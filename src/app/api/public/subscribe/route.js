@@ -51,7 +51,7 @@ export async function POST(req) {
 
         // Log activity
         await dbQuery(
-            `INSERT INTO activity_logs (team_id, action, entity_type, entity_id, description)
+            `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES (NULL, 'NEWSLETTER_SUBSCRIBE', 'client_lead', $1, $2)`,
             [newLead.id, `New website subscriber: ${cleanEmail}`]
         ).catch(() => {});

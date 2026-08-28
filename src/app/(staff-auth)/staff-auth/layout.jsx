@@ -2,7 +2,7 @@ import React from 'react'
 
 export const metadata = {
   title: "Staff Auth | Disibin",
-  description: "Secure access for Disibin team members."
+  description: "Secure access for Disibin staff members."
 }
 
 const layout = ({ children }) => {

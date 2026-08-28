@@ -7,7 +7,7 @@ import { FiUser, FiLogOut, FiGrid, FiShield } from 'react-icons/fi'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const Navbar = () => {
-  const { sidebar, setSidebar, isLoggedIn, userData, logout,teamData } = useContext(Context)
+  const { sidebar, setSidebar, isLoggedIn, userData, logout,staffData } = useContext(Context)
 
   const [showTopbar, setShowTopbar] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -48,7 +48,7 @@ const Navbar = () => {
     { label: 'About', href: '/about' },
   ]
 
-  const isManagement = teamData?.role
+  const isManagement = staffData?.role
 
   return (
     <div className='w-full fixed top-0 px-3 z-50 pt-3'>
@@ -116,7 +116,7 @@ const Navbar = () => {
 
                     {isManagement && (
                       <Link
-                        href="/team"
+                        href="/panel"
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-primary hover:bg-primary/10 hover:text-primary-dark transition-all"
                       >
@@ -141,7 +141,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link
-              href='/auth/login'
+              href='/user-auth/login'
               className='ml-3 px-5 py-1 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-all duration-300 shadow-sm'
             >
               Login

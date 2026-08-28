@@ -67,12 +67,12 @@ export const sendVerificationEmail = async (email, name, verificationUrl) => {
 
 
 export const sendStaffInvitationEmail = async (email, name, activationUrl) => {
-    const subject = "Invitation to join Disibin Team";
+    const subject = "Invitation to join Disibin Staff";
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>Disibin Team Invitation</h2>
+            <h2>Disibin Staff Invitation</h2>
             <p>Hi ${name},</p>
-            <p>You have been invited to join the Disibin team as staff. Please click the link below to complete your profile setup:</p>
+            <p>You have been invited to join the Disibin staff as staff. Please click the link below to complete your profile setup:</p>
             <a href="${activationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #059669; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;">Complete Setup</a>
             <p>This link will expire in 7 days.</p>
         </div>

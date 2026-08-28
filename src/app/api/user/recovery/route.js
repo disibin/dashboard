@@ -34,7 +34,7 @@ export async function POST(req) {
             [token, expiresAt, email]
         );
 
-        const resetLink = `${BASE_URL}/auth/recovery?token=${token}`;
+        const resetLink = `${BASE_URL}/user-auth/recovery?token=${token}`;
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">Password Reset Request</h1>

@@ -1,4 +1,4 @@
-import RecoverAccountForm from '@/component/team/forms/RecoverAccountForm'
+import RecoverAccountForm from '@/component/staff/forms/RecoverAccountForm'
 import React, { Suspense } from 'react'
 
 const Recovery = () => {

@@ -157,7 +157,7 @@ export default function UserSecurityPage() {
         toast.success('Account deleted successfully');
         setShowDeleteModal(false);
         setUserData(null);
-        window.location.replace('/auth/login');
+        window.location.replace('/user-auth/login');
       } else {
         toast.error(res.data.message);
       }

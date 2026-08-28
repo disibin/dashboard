@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function Layout({ children }) {
   const auth=await isUserLogin()
-  if(!auth.success) return redirect('/auth/login')
+  if(!auth.success) return redirect('/user-auth/login')
   return (
     <section className="w-full relative pt-14 bg-slate-50 min-h-screen">
       <Navbar/>

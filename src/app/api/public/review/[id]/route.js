@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isManager } from "@/lib/auth/team";
+import { isManager } from "@/lib/auth/staff";
 import { isUserLogin as isLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
@@ -44,7 +44,7 @@ export async function PATCH(req, { params }) {
 
         // Record activity log
         await dbQuery(`
-            INSERT INTO activity_logs (team_id, action, entity_type, entity_id, description)
+            INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, $2, $3, $4, $5)
         `, [auth.data.id, 'REVIEW_UPDATE', 'review', reviewId, `Updated review #${reviewId} (approved: ${review.is_approved})`]).catch(() => {});
 
@@ -67,7 +67,7 @@ export async function PATCH(req, { params }) {
             `, [
                 review.user_id,
                 "Staff Replied to Your Review",
-                `Our team posted an official reply to your review: "${reply.substring(0, 80)}${reply.length > 80 ? '...' : ''}"`,
+                `Our staff posted an official reply to your review: "${reply.substring(0, 80)}${reply.length > 80 ? '...' : ''}"`,
                 "review",
                 "/user/reviews"
             ]).catch((err) => console.error("Notification insertion error:", err));

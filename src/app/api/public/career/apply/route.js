@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isManager } from "@/lib/auth/team";
+import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import cloudinary from "@/lib/database/cloudinary";
 

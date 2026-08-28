@@ -150,7 +150,7 @@ export default function UserReviewsPage() {
             <div className="bg-primary/10/70 p-5 rounded-2xl border border-primary/20 space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-primary-dark">
                 <FiCornerDownRight size={14} />
-                Official Response from Disibin Team
+                Official Response from Disibin Staff
               </div>
               <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap pl-5">
                 {review.reply}

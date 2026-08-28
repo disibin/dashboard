@@ -122,7 +122,7 @@ export default function FAQ() {
             href="/contact"
             className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold font-poppins px-6 py-3 text-sm rounded-xl transition-all duration-300 shadow-md shadow-primary/30"
           >
-            Reach Out to Our Team <FiArrowRight className="w-4 h-4" />
+            Reach Out to Our Staff <FiArrowRight className="w-4 h-4" />
           </Link>
         </motion.div>
 

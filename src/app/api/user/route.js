@@ -97,7 +97,7 @@ export async function POST(req) {
             console.error("Auto client_leads insertion failed:", leadError.message);
         }
 
-        const verifyLink = `${BASE_URL}/auth/verify?token=${verificationToken}`;
+        const verifyLink = `${BASE_URL}/user-auth/verify?token=${verificationToken}`;
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">Verify Your Email</h1>

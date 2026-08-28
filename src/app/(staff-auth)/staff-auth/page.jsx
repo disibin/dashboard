@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Auth = () => {
-  return redirect('/team-auth/login')
+  return redirect('/staff-auth/login')
 }
 
 export default Auth

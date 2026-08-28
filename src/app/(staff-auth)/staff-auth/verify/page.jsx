@@ -22,7 +22,7 @@ function VerifyContent() {
 
     const verifyAccount = async () => {
       try {
-        const res = await axios.post('/api/team/security', { token });
+        const res = await axios.post('/api/staff/security', { token });
         if (res.data.success) {
           setSuccess(true);
           setMessage(res.data.message || 'Account verified successfully!');
@@ -58,7 +58,7 @@ function VerifyContent() {
             <h2 className="text-2xl font-bold text-slate-900">Email Verified!</h2>
             <p className="text-sm text-slate-600 font-medium">{message}</p>
             <Link
-              href="/team-auth/login"
+              href="/staff-auth/login"
               className="w-full py-3 text-center rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/10 mt-2"
             >
               Proceed to Login
@@ -75,7 +75,7 @@ function VerifyContent() {
               If you believe this is an error, please contact your manager.
             </p>
             <Link
-              href="/team-auth/login"
+              href="/staff-auth/login"
               className="w-full py-3 text-center rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/10 mt-2"
             >
               Back to Login

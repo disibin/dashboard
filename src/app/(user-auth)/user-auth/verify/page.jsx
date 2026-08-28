@@ -59,7 +59,7 @@ function VerifyContent() {
             <h2 className="text-2xl font-bold text-slate-900">Email Verified!</h2>
             <p className="text-sm text-slate-600 font-medium">{message}</p>
             <Link
-              href="/auth/login"
+              href="/user-auth/login"
               className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
             >
               Proceed to Login
@@ -73,7 +73,7 @@ function VerifyContent() {
             <h2 className="text-2xl font-bold text-slate-900">Verification Failed</h2>
             <p className="text-sm text-slate-600 font-medium">{message}</p>
             <Link
-              href="/auth/login"
+              href="/user-auth/login"
               className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
             >
               Back to Login

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isManager } from "@/lib/auth/team";
+import { isManager } from "@/lib/auth/staff";
 import { isUserLogin as isLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
@@ -33,7 +33,7 @@ export async function POST(req) {
 
         // Record activity log
         await dbQuery(`
-            INSERT INTO activity_logs (team_id, action, entity_type, entity_id, description)
+            INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES (NULL, $1, $2, $3, $4)
         `, ['REVIEW_CREATE', 'review', review.id, `User ${auth.data.name || auth.data.email} submitted a ${rating}-star review`]).catch(() => {});
 

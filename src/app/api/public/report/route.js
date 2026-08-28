@@ -34,7 +34,7 @@ export async function POST(req) {
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 22px; font-weight: 700; margin-bottom: 8px;">We received your issue report</h1>
-                <p style="color: #64748b; line-height: 1.6; margin-bottom: 16px;">Hi ${name}, thank you for reporting an issue to Disibin. We've received your report and our engineering/support team will investigate it promptly.</p>
+                <p style="color: #64748b; line-height: 1.6; margin-bottom: 16px;">Hi ${name}, thank you for reporting an issue to Disibin. We've received your report and our engineering/support staff will investigate it promptly.</p>
                 <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
                     <p style="color: #475569; margin: 0 0 6px;"><strong>Subject:</strong> ${subject}</p>
                     <p style="color: #475569; margin: 0;"><strong>Report Reference ID:</strong> #${report.id}</p>

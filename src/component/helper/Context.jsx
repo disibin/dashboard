@@ -8,10 +8,10 @@ export const Context = createContext();
 const ContextProvider = ({ children }) => {
   const router = useRouter();
   const [sidebar, setSidebar] = useState(false);
-  const [dashboardSidebar, setDashboardSidebar] = useState(false);
+  const [dashboardSidebar, setDashboardSidebar] = useState(true);
   const [userSidebar, setUserSidebar] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [teamData, setTeamData] = useState(null);
+  const [staffData, setStaffData] = useState(null);
   const isLoggedIn = !!userData;
 
   // Fetch regular user session
@@ -33,43 +33,43 @@ const ContextProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // Fetch team member session
+  // Fetch staff member session
   useEffect(() => {
-    const fetchTeamUser = async () => {
+    const fetchStaffUser = async () => {
       try {
-        const response = await axios.get('/api/team/me', {
+        const response = await axios.get('/api/staff/me', {
           validateStatus: (status) => status < 500
         });
         if (response.data?.success && response.data?.data) {
-          setTeamData(response.data.data);
+          setStaffData(response.data.data);
         } else {
-          setTeamData(null);
+          setStaffData(null);
         }
       } catch (error) {
-        setTeamData(null);
+        setStaffData(null);
       }
     };
-    fetchTeamUser();
+    fetchStaffUser();
   }, []);
 
   const logout = async () => {
     try {
       await axios.post('/api/user/logout');
       setUserData(null);
-      window.location.replace('/auth/login');
+      window.location.replace('/user-auth/login');
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  const teamLogout = async () => {
+  const staffLogout = async () => {
     try {
-      await axios.post('/api/team/logout');
+      await axios.post('/api/staff/logout');
     } catch (error) {
-      console.error("Team logout request failed:", error);
+      console.error("Staff logout request failed:", error);
     } finally {
-      setTeamData(null);
-      window.location.replace('/team-auth/login');
+      setStaffData(null);
+      window.location.replace('/staff-auth/login');
     }
   };
 
@@ -77,8 +77,11 @@ const ContextProvider = ({ children }) => {
     sidebar, setSidebar,
     userSidebar, setUserSidebar,
     dashboardSidebar, setDashboardSidebar,
-    userData, setUserData, teamData, setTeamData,
-    isLoggedIn, logout, teamLogout
+    userData, setUserData,
+    staffData, setStaffData,
+    staffData: staffData, setStaffData: setStaffData,
+    isLoggedIn, logout,
+    staffLogout, staffLogout: staffLogout
   };
 
   return (

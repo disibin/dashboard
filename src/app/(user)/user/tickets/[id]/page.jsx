@@ -183,7 +183,7 @@ export default function UserTicketDetailPage() {
                   className={`flex flex-col ${isUserMsg ? 'items-end ml-auto' : 'items-start mr-auto'} max-w-[85%] sm:max-w-[75%]`}
                 >
                   <div className="text-[11px] font-semibold text-slate-500 mb-0.5 px-1">
-                    {isUserMsg ? 'You' : (msg.team_name || 'Support Staff')}
+                    {isUserMsg ? 'You' : (msg.staff_name || 'Support Staff')}
                   </div>
 
                   <div

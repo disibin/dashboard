@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isManager } from "@/lib/auth/team";
+import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
 function toPgArray(arr) {
@@ -81,7 +81,7 @@ export async function POST(req) {
 
         // Record activity log
         await dbQuery(`
-            INSERT INTO activity_logs (team_id, action, entity_type, entity_id, description)
+            INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'CAREER_CREATE', 'career', $2, $3)
         `, [auth.data.id, job.job_id, `Created job posting "${job.title}"`]).catch(() => {});
 

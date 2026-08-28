@@ -23,7 +23,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
     if (!name.trim()) { toast.error('Feature name is required'); return; }
     setLoading(true);
     try {
-      const res = await axios.post('/api/team/product/features', {
+      const res = await axios.post('/api/staff/product/features', {
         name: name.trim(),
         description: description.trim() || null,
       });
@@ -161,7 +161,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
     const fetchFeatures = async () => {
       setFeaturesLoading(true);
       try {
-        const res = await axios.get('/api/team/product/features');
+        const res = await axios.get('/api/staff/product/features');
         if (res.data.success) setAvailableFeatures(res.data.data || []);
       } catch {
         toast.error('Could not load features');
@@ -238,7 +238,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
 
     try {
       const isEditing = !!initialData?.slug;
-      const url = isEditing ? `/api/team/product/${initialData.slug}` : '/api/team/product';
+      const url = isEditing ? `/api/staff/product/${initialData.slug}` : '/api/staff/product';
       const method = isEditing ? 'put' : 'post';
 
       const payload = {
@@ -262,7 +262,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
         toast.success(res.data.message || (publishStatus ? 'Product published successfully!' : 'Draft saved successfully!'));
         setFormData(prev => ({ ...prev, is_published: publishStatus }));
         if (onSuccess) onSuccess(res.data.data);
-        else router.push('/team/products');
+        else router.push('/panel/products');
       } else {
         toast.error(res.data.message || 'Failed to save product');
       }

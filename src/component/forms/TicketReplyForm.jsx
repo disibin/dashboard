@@ -54,7 +54,7 @@ export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
 
     setSending(true);
     try {
-      const endpoint = isTeam ? `/api/team/ticket/${ticketId}` : `/api/user/ticket/${ticketId}`;
+      const endpoint = isTeam ? `/api/staff/ticket/${ticketId}` : `/api/user/ticket/${ticketId}`;
       const payload = {
         message: message.trim(),
         images: images.map(img => ({ file_url: img.file_url, file_id: img.file_id }))

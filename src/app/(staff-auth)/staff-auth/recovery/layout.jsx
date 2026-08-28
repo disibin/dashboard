@@ -1,4 +1,4 @@
-import { isTeamLogin } from '@/lib/auth/team'
+import { isStaffLogin } from '@/lib/auth/staff'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
@@ -8,8 +8,8 @@ export const metadata={
 }
 
 const layout =async ({children}) => {
-  const auth=await isTeamLogin()
-    if(auth.success) return redirect('/team')
+  const auth=await isStaffLogin()
+    if(auth.success) return redirect('/panel')
   
   return (
     <>{children}</>

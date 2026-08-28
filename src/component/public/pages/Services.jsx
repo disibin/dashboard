@@ -269,7 +269,7 @@ export default function Services() {
             <FiShield className="w-5 h-5 text-primary" />
           </div>
           <p className="text-slate-600 text-xs leading-relaxed font-poppins">
-            <span className="text-slate-900 font-semibold">Production Guarantee:</span> Clean, modular codebases with full technical documentation and type safety, ensuring seamless scalability for your team.
+            <span className="text-slate-900 font-semibold">Production Guarantee:</span> Clean, modular codebases with full technical documentation and type safety, ensuring seamless scalability for your staff.
           </p>
         </div>
       </motion.section>

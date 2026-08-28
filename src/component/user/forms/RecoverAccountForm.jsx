@@ -50,7 +50,7 @@ const RecoverAccountForm = () => {
 
       if (data.success) {
         toast.success(data.message);
-        router.push('/auth/login');
+        router.push('/user-auth/login');
       } else {
         toast.error(data.message);
       }
@@ -103,7 +103,7 @@ const RecoverAccountForm = () => {
 
           <p className="mt-6 text-center text-sm text-slate-500 font-medium">
             Remember your password?{' '}
-            <Link href="/auth/login" className="text-primary font-bold hover:underline">Login</Link>
+            <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
           </p>
         </div>
       </div>
@@ -153,7 +153,7 @@ const RecoverAccountForm = () => {
 
         <p className="mt-6 text-center text-sm text-slate-500 font-medium">
           Remember your password?{' '}
-          <Link href="/auth/login" className="text-primary font-bold hover:underline">Login</Link>
+          <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
         </p>
       </div>
     </div>

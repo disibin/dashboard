@@ -81,9 +81,9 @@ export async function POST(req) {
                 return NextResponse.json({ success: false, message: "This email address is already in use by another user account" }, { status: 400 });
             }
 
-            const existingTeam = await dbQuery("SELECT id FROM teams WHERE email = $1", [newEmail]);
-            if (existingTeam.rows.length > 0) {
-                return NextResponse.json({ success: false, message: "This email address is already in use by a team account" }, { status: 400 });
+            const existingStaff = await dbQuery("SELECT id FROM staffs WHERE email = $1", [newEmail]);
+            if (existingStaff.rows.length > 0) {
+                return NextResponse.json({ success: false, message: "This email address is already in use by a staff account" }, { status: 400 });
             }
 
             // Generate 6-digit verification code & 15-min expiration

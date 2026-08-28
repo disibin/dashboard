@@ -34,15 +34,15 @@ export async function GET(req, { params }) {
                 tm.id, 
                 tm.ticket_id, 
                 tm.user_id, 
-                tm.team_id, 
+                tm.staff_id, 
                 tm.message, 
                 tm.created_at,
                 u.name AS user_name,
-                t.name AS team_name,
-                t.role AS team_role
+                t.name AS staff_name,
+                t.role AS staff_role
              FROM ticket_messages tm
              LEFT JOIN users u ON tm.user_id = u.id
-             LEFT JOIN teams t ON tm.team_id = t.id
+             LEFT JOIN staffs t ON tm.staff_id = t.id
              WHERE tm.ticket_id = $1
              ORDER BY tm.created_at ASC`,
             [ticketId]
@@ -50,7 +50,7 @@ export async function GET(req, { params }) {
 
         // Fetch attachments
         const attachmentsRes = await dbQuery(
-            `SELECT id, ticket_id, user_id, team_id, message_id, file_url, file_id, created_at
+            `SELECT id, ticket_id, user_id, staff_id, message_id, file_url, file_id, created_at
              FROM ticket_attachments
              WHERE ticket_id = $1
              ORDER BY created_at ASC`,

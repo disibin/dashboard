@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { FiBriefcase, FiX } from 'react-icons/fi';
-import CareerForm from '../team/forms/CareerForm';
+import CareerForm from '../panel/forms/CareerForm';
 
 
 const CareerModal = ({ isOpen, onClose, onSuccess, initialData }) => {

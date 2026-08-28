@@ -768,3 +768,40 @@ CREATE TABLE IF NOT EXISTS faqs (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
+
+-- =====================================================
+-- 12. STAFF NOTES & TODOS
+-- =====================================================
+CREATE TABLE IF NOT EXISTS staff_notes (
+  id SERIAL PRIMARY KEY,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_staff_notes_modtime 
+BEFORE UPDATE ON staff_notes 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_staff_notes_staff_id ON staff_notes(staff_id);
+
+CREATE TABLE IF NOT EXISTS staff_todos (
+  id SERIAL PRIMARY KEY,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  start_time TIMESTAMP,
+  end_time TIMESTAMP,
+  is_completed BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_staff_todos_modtime 
+BEFORE UPDATE ON staff_todos 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_staff_todos_staff_id ON staff_todos(staff_id);
+CREATE INDEX idx_staff_todos_is_completed ON staff_todos(staff_id, is_completed);

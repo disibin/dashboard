@@ -24,7 +24,7 @@ const RegisterForm = () => {
 
       if (data.success) {
         toast.success(data.message, { duration: 6000 });
-        router.push('/auth/login');
+        router.push('/user-auth/login');
       } else {
         toast.error(data.message || 'Registration failed');
       }
@@ -73,7 +73,7 @@ const RegisterForm = () => {
           </button>
           <p className="mt-8 text-center text-sm text-slate-500 font-medium">
             Already a member?{' '}
-            <Link href="/auth/login" className="text-primary font-bold hover:underline">Login</Link>
+            <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
           </p>
         </form>
 

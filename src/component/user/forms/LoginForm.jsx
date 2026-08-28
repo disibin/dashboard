@@ -70,7 +70,7 @@ const LoginForm = () => {
           <div className="w-full flex flex-col gap-1.5">
             <div className="flex justify-between items-center px-1">
               <label className={labelCls}>Password</label>
-              <Link href="/auth/recovery" className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+              <Link href="/user-auth/recovery" className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
                 Forgot Password?
               </Link>
             </div>
@@ -105,7 +105,7 @@ const LoginForm = () => {
 
           <p className="mt-2 text-center text-sm text-slate-500 font-medium">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/register" className="text-slate-900 font-bold hover:underline">Create one</Link>
+            <Link href="/user-auth/register" className="text-slate-900 font-bold hover:underline">Create one</Link>
           </p>
         </form>
       </div>

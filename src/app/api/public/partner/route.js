@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isManager } from "@/lib/auth/team";
+import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -63,7 +63,7 @@ export async function POST(req) {
 
         // Record activity log
         await dbQuery(`
-            INSERT INTO activity_logs (team_id, action, entity_type, entity_id, description)
+            INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, $2, $3, $4, $5)
         `, [auth.data.id, 'PARTNER_CREATE', 'partner', newPartner.id, `Added partner "${company_name}"`]).catch(() => {});
 
