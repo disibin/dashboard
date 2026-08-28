@@ -12,30 +12,25 @@ export async function GET() {
 
         const res = await dbQuery(`
             SELECT 
-                pur.id as purchase_id, 
-                pur.product_id, 
-                pur.project_id, 
+                pur.id AS purchase_id, 
+                pur.package_id, 
                 pur.price, 
                 pur.discount, 
-                pur.status as purchase_status, 
+                pur.status AS purchase_status, 
                 pur.created_at,
-                prod.name as product_title, 
-                pimg.image as product_image, 
-                prod.slug as product_slug,
-                proj.title as project_title,
-                pay.id as payment_id, 
-                pay.price as payment_price, 
+                pkg.title AS package_title, 
+                pkg.description AS package_description,
+                pay.id AS payment_id, 
+                pay.price AS payment_price, 
                 pay.paid, 
                 pay.due, 
-                pay.status as payment_status
+                pay.status AS payment_status
             FROM purchases pur
-            LEFT JOIN products prod ON pur.product_id = prod.id
-            LEFT JOIN product_images pimg ON pimg.product_id = prod.id AND pimg.is_primary = true
-            LEFT JOIN projects proj ON pur.project_id = proj.id
+            LEFT JOIN packages pkg ON pur.package_id = pkg.id
             LEFT JOIN payments pay ON pur.id = pay.purchase_id
-            WHERE proj.user_id = $1
+            WHERE pur.user_id = $1
             ORDER BY pur.created_at DESC
-        `, [userId]).catch(() => ({ rows: [] }));
+        `, [userId]);
 
         return NextResponse.json({ success: true, data: res.rows });
     } catch (error) {
