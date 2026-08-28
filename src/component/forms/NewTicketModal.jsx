@@ -87,7 +87,7 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-fade-in">
         {/* Modal Header */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <FiPlusCircle className="text-primary" size={20} />
             Create Support Ticket
           </h3>
@@ -102,7 +102,7 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Ticket Subject *
             </label>
             <input
@@ -116,7 +116,7 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Initial Message *
             </label>
             <textarea
@@ -132,14 +132,14 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
           {/* Image Attachments */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
                 Image Attachments (Optional)
               </label>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading || submitting}
-                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
               >
                 {uploading ? <FiLoader className="animate-spin" size={12} /> : <FiPaperclip size={12} />}
                 Add Screenshot
@@ -185,7 +185,7 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={submitting || uploading}
-              className="px-5 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+              className="px-5 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
             >
               {submitting ? <FiLoader className="animate-spin" size={14} /> : null}
               {submitting ? 'Creating Ticket...' : 'Submit Ticket'}

@@ -150,13 +150,13 @@ export default function TeamCareerPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiBriefcase size={20} />
             </span>
@@ -170,13 +170,13 @@ export default function TeamCareerPage() {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <Link
             href="/panel/career/applications"
-            className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs sm:text-sm transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold text-xs sm:text-sm transition-all"
           >
             Review Candidates →
           </Link>
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold text-xs sm:text-sm transition-all shadow-md shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-md shrink-0"
           >
             <FiPlus size={16} />
             Create Job Vacancy
@@ -195,12 +195,12 @@ export default function TeamCareerPage() {
           <div className="py-16 text-center space-y-4 px-4">
             <FiBriefcase className="mx-auto text-slate-300" size={32} />
             <div className="space-y-1 max-w-sm mx-auto">
-              <h3 className="font-bold text-slate-800 text-base">No career positions created</h3>
+              <h3 className="font-semibold text-slate-800 text-base">No career positions created</h3>
               <p className="text-xs text-slate-500">Click "Create Job Vacancy" to add your first job opening.</p>
             </div>
             <button
               onClick={openAddModal}
-              className="text-xs text-primary font-bold hover:underline"
+              className="text-xs text-primary font-semibold hover:underline"
             >
               + Create First Job
             </button>
@@ -211,8 +211,8 @@ export default function TeamCareerPage() {
               <div key={job.job_id} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-2 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-slate-900 truncate">{job.title}</h3>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                    <h3 className="text-lg font-semibold text-slate-900 truncate">{job.title}</h3>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${
                       job.is_published ? 'bg-primary/20 text-primary' : 'bg-slate-200 text-slate-600'
                     }`}>
                       {job.is_published ? 'Published' : 'Draft'}
@@ -226,7 +226,7 @@ export default function TeamCareerPage() {
                       <FiMapPin size={12} /> {job.location}
                     </span>
                     {job.compensation && (
-                      <span className="bg-primary/10 px-2.5 py-1 rounded-lg text-primary font-bold">{job.compensation}</span>
+                      <span className="bg-primary/10 px-2.5 py-1 rounded-lg text-primary font-semibold">{job.compensation}</span>
                     )}
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function TeamCareerPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                 <FiBriefcase className="text-primary" size={18} />
                 {editingJob ? 'Edit Job Opening' : 'Create New Job Vacancy'}
               </h3>
@@ -282,7 +282,7 @@ export default function TeamCareerPage() {
 
             <form onSubmit={handleSave} className="p-6 flex-1 overflow-y-auto space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Job Title *
                 </label>
                 <input
@@ -297,7 +297,7 @@ export default function TeamCareerPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Location *
                   </label>
                   <input
@@ -311,7 +311,7 @@ export default function TeamCareerPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Job Type *
                   </label>
                   <select
@@ -327,7 +327,7 @@ export default function TeamCareerPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Experience Level *
                   </label>
                   <select
@@ -344,7 +344,7 @@ export default function TeamCareerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Compensation / Salary Range
                 </label>
                 <input
@@ -357,7 +357,7 @@ export default function TeamCareerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Role Description *
                 </label>
                 <textarea
@@ -371,7 +371,7 @@ export default function TeamCareerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Responsibilities (Comma-separated or lines)
                 </label>
                 <input
@@ -384,7 +384,7 @@ export default function TeamCareerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Required Skills (Comma-separated)
                 </label>
                 <input
@@ -397,7 +397,7 @@ export default function TeamCareerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Nice to Have (Comma-separated)
                 </label>
                 <input
@@ -417,7 +417,7 @@ export default function TeamCareerPage() {
                   onChange={e => setForm({ ...form, is_published: e.target.checked })}
                   className="input-style"
                 />
-                <label htmlFor="is_published" className="text-xs font-bold text-slate-700 cursor-pointer">
+                <label htmlFor="is_published" className="text-xs font-semibold text-slate-700 cursor-pointer">
                   Publish vacancy immediately on career page
                 </label>
               </div>
@@ -433,7 +433,7 @@ export default function TeamCareerPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+                  className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
                 >
                   {saving ? <FiLoader className="animate-spin" size={14} /> : null}
                   {saving ? 'Saving...' : editingJob ? 'Update Vacancy' : 'Create Vacancy'}

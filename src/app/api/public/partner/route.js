@@ -17,7 +17,6 @@ function slugify(text) {
         .replace(/\-\-+/g, '-');
 }
 
-// GET - List all partners (Public)
 export async function GET() {
     try {
         const res = await dbQuery(`
@@ -31,14 +30,13 @@ export async function GET() {
     }
 }
 
-// POST - Create a partner (Manager only)
 export async function POST(req) {
     try {
         const auth = await isManager();
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { company_name, slug, business_url, image, image_id, email } = body;
+        const { company_name, business_url, image, image_id, email } = body;
 
         if (!company_name || !company_name.trim()) {
             return NextResponse.json({ success: false, message: "Company name is required" }, { status: 400 });
@@ -50,7 +48,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Contact email is required" }, { status: 400 });
         }
 
-        const partnerSlug = (slug || slugify(company_name)).trim();
+        const partnerSlug = slugify(company_name);
         const url = (business_url || "").trim() || "#";
 
         const res = await dbQuery(`
@@ -61,7 +59,6 @@ export async function POST(req) {
 
         const newPartner = res.rows[0];
 
-        // Record activity log
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, $2, $3, $4, $5)
@@ -78,20 +75,18 @@ export async function POST(req) {
     }
 }
 
-// PATCH - Update partner (Manager only)
 export async function PATCH(req) {
     try {
         const auth = await isManager();
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { id, company_name, slug, business_url, image, image_id, email } = body;
+        const { id, company_name, business_url, image, image_id, email } = body;
 
         if (!id) {
             return NextResponse.json({ success: false, message: "Partner ID is required" }, { status: 400 });
         }
 
-        // Fetch old partner info
         const oldRes = await dbQuery("SELECT image_id FROM partners WHERE id = $1", [id]);
         if (oldRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Partner not found" }, { status: 404 });
@@ -99,12 +94,11 @@ export async function PATCH(req) {
 
         const oldImageId = oldRes.rows[0].image_id;
 
-        // If image replaced and oldImageId differs, remove old Cloudinary image
         if (image && image_id && oldImageId && oldImageId !== image_id) {
             try { await cloudinary.uploader.destroy(oldImageId); } catch {}
         }
 
-        const partnerSlug = (slug || (company_name ? slugify(company_name) : '')).trim();
+        const partnerSlug = company_name ? slugify(company_name) : null;
 
         const res = await dbQuery(`
             UPDATE partners
@@ -129,7 +123,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE - Delete partner (Manager only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();

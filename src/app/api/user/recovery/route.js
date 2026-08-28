@@ -3,7 +3,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
-import { BASE_URL } from "@/lib/database/secret";
+import { BASE_URL, getBaseUrl } from "@/lib/database/secret";
 
 // POST — Request password reset email
 export async function POST(req) {
@@ -34,7 +34,8 @@ export async function POST(req) {
             [token, expiresAt, email]
         );
 
-        const resetLink = `${BASE_URL}/user-auth/recovery?token=${token}`;
+        const baseUrl = getBaseUrl(req);
+        const resetLink = `${baseUrl}/user-auth/recovery?token=${token}`;
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">Password Reset Request</h1>

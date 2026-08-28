@@ -109,13 +109,13 @@ export default function BusinessLeadsPage() {
   const totalLeads = leads.length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
               <FiBriefcase size={20} />
             </span>
@@ -138,7 +138,7 @@ export default function BusinessLeadsPage() {
 
           <Link
             href="/panel/leads/business/new"
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-amber-600 text-white rounded-xl font-bold text-xs sm:text-sm transition-all shadow-md shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-amber-600 text-white rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-md shrink-0"
           >
             <FiPlus size={16} /> Add New Business Lead
           </Link>
@@ -148,22 +148,22 @@ export default function BusinessLeadsPage() {
       {/* Stat Card */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0 font-bold">
+          <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0 font-semibold">
             <FiBriefcase size={22} />
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Business Leads</p>
-            <p className="text-2xl font-bold text-slate-900">{loading ? '...' : totalLeads}</p>
+            <p className="text-2xl font-semibold text-slate-900">{loading ? '...' : totalLeads}</p>
           </div>
         </div>
 
         <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 font-bold">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 font-semibold">
             <FiMail size={22} />
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Contact Emails</p>
-            <p className="text-2xl font-bold text-slate-900">{loading ? '...' : leads.filter(l => l.email).length}</p>
+            <p className="text-2xl font-semibold text-slate-900">{loading ? '...' : leads.filter(l => l.email).length}</p>
           </div>
         </div>
       </div>
@@ -207,7 +207,7 @@ export default function BusinessLeadsPage() {
               <FiBriefcase size={32} />
             </div>
             <div className="space-y-1 max-w-sm mx-auto">
-              <h3 className="font-bold text-slate-800 text-base">No business leads found</h3>
+              <h3 className="font-semibold text-slate-800 text-base">No business leads found</h3>
               <p className="text-xs text-slate-500">
                 {search ? 'No results match your search query.' : 'Click "Add New Business Lead" to register your first lead.'}
               </p>
@@ -215,7 +215,7 @@ export default function BusinessLeadsPage() {
             {!search && (
               <Link
                 href="/panel/leads/business/new"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white font-bold rounded-xl text-xs hover:bg-amber-700 transition-all shadow-md"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white font-semibold rounded-xl text-xs hover:bg-amber-700 transition-all shadow-md"
               >
                 <FiPlus size={14} /> Add New Business Lead
               </Link>
@@ -224,7 +224,7 @@ export default function BusinessLeadsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Business Name</th>
                   <th className="px-6 py-4">Contact Info</th>
@@ -246,7 +246,7 @@ export default function BusinessLeadsPage() {
                             type="text"
                             value={editForm.name}
                             onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-                            className="input-style py-1.5 text-xs font-bold"
+                            className="input-style py-1.5 text-xs font-semibold"
                             placeholder="Business Name *"
                           />
                         </td>
@@ -310,7 +310,7 @@ export default function BusinessLeadsPage() {
 
                   return (
                     <tr key={lead.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900">
+                      <td className="px-6 py-4 font-semibold text-slate-900">
                         {lead.name}
                       </td>
 

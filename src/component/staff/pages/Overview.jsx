@@ -49,7 +49,7 @@ const Overview = ({ staffData }) => {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         <div className="relative z-10 max-w-2xl space-y-3">
           
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
             Welcome back, {staffData?.name || 'Staff Member'}
           </h1>
           <p className="text-slate-300 text-sm leading-relaxed">
@@ -60,7 +60,7 @@ const Overview = ({ staffData }) => {
 
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Operational Tools & Workspaces</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Operational Tools & Workspaces</h2>
           <p className="text-xs text-slate-500 mt-0.5">{currentLinks.length} management modules available for your role</p>
         </div>
       </div>
@@ -74,13 +74,13 @@ const Overview = ({ staffData }) => {
                 <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-primary/10 transition-colors w-fit mb-4">
                   {link.icon}
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-1 group-hover:text-primary transition-colors">
+                <h3 className="text-base font-semibold text-slate-900 mb-1 group-hover:text-primary transition-colors">
                   {link.name}
                 </h3>
                 <p className="text-xs text-slate-500 leading-relaxed">{link.desc}</p>
               </div>
 
-              <div className="flex items-center gap-1 text-xs font-bold text-primary mt-5 pt-3 border-t border-slate-50 group-hover:translate-x-1 transition-transform">
+              <div className="flex items-center gap-1 text-xs font-semibold text-primary mt-5 pt-3 border-t border-slate-50 group-hover:translate-x-1 transition-transform">
                 <span>Open Workspace</span>
                 <FiArrowRight size={14} />
               </div>
@@ -95,13 +95,13 @@ const Overview = ({ staffData }) => {
               <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-primary/10 transition-colors w-fit mb-4">
                 <FiMessageSquare className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-1 group-hover:text-primary transition-colors">
+              <h3 className="text-base font-semibold text-slate-900 mb-1 group-hover:text-primary transition-colors">
                 Staff Chat
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed">Communicate and collaborate with other staff members</p>
             </div>
 
-            <div className="flex items-center gap-1 text-xs font-bold text-primary mt-5 pt-3 border-t border-slate-50 group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center gap-1 text-xs font-semibold text-primary mt-5 pt-3 border-t border-slate-50 group-hover:translate-x-1 transition-transform">
               <span>Open Chat</span>
               <FiArrowRight size={14} />
             </div>

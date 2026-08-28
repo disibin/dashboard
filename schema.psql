@@ -142,6 +142,8 @@ CREATE TABLE IF NOT EXISTS packages (
   description TEXT,
   price INT DEFAULT 0,
   discount INT DEFAULT 0,
+  image TEXT,
+  image_id TEXT,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { cookies } from "next/headers";
-import { BASE_URL } from "@/lib/database/secret";
+import { BASE_URL, getBaseUrl } from "@/lib/database/secret";
 import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { isUserLogin } from "@/lib/auth/user";
@@ -97,7 +97,8 @@ export async function POST(req) {
             console.error("Auto client_leads insertion failed:", leadError.message);
         }
 
-        const verifyLink = `${BASE_URL}/user-auth/verify?token=${verificationToken}`;
+        const baseUrl = getBaseUrl(req);
+        const verifyLink = `${baseUrl}/user-auth/verify?token=${verificationToken}`;
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">Verify Your Email</h1>

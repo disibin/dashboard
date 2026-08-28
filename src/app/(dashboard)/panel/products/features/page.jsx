@@ -125,7 +125,7 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-all flex items-center gap-1 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-all flex items-center gap-1 disabled:opacity-50"
               >
                 {saving ? <FiLoader size={12} className="animate-spin" /> : <FiCheck size={12} />}
                 Save
@@ -160,7 +160,7 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
 
       {showProducts && !editing && feature.products?.length > 0 && (
         <div className="mt-3 pt-3 border-t border-tertiary">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-primary-light block mb-1.5">Tagged Products:</span>
+          <span className="text-[10px] uppercase font-semibold tracking-wider text-primary-light block mb-1.5">Tagged Products:</span>
           <div className="flex flex-wrap gap-1.5">
             {feature.products.map(p => (
               <Link
@@ -260,7 +260,7 @@ const FeaturesPage = () => {
             <FiArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
               <FiTag className="text-primary" /> Features
             </h1>
             <p className="text-slate-500 text-xs sm:text-sm">Manage feature tags used across products</p>
@@ -269,7 +269,7 @@ const FeaturesPage = () => {
 
         <button
           onClick={showAdd ? () => setShowAdd(false) : handleOpenAdd}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-primary transition-all shadow-md shrink-0"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-primary transition-all shadow-md shrink-0"
         >
           {showAdd ? <FiX size={14} /> : <FiPlus size={14} />}
           {showAdd ? 'Cancel' : 'Add Feature'}
@@ -279,7 +279,7 @@ const FeaturesPage = () => {
       {showAdd && (
         <form onSubmit={handleCreate} className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">New Feature Tag</span>
+            <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">New Feature Tag</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
@@ -309,7 +309,7 @@ const FeaturesPage = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-dark transition-all flex items-center gap-1 disabled:opacity-50"
+              className="px-5 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-dark transition-all flex items-center gap-1 disabled:opacity-50"
             >
               {submitting ? <FiLoader size={12} className="animate-spin" /> : <FiCheck size={12} />}
               {submitting ? 'Creating...' : 'Save Feature'}
@@ -351,7 +351,7 @@ const FeaturesPage = () => {
           {!search && (
             <button
               onClick={handleOpenAdd}
-              className="mt-3 inline-flex items-center gap-1 text-xs text-primary font-bold hover:underline"
+              className="mt-3 inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline"
             >
               <FiPlus size={13} /> Create your first feature
             </button>

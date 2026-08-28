@@ -17,28 +17,23 @@ const Navbar = () => {
           aria-label="Toggle menu"
         >
           <FiSidebar size={18} className={`transition-transform duration-200 ${userSidebar ? 'rotate-180 text-indigo-600' : 'text-slate-500'}`} />
-          <span className="hidden sm:inline text-xs font-bold tracking-tight">
+          <span className="hidden sm:inline text-xs font-semibold tracking-tight">
             Menu
           </span>
         </button>
 
-        <Link href="/user" className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          <span className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs font-black shadow-sm">
-            U
-          </span>
-          <span>User Dashboard</span>
-        </Link>
+        
       </div>
 
       <div className="flex items-center gap-3">
         {userData?.name && (
-          <span className="hidden sm:block text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
+          <span className="hidden sm:block text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
             {userData.name}
           </span>
         )}
         <button
           onClick={logout}
-          className="px-4 py-1.5 rounded-xl cursor-pointer bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm"
+          className="px-4 py-1.5 rounded-xl cursor-pointer bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all shadow-sm"
         >
           Logout
         </button>

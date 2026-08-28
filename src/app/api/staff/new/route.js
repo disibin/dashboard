@@ -1,7 +1,7 @@
 import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
-import { BASE_URL, DEMO_PASSWORD } from "@/lib/database/secret";
+import { BASE_URL, getBaseUrl, DEMO_PASSWORD } from "@/lib/database/secret";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -61,7 +61,8 @@ export async function POST(req) {
         const newMember = insertRes.rows[0];
 
         // Send invitation / verification email
-        const verifyLink = `${BASE_URL}/staff-auth/verify?token=${verificationToken}`;
+        const baseUrl = getBaseUrl(req);
+        const verifyLink = `${baseUrl}/staff-auth/verify?token=${verificationToken}`;
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px;">Welcome to Disibin Staff</h1>

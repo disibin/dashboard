@@ -114,7 +114,7 @@ const TeamMemberManagement = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
             <span className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center">
               <FiShield className="text-white" size={18} />
             </span>
@@ -125,7 +125,7 @@ const TeamMemberManagement = () => {
 
         <Link
           href="/panel/staff-member/new"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-700 transition-all shadow-md shadow-slate-900/10"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-700 transition-all shadow-md shadow-slate-900/10"
         >
           <FiUserPlus size={16} />
           <span>Add Staff Member</span>
@@ -142,7 +142,7 @@ const TeamMemberManagement = () => {
           <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4">
             <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${bg}`}>{icon}</div>
             <div>
-              <p className="text-2xl font-extrabold text-slate-900">{value}</p>
+              <p className="text-2xl font-semibold text-slate-900">{value}</p>
               <p className="text-xs text-slate-400 font-medium mt-0.5">{label}</p>
             </div>
           </div>
@@ -184,7 +184,7 @@ const TeamMemberManagement = () => {
         {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest font-bold border-b border-slate-100">
+            <thead className="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest font-semibold border-b border-slate-100">
               <tr>
                 <th className="px-6 py-4">Member</th>
                 <th className="px-6 py-4">Role</th>
@@ -218,7 +218,7 @@ const TeamMemberManagement = () => {
                     {/* Member */}
                     <td className="px-6 py-4">
                       <div>
-                        <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                        <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                           {m.name}
                           {m.is_verified && <FiShield size={14} className="text-primary" title="Verified" />}
                         </div>
@@ -232,7 +232,7 @@ const TeamMemberManagement = () => {
                       <select
                         value={m.role}
                         onChange={(e) => updateRole(m, e.target.value)}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold capitalize border outline-none cursor-pointer transition-colors ${
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold capitalize border outline-none cursor-pointer transition-colors ${
                           m.role === 'manager' ? 'bg-secondary/10 text-secondary border-secondary/20' :
                           m.role === 'developer' ? 'bg-primary/10 text-violet-700 border-primary/20' :
                           'bg-primary/10 text-primary border-primary/20'
@@ -249,11 +249,11 @@ const TeamMemberManagement = () => {
                     {/* Status */}
                     <td className="px-6 py-4">
                       {m.is_active ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-primary/10 text-primary">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-primary/10 text-primary">
                           <FiCheckCircle size={11} /> Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-500">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-500">
                           <FiXCircle size={11} /> Inactive
                         </span>
                       )}

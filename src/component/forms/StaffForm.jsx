@@ -112,7 +112,7 @@ const TeamForm = ({ initialData, onSuccess, onCancel }) => {
   };
 
   const inputCls = 'input-style';
-  const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-400 ml-1';
+  const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -178,7 +178,7 @@ const TeamForm = ({ initialData, onSuccess, onCancel }) => {
         <button type="button" onClick={onCancel} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-all">
           Cancel
         </button>
-        <button type="submit" disabled={loading} className="px-5 py-2.5 rounded-xl bg-violet-600 text-white font-bold text-sm hover:bg-violet-700 transition-all shadow-lg shadow-violet-200 disabled:opacity-50">
+        <button type="submit" disabled={loading} className="px-5 py-2.5 rounded-xl bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-all shadow-lg shadow-violet-200 disabled:opacity-50">
           {loading ? 'Saving...' : initialData ? 'Update Member' : 'Add Member'}
         </button>
       </div>

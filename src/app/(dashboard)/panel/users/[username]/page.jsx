@@ -49,11 +49,11 @@ export default function TeamUserProfilePage() {
         <Toaster position="top-center" />
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <FiAlertCircle className="mx-auto text-secondary" size={36} />
-          <h2 className="text-lg font-bold text-slate-800">User Profile Not Found</h2>
+          <h2 className="text-lg font-semibold text-slate-800">User Profile Not Found</h2>
           <p className="text-xs text-slate-500">No registered account matches "{rawParam}".</p>
           <Link
             href="/panel/users"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-primary transition-all shadow-md"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-semibold text-xs hover:bg-primary transition-all shadow-md"
           >
             <FiArrowLeft size={14} /> Back to Registered Users
           </Link>
@@ -76,7 +76,7 @@ export default function TeamUserProfilePage() {
           >
             <FiArrowLeft size={16} /> Back to Registered Users
           </Link>
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
             user.is_verified
               ? 'bg-primary/10 text-primary border border-primary/20'
               : 'bg-secondary/10 text-secondary border border-secondary/20'
@@ -88,12 +88,12 @@ export default function TeamUserProfilePage() {
 
         {/* User Identity Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary font-extrabold text-2xl flex items-center justify-center shrink-0 border border-primary/20">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary font-semibold text-2xl flex items-center justify-center shrink-0 border border-primary/20">
             {user.name?.charAt(0) || user.email?.charAt(0) || 'U'}
           </div>
 
           <div className="space-y-1 min-w-0">
-            <h1 className="text-2xl font-extrabold text-slate-900">{user.name}</h1>
+            <h1 className="text-2xl font-semibold text-slate-900">{user.name}</h1>
             <p className="text-xs text-slate-400 font-mono">User #{user.id} · {user.email}</p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function TeamUserProfilePage() {
             <p className="text-slate-400 font-medium flex items-center gap-1">
               <FiMail size={12} className="text-primary" /> Email Address
             </p>
-            <a href={`mailto:${user.email}`} className="font-bold text-slate-800 hover:text-primary truncate block">
+            <a href={`mailto:${user.email}`} className="font-semibold text-slate-800 hover:text-primary truncate block">
               {user.email}
             </a>
           </div>
@@ -113,14 +113,14 @@ export default function TeamUserProfilePage() {
             <p className="text-slate-400 font-medium flex items-center gap-1">
               <FiPhone size={12} className="text-primary" /> Phone Number
             </p>
-            <p className="font-bold text-slate-800">{user.phone || 'N/A'}</p>
+            <p className="font-semibold text-slate-800">{user.phone || 'N/A'}</p>
           </div>
 
           <div className="space-y-1">
             <p className="text-slate-400 font-medium flex items-center gap-1">
               <FiMapPin size={12} className="text-rose-500" /> Location
             </p>
-            <p className="font-bold text-slate-800">
+            <p className="font-semibold text-slate-800">
               {[user.city, user.country].filter(Boolean).join(', ') || 'N/A'}
             </p>
           </div>
@@ -129,14 +129,14 @@ export default function TeamUserProfilePage() {
             <p className="text-slate-400 font-medium flex items-center gap-1">
               <FiCalendar size={12} className="text-secondary" /> Account Created
             </p>
-            <p className="font-bold text-slate-800">{new Date(user.created_at).toLocaleDateString()}</p>
+            <p className="font-semibold text-slate-800">{new Date(user.created_at).toLocaleDateString()}</p>
           </div>
         </div>
       </div>
 
       {/* User Support Tickets History */}
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-4">
-        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <FiLifeBuoy className="text-primary" size={18} />
           Support Tickets ({tickets?.length || 0})
         </h2>
@@ -148,14 +148,14 @@ export default function TeamUserProfilePage() {
             {tickets.map((t) => (
               <div key={t.id} className="py-3 flex items-center justify-between gap-4">
                 <div>
-                  <Link href={`/panel/tickets/${t.id}`} className="font-bold text-slate-800 text-sm hover:text-primary transition-colors">
+                  <Link href={`/panel/tickets/${t.id}`} className="font-semibold text-slate-800 text-sm hover:text-primary transition-colors">
                     {t.title}
                   </Link>
                   <p className="text-xs text-slate-400">Created {new Date(t.created_at).toLocaleString()}</p>
                 </div>
                 <Link
                   href={`/panel/tickets/${t.id}`}
-                  className="text-xs font-bold text-primary hover:underline"
+                  className="text-xs font-semibold text-primary hover:underline"
                 >
                   Open Ticket →
                 </Link>
@@ -168,7 +168,7 @@ export default function TeamUserProfilePage() {
       {/* User Feedback & Review */}
       {reviews && (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <FiStar className="text-secondary" size={18} />
             Submitted Review & Rating
           </h2>
@@ -178,7 +178,7 @@ export default function TeamUserProfilePage() {
               {[...Array(5)].map((_, i) => (
                 <FiStar key={i} size={14} fill={i < reviews.rating ? "currentColor" : "none"} />
               ))}
-              <span className="font-bold text-slate-700 ml-1.5">{reviews.rating} Stars</span>
+              <span className="font-semibold text-slate-700 ml-1.5">{reviews.rating} Stars</span>
             </div>
             <p className="text-slate-800 font-medium">{reviews.comment}</p>
             {reviews.reply && (
@@ -193,7 +193,7 @@ export default function TeamUserProfilePage() {
       {/* Login History Logs */}
       {loginLogs && loginLogs.length > 0 && (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-4">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <FiClock className="text-slate-500" size={18} />
             Recent Login & Activity Logs
           </h2>

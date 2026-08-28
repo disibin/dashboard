@@ -10,7 +10,7 @@ export async function GET() {
 
         const res = await dbQuery(
             `SELECT 
-                p.id, p.tenant_id, p.name, p.slug, p.description, p.price, p.discount, p.created_at, p.updated_at,
+                p.id, p.tenant_id, p.name, p.slug, p.description, p.price, p.discount, p.image, p.image_id, p.created_at, p.updated_at,
                 t.name AS tenant_name, t.url AS tenant_url,
                 COALESCE(
                     (SELECT json_agg(
@@ -44,7 +44,7 @@ export async function POST(req) {
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { tenant_id, name, description, price, discount, feature_ids } = body;
+        const { tenant_id, name, description, price, discount, image, image_id, feature_ids } = body;
 
         if (!name || !name.trim()) {
             return NextResponse.json({ success: false, message: "Package name is required" }, { status: 400 });
@@ -62,10 +62,10 @@ export async function POST(req) {
         }
 
         const pkgRes = await dbQuery(
-            `INSERT INTO packages (tenant_id, name, slug, description, price, discount)
-             VALUES ($1, $2, $3, $4, $5, $6)
+            `INSERT INTO packages (tenant_id, name, slug, description, price, discount, image, image_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING *`,
-            [tenant_id || null, nameTrimmed, slug, description?.trim() || null, price || 0, discount || 0]
+            [tenant_id || null, nameTrimmed, slug, description?.trim() || null, price || 0, discount || 0, image || null, image_id || null]
         );
 
         const packageId = pkgRes.rows[0].id;
@@ -107,7 +107,7 @@ export async function PUT(req) {
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { id, tenant_id, name, description, price, discount, feature_ids } = body;
+        const { id, tenant_id, name, description, price, discount, image, image_id, feature_ids } = body;
 
         if (!id) {
             return NextResponse.json({ success: false, message: "Package ID is required" }, { status: 400 });
@@ -115,15 +115,17 @@ export async function PUT(req) {
 
         const pkgRes = await dbQuery(
             `UPDATE packages
-             SET tenant_id = COALESCE($1, tenant_id),
+             SET tenant_id = $1,
                  name = COALESCE(NULLIF($2, ''), name),
-                 description = COALESCE($3, description),
+                 description = $3,
                  price = COALESCE($4, price),
                  discount = COALESCE($5, discount),
+                 image = $6,
+                 image_id = $7,
                  updated_at = now()
-             WHERE id = $6
+             WHERE id = $8
              RETURNING *`,
-            [tenant_id || null, name?.trim() || '', description?.trim() || null, price, discount, id]
+            [tenant_id || null, name?.trim() || '', description?.trim() || null, price, discount, image || null, image_id || null, id]
         );
 
         if (pkgRes.rows.length === 0) {

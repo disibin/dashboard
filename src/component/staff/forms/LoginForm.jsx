@@ -49,7 +49,7 @@ const LoginForm = () => {
       <div className="w-full max-w-sm flex flex-col p-6 rounded-2xl items-center justify-center gap-3">
 
         <div className='w-full flex flex-col gap-2 mb-4 items-center justify-center'>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Staff Portal</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Staff Portal</h1>
           <p className="text-slate-500 text-sm text-center">Sign in to access the Disibin dashboard.</p>
         </div>
 
@@ -98,7 +98,7 @@ const LoginForm = () => {
           <button
             id="staff-login-btn"
             disabled={loading}
-            className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
@@ -106,7 +106,7 @@ const LoginForm = () => {
 
         <p className="mt-2 text-center text-sm text-slate-500 font-medium">
           Trouble accessing your account?{' '}
-          <Link href="/staff-auth/recovery" className="text-slate-900 font-bold hover:underline">Reset Password</Link>
+          <Link href="/staff-auth/recovery" className="text-slate-900 font-semibold hover:underline">Reset Password</Link>
         </p>
       </div>
     </div>

@@ -73,7 +73,7 @@ const RecoverAccountForm = () => {
       <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
         <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-6 rounded-2xl">
           <div className="w-full flex flex-col gap-2 mb-4 items-center justify-center">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">Set New Password</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Set New Password</h1>
             <p className="text-slate-500 text-sm text-center">
               Enter your new password below to reset your staff account credentials.
             </p>
@@ -107,7 +107,7 @@ const RecoverAccountForm = () => {
             <button
               id="staff-reset-btn"
               disabled={loading}
-              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
             >
               {loading ? 'Updating Password...' : 'Reset Password'}
             </button>
@@ -115,7 +115,7 @@ const RecoverAccountForm = () => {
 
           <p className="mt-2 text-center text-sm text-slate-500 font-medium">
             Remember your password?{' '}
-            <Link href="/staff-auth/login" className="text-slate-900 font-bold hover:underline">Login</Link>
+            <Link href="/staff-auth/login" className="text-slate-900 font-semibold hover:underline">Login</Link>
           </p>
         </div>
       </div>
@@ -127,7 +127,7 @@ const RecoverAccountForm = () => {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
       <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-6 rounded-2xl">
         <div className="w-full flex flex-col gap-2 mb-4 items-center justify-center">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Reset Password</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Reset Password</h1>
           <p className="text-slate-500 text-sm text-center">
             {submitted
               ? 'Check your inbox for a password reset link.'
@@ -152,7 +152,7 @@ const RecoverAccountForm = () => {
             <button
               id="staff-send-reset-btn"
               disabled={loading}
-              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-2 shadow-lg shadow-primary/20 disabled:bg-slate-300 disabled:cursor-not-allowed"
             >
               {loading ? 'Sending Link...' : 'Send Reset Link'}
             </button>
@@ -170,7 +170,7 @@ const RecoverAccountForm = () => {
 
         <p className="mt-2 text-center text-sm text-slate-500 font-medium">
           Remember your password?{' '}
-          <Link href="/staff-auth/login" className="text-slate-900 font-bold hover:underline">Sign In</Link>
+          <Link href="/staff-auth/login" className="text-slate-900 font-semibold hover:underline">Sign In</Link>
         </p>
       </div>
     </div>

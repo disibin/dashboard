@@ -1,40 +1,28 @@
 'use client';
 import React, { useState } from 'react';
-import axios from 'axios';
-import { FiUploadCloud, FiX, FiCheckCircle, FiLoader } from 'react-icons/fi';
+import { FiUploadCloud, FiX, FiCheckCircle } from 'react-icons/fi';
 import Image from 'next/image';
 
-const ImageUpload = ({ onUpload, label = "Upload Image" }) => {
-  const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(null);
+const ImageUpload = ({ onSelectFile, label = "Upload Image", value = null }) => {
+  const [preview, setPreview] = useState(value);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result);
-    reader.readAsDataURL(file);
+    const previewUrl = URL.createObjectURL(file);
+    setPreview(previewUrl);
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
+    if (onSelectFile) {
+      onSelectFile(file, previewUrl);
+    }
+  };
 
-    try {
-      const res = await axios.post('/api/image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      if (res.data.success) {
-        onUpload(res.data.data);
-        setPreview(null);
-      }
-    } catch (error) {
-      console.error('Upload failed', error);
-      setPreview(null);
-    } finally {
-      setUploading(false);
-      e.target.value = '';
+  const handleClear = (e) => {
+    e.preventDefault();
+    setPreview(null);
+    if (onSelectFile) {
+      onSelectFile(null, null);
     }
   };
 
@@ -52,7 +40,7 @@ const ImageUpload = ({ onUpload, label = "Upload Image" }) => {
           ) : (
             <>
               <FiUploadCloud className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
-              <p className="text-xs text-slate-500 font-medium">Click or drag to upload</p>
+              <p className="text-xs text-slate-500 font-medium">Click or drag to select image file</p>
             </>
           )}
           
@@ -61,31 +49,23 @@ const ImageUpload = ({ onUpload, label = "Upload Image" }) => {
             accept="image/*"
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             onChange={handleFileChange}
-            disabled={uploading}
           />
 
-          {uploading && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
-              <FiLoader className="w-8 h-8 text-primary animate-spin mb-2" />
-              <p className="text-xs font-bold text-primary">Uploading...</p>
-            </div>
-          )}
-
-          {preview && !uploading && (
+          {preview && (
             <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-              <p className="text-white text-xs font-bold px-3 py-1 bg-slate-900/60 rounded-full backdrop-blur-md">Change Image</p>
+              <p className="text-white text-xs font-semibold px-3 py-1 bg-slate-900/60 rounded-full backdrop-blur-md">Change Image</p>
             </div>
           )}
         </div>
         
-        {preview && !uploading && (
-           <div className="absolute top-2 right-2 flex gap-1">
+        {preview && (
+           <div className="absolute top-2 right-2 flex gap-1 z-20">
               <div className="bg-emerald-500 text-white p-1 rounded-full shadow-lg">
                 <FiCheckCircle size={14} />
               </div>
               <button 
-                onClick={(e) => { e.preventDefault(); setPreview(null); }}
-                className="bg-rose-500 text-white p-1 rounded-full shadow-lg hover:bg-rose-600 transition-colors"
+                onClick={handleClear}
+                className="bg-rose-500 text-white p-1 rounded-full shadow-lg hover:bg-rose-600 transition-colors cursor-pointer"
               >
                 <FiX size={14} />
               </button>

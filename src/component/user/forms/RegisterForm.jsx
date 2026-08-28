@@ -36,7 +36,7 @@ const RegisterForm = () => {
   };
 
   const inputCls = 'input-style';
-  const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-400 ml-1';
+  const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1';
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -44,7 +44,7 @@ const RegisterForm = () => {
       <div className="w-full max-w-80 flex flex-col items-center justify-center gap-4 p-4">
 
         <div className='w-full flex flex-col items-center justify-center gap-2'>
-          <h1 className="text-3xl font-bold mb-2 tracking-tight text-slate-900">Get Started</h1>
+          <h1 className="text-3xl font-semibold mb-2 tracking-tight text-slate-900">Get Started</h1>
           <p className="text-slate-500 text-sm mb-10 font-medium text-center">Join the network and start building today.</p>
 
         </div>
@@ -67,13 +67,13 @@ const RegisterForm = () => {
           </div>
           <button
             disabled={loading}
-            className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
+            className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
           <p className="mt-8 text-center text-sm text-slate-500 font-medium">
             Already a member?{' '}
-            <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
+            <Link href="/user-auth/login" className="text-primary font-semibold hover:underline">Login</Link>
           </p>
         </form>
 

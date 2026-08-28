@@ -126,7 +126,7 @@ export default function TeamTicketDetailPage() {
       <div className="p-6 max-w-xl mx-auto text-center space-y-3">
         <Toaster position="top-center" />
         <FiAlertCircle className="mx-auto text-amber-500" size={32} />
-        <h2 className="text-base font-bold text-slate-800">Ticket Not Found</h2>
+        <h2 className="text-base font-semibold text-slate-800">Ticket Not Found</h2>
         <Link
           href="/panel/tickets"
           className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900"
@@ -153,7 +153,7 @@ export default function TeamTicketDetailPage() {
             <FiArrowLeft size={16} />
           </Link>
           <div>
-            <h1 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <span>{ticket.title}</span>
               <span className="text-xs font-mono font-normal text-slate-400">#{ticket.id}</span>
             </h1>

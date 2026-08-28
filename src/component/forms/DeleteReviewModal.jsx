@@ -24,9 +24,9 @@ const DeleteReviewModal = ({ isOpen, review, onConfirm, onCancel, loading }) => 
           <FiAlertTriangle className="text-rose-500" size={28} />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-slate-900">Delete Review?</h3>
+          <h3 className="text-lg font-semibold text-slate-900">Delete Review?</h3>
           <p className="text-sm text-slate-500 mt-1">
-            The review by <span className="font-bold text-rose-600">{review.user_name}</span> will be permanently removed.
+            The review by <span className="font-semibold text-rose-600">{review.user_name}</span> will be permanently removed.
           </p>
         </div>
         <div className="flex gap-3">
@@ -42,7 +42,7 @@ const DeleteReviewModal = ({ isOpen, review, onConfirm, onCancel, loading }) => 
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 py-2.5 rounded-xl bg-rose-500 text-white font-bold text-sm hover:bg-rose-600 transition-all disabled:opacity-50"
+            className="flex-1 py-2.5 rounded-xl bg-rose-500 text-white font-semibold text-sm hover:bg-rose-600 transition-all disabled:opacity-50"
           >
             {loading ? 'Deleting...' : 'Delete'}
           </button>

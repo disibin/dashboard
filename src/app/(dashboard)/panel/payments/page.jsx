@@ -83,12 +83,12 @@ export default function TeamPaymentsPage() {
   const paidCount = payments.filter((item) => item.payment_status === 'paid').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
             <FiCreditCard className="text-primary" /> Payments & Financial Ledger
           </h1>
           <p className="text-slate-500 text-sm mt-1 font-medium">
@@ -104,8 +104,8 @@ export default function TeamPaymentsPage() {
             <FiDollarSign size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Collected</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">${totalRevenue.toLocaleString()}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Collected</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalRevenue.toLocaleString()}</h3>
           </div>
         </div>
 
@@ -114,8 +114,8 @@ export default function TeamPaymentsPage() {
             <FiAlertCircle size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Outstanding Dues</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">${totalOutstanding.toLocaleString()}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Outstanding Dues</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalOutstanding.toLocaleString()}</h3>
           </div>
         </div>
 
@@ -124,8 +124,8 @@ export default function TeamPaymentsPage() {
             <FiCheckCircle size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Paid Invoices</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">{paidCount} Record{paidCount === 1 ? '' : 's'}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Paid Invoices</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{paidCount} Record{paidCount === 1 ? '' : 's'}</h3>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function TeamPaymentsPage() {
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all cursor-pointer ${
                 statusFilter === tab
                   ? 'bg-slate-900 text-white shadow-md'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -171,7 +171,7 @@ export default function TeamPaymentsPage() {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center">
             <FiCreditCard size={24} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">No Payment Records</h3>
+          <h3 className="text-lg font-semibold text-slate-900">No Payment Records</h3>
           <p className="text-slate-500 text-sm max-w-sm mx-auto">
             No transactions match the selected filter criteria.
           </p>
@@ -181,7 +181,7 @@ export default function TeamPaymentsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                   <th className="py-4 px-6">Customer & Project</th>
                   <th className="py-4 px-6">Total Price</th>
                   <th className="py-4 px-6">Paid</th>
@@ -195,7 +195,7 @@ export default function TeamPaymentsPage() {
                   <tr key={item.payment_id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="py-4 px-6">
                       <div className="space-y-1">
-                        <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                        <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                           <FiUser className="text-primary" size={14} /> {item.user_name || 'Customer User'}
                           <span className="text-slate-400 font-normal text-xs">({item.user_email || 'N/A'})</span>
                         </div>
@@ -205,15 +205,15 @@ export default function TeamPaymentsPage() {
                       </div>
                     </td>
 
-                    <td className="py-4 px-6 font-extrabold text-slate-900">
+                    <td className="py-4 px-6 font-semibold text-slate-900">
                       ${Number(item.total_price || 0).toLocaleString()}
                     </td>
 
-                    <td className="py-4 px-6 font-bold text-primary">
+                    <td className="py-4 px-6 font-semibold text-primary">
                       ${Number(item.paid_amount || 0).toLocaleString()}
                     </td>
 
-                    <td className="py-4 px-6 font-bold text-secondary">
+                    <td className="py-4 px-6 font-semibold text-secondary">
                       ${Number(item.due_amount || 0).toLocaleString()}
                     </td>
 
@@ -228,7 +228,7 @@ export default function TeamPaymentsPage() {
                           setNewPaid(item.paid_amount || item.total_price || 0);
                           setNewStatus(item.payment_status || 'paid');
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 text-slate-700 hover:text-primary hover:bg-primary/10 text-xs font-bold transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 text-slate-700 hover:text-primary hover:bg-primary/10 text-xs font-semibold transition-all cursor-pointer"
                       >
                         <FiEdit2 size={13} /> Update
                       </button>
@@ -246,12 +246,12 @@ export default function TeamPaymentsPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
                 <FiCreditCard className="text-primary" /> Update Payment Record
               </h2>
               <button
                 onClick={() => setEditingPayment(null)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-xl cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 font-semibold text-xl cursor-pointer"
               >
                 ✕
               </button>
@@ -264,7 +264,7 @@ export default function TeamPaymentsPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-1.5">
                   Amount Paid ($)
                 </label>
                 <input
@@ -273,19 +273,19 @@ export default function TeamPaymentsPage() {
                   max={editingPayment.total_price}
                   value={newPaid}
                   onChange={(e) => setNewPaid(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-primary"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-1.5">
                   Payment Status
                 </label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:border-primary"
                 >
                   <option value="paid">Paid (Fully Cleared)</option>
                   <option value="due">Partial Due</option>
@@ -297,14 +297,14 @@ export default function TeamPaymentsPage() {
                 <button
                   type="button"
                   onClick={() => setEditingPayment(null)}
-                  className="w-1/2 py-2.5 rounded-xl bg-slate-100 text-slate-600 font-bold text-sm hover:bg-slate-200 transition-colors"
+                  className="w-1/2 py-2.5 rounded-xl bg-slate-100 text-slate-600 font-semibold text-sm hover:bg-slate-200 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="w-1/2 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-primary transition-colors disabled:bg-slate-400"
+                  className="w-1/2 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-primary transition-colors disabled:bg-slate-400"
                 >
                   {updating ? 'Saving...' : 'Save Record'}
                 </button>
@@ -323,20 +323,20 @@ function StatusBadge({ status }) {
 
   if (normalized === 'paid') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold uppercase tracking-wider">
+      <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-semibold uppercase tracking-wider">
         Paid
       </span>
     );
   }
   if (normalized === 'due') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-bold uppercase tracking-wider">
+      <span className="px-2.5 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-semibold uppercase tracking-wider">
         Due
       </span>
     );
   }
   return (
-    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-wider">
+    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-semibold uppercase tracking-wider">
       {normalized}
     </span>
   );

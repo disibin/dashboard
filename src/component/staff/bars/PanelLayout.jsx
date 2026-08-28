@@ -28,13 +28,13 @@ export default function PanelLayout({ children }) {
             <div className="w-16 h-16 rounded-3xl bg-rose-100 text-rose-600 flex items-center justify-center mb-4">
               <FiShield size={32} />
             </div>
-            <h2 className="text-2xl font-extrabold text-slate-900">Access Restricted</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">Access Restricted</h2>
             <p className="text-slate-500 text-sm max-w-md mt-2">
-              Your current staff role (<span className="font-bold capitalize text-slate-800">{staffData?.role}</span>) does not have permission to view <code className="bg-slate-100 px-2 py-0.5 rounded text-xs">{pathname}</code>.
+              Your current staff role (<span className="font-semibold capitalize text-slate-800">{staffData?.role}</span>) does not have permission to view <code className="bg-slate-100 px-2 py-0.5 rounded text-xs">{pathname}</code>.
             </p>
             <Link
               href="/panel"
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-all shadow-md"
+              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md"
             >
               <FiArrowLeft size={16} /> Return to Dashboard
             </Link>

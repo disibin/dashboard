@@ -14,7 +14,7 @@ export default function FaqForm({
   return (
     <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-6 sm:p-8 mb-8 animate-in fade-in duration-200">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <FiHelpCircle className="text-primary" />
           {isEditing ? 'Edit FAQ' : 'Create New FAQ'}
         </h3>
@@ -30,7 +30,7 @@ export default function FaqForm({
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
             Question <span className="text-rose-500">*</span>
           </label>
           <input
@@ -44,7 +44,7 @@ export default function FaqForm({
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
             Answer <span className="text-rose-500">*</span>
           </label>
           <textarea
@@ -58,7 +58,7 @@ export default function FaqForm({
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
             Display Order Number
           </label>
           <input

@@ -85,12 +85,12 @@ export default function ReportDetailPage() {
   if (!report) return null;
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 w-full space-y-6">
       {/* Back button & header */}
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={() => router.push('/panel/reports')}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
         >
           <FiArrowLeft size={16} />
           <span>Back to Reports</span>
@@ -98,7 +98,7 @@ export default function ReportDetailPage() {
 
         <button
           onClick={handleDelete}
-          className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-100 transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-semibold hover:bg-rose-100 transition-all"
         >
           <FiTrash2 size={16} />
           <span>Delete Report</span>
@@ -110,22 +110,22 @@ export default function ReportDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
+              <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
                 Report #{report.id}
               </span>
               {report.status === 'replied' ? (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
                   <FiCheckCircle size={12} />
                   Replied
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-secondary/10 text-secondary border border-secondary/20">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-secondary/10 text-secondary border border-secondary/20">
                   <FiClock size={12} />
                   Pending
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-slate-900 mt-2">{report.subject}</h1>
+            <h1 className="text-2xl font-semibold text-slate-900 mt-2">{report.subject}</h1>
           </div>
 
           <div className="text-xs text-slate-400 space-y-1">
@@ -141,14 +141,14 @@ export default function ReportDetailPage() {
           <div className="flex items-center gap-3">
             <FiUser className="text-slate-400" size={18} />
             <div>
-              <span className="text-xs font-bold uppercase text-slate-400 block">Submitter Name</span>
+              <span className="text-xs font-semibold uppercase text-slate-400 block">Submitter Name</span>
               <span className="font-semibold text-slate-800">{report.name}</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <FiMail className="text-slate-400" size={18} />
             <div>
-              <span className="text-xs font-bold uppercase text-slate-400 block">Email Address</span>
+              <span className="text-xs font-semibold uppercase text-slate-400 block">Email Address</span>
               <span className="font-semibold text-slate-800">{report.email}</span>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function ReportDetailPage() {
 
         {/* Report Content */}
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Issue Description</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Issue Description</h3>
           <div
             className="prose prose-slate max-w-none p-5 bg-slate-50/50 rounded-2xl border border-slate-100 text-slate-800 text-sm leading-relaxed"
             dangerouslySetInnerHTML={{ __html: report.description }}
@@ -167,11 +167,11 @@ export default function ReportDetailPage() {
       {/* Reply Composer Card */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-semibold">
             <FiSend size={20} />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Send Email Reply</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Send Email Reply</h2>
             <p className="text-xs text-slate-500">Your response will be emailed directly to {report.email}</p>
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function ReportDetailPage() {
             <button
               type="submit"
               disabled={sending}
-              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
             >
               {sending ? (
                 <span>Sending Email...</span>

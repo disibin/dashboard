@@ -92,13 +92,13 @@ export default function TeamCareerApplicationsPage() {
   const rejectedCount = applications.filter(a => a.status === 'rejected').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiUsers size={20} />
             </span>
@@ -112,7 +112,7 @@ export default function TeamCareerApplicationsPage() {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <Link
             href="/panel/career"
-            className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs sm:text-sm transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold text-xs sm:text-sm transition-all"
           >
             ← Manage Vacancies
           </Link>
@@ -140,7 +140,7 @@ export default function TeamCareerApplicationsPage() {
             <button
               key={tab.id}
               onClick={() => setFilterStatus(tab.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 filterStatus === tab.id
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -178,7 +178,7 @@ export default function TeamCareerApplicationsPage() {
         ) : filteredApps.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiUsers className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No job applications found</p>
+            <p className="font-semibold text-slate-800 text-base">No job applications found</p>
             <p className="text-xs text-slate-500">There are no candidate applications matching your search query.</p>
           </div>
         ) : (
@@ -189,8 +189,8 @@ export default function TeamCareerApplicationsPage() {
                   {/* Candidate Info */}
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-extrabold text-slate-900 text-base">{app.full_name}</h3>
-                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${
+                      <h3 className="font-semibold text-slate-900 text-base">{app.full_name}</h3>
+                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold uppercase ${
                         app.status === 'hired'
                           ? 'bg-primary/20 text-primary'
                           : app.status === 'interviewing'
@@ -204,7 +204,7 @@ export default function TeamCareerApplicationsPage() {
                     </div>
 
                     <p className="text-xs text-slate-500 flex flex-wrap items-center gap-2">
-                      <a href={`mailto:${app.email}`} className="font-bold text-primary hover:underline">{app.email}</a>
+                      <a href={`mailto:${app.email}`} className="font-semibold text-primary hover:underline">{app.email}</a>
                       <span>·</span>
                       <span className="font-semibold text-slate-700">Applied for: {app.job_title || 'General Vacancy'}</span>
                       <span>·</span>
@@ -218,7 +218,7 @@ export default function TeamCareerApplicationsPage() {
                       href={app.resume_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-semibold transition-all shadow-sm"
                     >
                       <FiExternalLink size={13} /> View Resume
                     </a>
@@ -228,7 +228,7 @@ export default function TeamCareerApplicationsPage() {
                       value={app.status}
                       disabled={updatingId === app.app_id}
                       onChange={(e) => handleStatusChange(app.app_id, e.target.value)}
-                      className="input-style text-xs font-bold cursor-pointer py-2"
+                      className="input-style text-xs font-semibold cursor-pointer py-2"
                     >
                       <option value="applied">Applied</option>
                       <option value="interviewing">Interviewing</option>
@@ -250,7 +250,7 @@ export default function TeamCareerApplicationsPage() {
                 {/* Cover Letter */}
                 {app.cover_letter && (
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1 text-xs">
-                    <p className="font-bold text-slate-700 uppercase tracking-wider">Cover Letter / Note</p>
+                    <p className="font-semibold text-slate-700 uppercase tracking-wider">Cover Letter / Note</p>
                     <p className="text-slate-800 leading-relaxed whitespace-pre-wrap">{app.cover_letter}</p>
                   </div>
                 )}

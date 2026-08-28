@@ -151,7 +151,7 @@ export default function TeamPrivacyPolicyPage() {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-tertiary p-6 sm:p-8 rounded-3xl text-primary shadow-sm">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">Privacy Policy Management</h1>
+          <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">Privacy Policy Management</h1>
           <p className=" text-sm mt-1 max-w-xl">
             Create, update, and publish official Privacy Policy items. Restricted exclusively to authorized managers.
           </p>
@@ -208,7 +208,7 @@ export default function TeamPrivacyPolicyPage() {
       ) : filteredData.length === 0 ? (
         <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiFileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-800">No Privacy Policy items</h3>
+          <h3 className="text-lg font-semibold text-slate-800">No Privacy Policy items</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-6">
             There are no Privacy Policy items created yet. Click below to add one.
           </p>
@@ -236,7 +236,7 @@ export default function TeamPrivacyPolicyPage() {
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {filteredData.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-bold">#{item.order_num || 0}</td>
+                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
                     <td className="py-4 px-6 font-semibold text-slate-900 max-w-xs truncate">
                       {item.title}
                     </td>

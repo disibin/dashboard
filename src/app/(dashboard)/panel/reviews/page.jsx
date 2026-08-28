@@ -109,13 +109,13 @@ export default function TeamReviewsPage() {
   const approvedCount = reviews.filter(r => r.is_approved).length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
               <FiStar size={20} />
             </span>
@@ -147,7 +147,7 @@ export default function TeamReviewsPage() {
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id)}
-              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                 filter === tab.id
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -174,7 +174,7 @@ export default function TeamReviewsPage() {
         ) : filteredReviews.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiStar className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No reviews found</p>
+            <p className="font-semibold text-slate-800 text-base">No reviews found</p>
             <p className="text-xs text-slate-500">There are no client reviews matching your filter criteria.</p>
           </div>
         ) : (
@@ -185,7 +185,7 @@ export default function TeamReviewsPage() {
                   {/* User info & Stars */}
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold text-slate-900 text-base">{r.user_name}</h3>
+                      <h3 className="font-semibold text-slate-900 text-base">{r.user_name}</h3>
                       <span className="text-xs text-slate-400">({r.user_email})</span>
                     </div>
 
@@ -197,7 +197,7 @@ export default function TeamReviewsPage() {
                           className={star <= r.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}
                         />
                       ))}
-                      <span className="text-xs font-bold text-slate-600 ml-1.5">{r.rating} / 5</span>
+                      <span className="text-xs font-semibold text-slate-600 ml-1.5">{r.rating} / 5</span>
                     </div>
                   </div>
 
@@ -206,7 +206,7 @@ export default function TeamReviewsPage() {
                     <button
                       onClick={() => toggleApproval(r, !r.is_approved)}
                       disabled={updating === r.id}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
                         r.is_approved
                           ? 'bg-primary/10 text-primary border-primary/20 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200'
                           : 'bg-secondary/10 text-secondary border-secondary/20 hover:bg-primary/10 hover:text-primary hover:border-primary/20'
@@ -224,7 +224,7 @@ export default function TeamReviewsPage() {
 
                     <button
                       onClick={() => openReplyModal(r)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-primary/10 text-slate-700 hover:text-primary border border-slate-200 rounded-xl text-xs font-bold transition-all"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-primary/10 text-slate-700 hover:text-primary border border-slate-200 rounded-xl text-xs font-semibold transition-all"
                     >
                       <FiEdit3 size={13} />
                       {r.reply ? 'Edit Staff Reply' : 'Add Reply'}
@@ -249,7 +249,7 @@ export default function TeamReviewsPage() {
                 {/* Staff Reply callout */}
                 {r.reply && (
                   <div className="bg-primary/10/70 p-4 rounded-2xl border border-primary/20 space-y-1">
-                    <p className="text-xs font-bold text-primary-dark flex items-center gap-1.5">
+                    <p className="text-xs font-semibold text-primary-dark flex items-center gap-1.5">
                       <FiMessageSquare size={13} /> Official Staff Reply
                     </p>
                     <p className="text-slate-700 text-sm leading-relaxed pl-5">
@@ -268,7 +268,7 @@ export default function TeamReviewsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                 <FiMessageSquare className="text-primary" size={18} />
                 Reply to {selectedReview.user_name}
               </h3>
@@ -282,12 +282,12 @@ export default function TeamReviewsPage() {
 
             <div className="p-6 space-y-4">
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-1">
-                <p className="font-bold text-slate-800">Review from {selectedReview.user_name}</p>
+                <p className="font-semibold text-slate-800">Review from {selectedReview.user_name}</p>
                 <p className="text-slate-600 line-clamp-2">{selectedReview.comment}</p>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Official Staff Response *
                 </label>
                 <textarea
@@ -311,7 +311,7 @@ export default function TeamReviewsPage() {
                   type="button"
                   onClick={handleSendReply}
                   disabled={sendingReply}
-                  className="px-5 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
                 >
                   {sendingReply ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
                   {sendingReply ? 'Saving Reply...' : 'Save Staff Reply'}

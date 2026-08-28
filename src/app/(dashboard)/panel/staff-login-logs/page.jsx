@@ -49,13 +49,13 @@ export default function TeamLoginLogsPage() {
   const failCount = logs.filter(l => l.status === 'fail').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiShield size={20} />
             </span>
@@ -87,7 +87,7 @@ export default function TeamLoginLogsPage() {
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                 statusFilter === tab.id
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -125,13 +125,13 @@ export default function TeamLoginLogsPage() {
         ) : filteredLogs.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiShield className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No login logs found</p>
+            <p className="font-semibold text-slate-800 text-base">No login logs found</p>
             <p className="text-xs text-slate-500">There are no staff authentication records matching your filter criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Staff Member</th>
                   <th className="px-6 py-4">Role</th>
@@ -144,18 +144,18 @@ export default function TeamLoginLogsPage() {
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
-                      <p className="font-bold text-slate-900 text-xs">{log.staff_name || 'Staff Member'}</p>
+                      <p className="font-semibold text-slate-900 text-xs">{log.staff_name || 'Staff Member'}</p>
                       <p className="text-[10px] text-slate-400">{log.staff_email}</p>
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase bg-slate-100 text-slate-700">
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full font-semibold uppercase bg-slate-100 text-slate-700">
                         {log.staff_role || 'Staff'}
                       </span>
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                         log.status === 'success'
                           ? 'bg-primary/10 text-primary border border-primary/20'
                           : 'bg-rose-50 text-rose-600 border border-rose-100'

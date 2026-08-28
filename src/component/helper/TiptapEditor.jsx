@@ -1,150 +1,133 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { 
-  FaBold, FaItalic, FaListUl, FaListOl, FaHeading, FaQuoteRight, FaUndo, FaRedo 
-} from 'react-icons/fa';
+'use client'
 
-const MenuBar = ({ editor }) => {
-  if (!editor) {
-    return null;
-  }
+import React from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import {
+  FiBold, FiItalic, FiList, FiCheckSquare,
+  FiCode, FiRotateCcw, FiRotateCw
+} from 'react-icons/fi'
 
-  const btnClass = "p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors";
-  const activeBtnClass = "p-2 rounded-lg text-primary bg-primary/10 transition-colors";
-
-  return (
-    <div className="flex flex-wrap items-center gap-1 p-2 border-b border-slate-200 bg-slate-50/50 rounded-t-2xl">
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={!editor.can().chain().focus().toggleBold().run()}
-        className={editor.isActive('bold') ? activeBtnClass : btnClass}
-        title="Bold"
-      >
-        <FaBold size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={!editor.can().chain().focus().toggleItalic().run()}
-        className={editor.isActive('italic') ? activeBtnClass : btnClass}
-        title="Italic"
-      >
-        <FaItalic size={14} />
-      </button>
-      
-      <div className="w-px h-6 bg-slate-200 mx-1" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive('heading', { level: 1 }) ? activeBtnClass : btnClass}
-        title="Heading 1"
-      >
-        <FaHeading size={14} />1
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? activeBtnClass : btnClass}
-        title="Heading 2"
-      >
-        <FaHeading size={14} />2
-      </button>
-
-      <div className="w-px h-6 bg-slate-200 mx-1" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? activeBtnClass : btnClass}
-        title="Bullet List"
-      >
-        <FaListUl size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive('orderedList') ? activeBtnClass : btnClass}
-        title="Ordered List"
-      >
-        <FaListOl size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? activeBtnClass : btnClass}
-        title="Blockquote"
-      >
-        <FaQuoteRight size={14} />
-      </button>
-
-      <div className="w-px h-6 bg-slate-200 mx-1" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().undo().run()}
-        disabled={!editor.can().chain().focus().undo().run()}
-        className={btnClass}
-        title="Undo"
-      >
-        <FaUndo size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().redo().run()}
-        disabled={!editor.can().chain().focus().redo().run()}
-        className={btnClass}
-        title="Redo"
-      >
-        <FaRedo size={14} />
-      </button>
-    </div>
-  );
-};
-
-const TiptapEditor = ({ value, onChange, placeholder = "Write something...", hideToolbar = false, minHeight = "150px" }) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+export default function TiptapEditor({ value = '', onChange }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
     ],
-    content: value,
-    editorProps: {
-      attributes: {
-        class: `prose prose-sm sm:prose max-w-none p-4 focus:outline-none text-slate-700`,
-        style: `min-height: ${minHeight};`,
-      },
-    },
+    content: value || '',
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML()
+      if (onChange) onChange(html)
     },
-  });
+  })
 
-  // Handle value updates from parent (e.g. initial load)
-  useEffect(() => {
+  React.useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value);
+      editor.commands.setContent(value || '')
     }
-  }, [value, editor]);
+  }, [value, editor])
 
-  if (!mounted) {
-    return <div className="min-h-[200px] w-full bg-slate-50 animate-pulse rounded-[2rem] border border-slate-200"></div>;
+  if (!editor) {
+    return <div className="h-32 bg-slate-50 rounded-2xl border border-slate-200 animate-pulse p-4 text-slate-400 text-xs">Loading...</div>
   }
 
   return (
-    <div className="input-style p-0 overflow-hidden bg-white focus-within:border-primary-light focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-      {!hideToolbar && <MenuBar editor={editor} />}
-      <EditorContent editor={editor} />
-    </div>
-  );
-};
+    <div className="w-full border border-slate-200 rounded-2xl overflow-hidden bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+      <div className="flex flex-wrap items-center gap-1 p-2 bg-slate-50 border-b border-slate-100 text-slate-600">
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('bold') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Bold"
+        >
+          <FiBold size={14} />
+        </button>
 
-export default TiptapEditor;
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('italic') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Italic"
+        >
+          <FiItalic size={14} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('strike') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Strikethrough"
+        >
+          <s>S</s>
+        </button>
+
+        <div className="w-px h-4 bg-slate-200 mx-1" />
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('bulletList') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Bullet List"
+        >
+          <FiList size={14} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('orderedList') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Numbered List"
+        >
+          <FiCheckSquare size={14} />
+        </button>
+
+        <div className="w-px h-4 bg-slate-200 mx-1" />
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+            editor.isActive('codeBlock') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
+          }`}
+          title="Code Block"
+        >
+          <FiCode size={14} />
+        </button>
+
+        <div className="w-px h-4 bg-slate-200 mx-1" />
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().undo().run()}
+          className="p-1.5 rounded-lg text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
+          title="Undo"
+        >
+          <FiRotateCcw size={14} />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().redo().run()}
+          className="p-1.5 rounded-lg text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
+          title="Redo"
+        >
+          <FiRotateCw size={14} />
+        </button>
+      </div>
+
+      <div className="p-4 min-h-[140px] max-h-[350px] overflow-y-auto text-sm text-slate-800 focus:outline-none prose prose-slate max-w-none">
+        <EditorContent editor={editor} />
+      </div>
+    </div>
+  )
+}

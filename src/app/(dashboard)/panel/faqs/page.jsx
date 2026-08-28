@@ -152,7 +152,7 @@ export default function TeamFaqsPage() {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 p-6 sm:p-8 rounded-3xl text-primary shadow-sm bg-white border border-slate-100">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Frequently Asked Questions</h1>
+          <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-slate-900">Frequently Asked Questions</h1>
           <p className="text-slate-500 text-sm mt-1 max-w-xl font-medium">
             Manage FAQs for public users. Add, update, reorder, or toggle publication state.
           </p>
@@ -160,7 +160,7 @@ export default function TeamFaqsPage() {
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center justify-center cursor-pointer gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary-dark text-white text-sm font-bold transition-all shadow-md shadow-primary/20 shrink-0"
+          className="inline-flex items-center justify-center cursor-pointer gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold transition-all shadow-md shadow-primary/20 shrink-0"
         >
           <FiPlus className="w-5 h-5" /> Create New FAQ
         </button>
@@ -180,7 +180,7 @@ export default function TeamFaqsPage() {
 
       {/* Controls */}
       <div className="flex items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
-        <div className="text-xs font-bold text-slate-500">
+        <div className="text-xs font-semibold text-slate-500">
           Total FAQs: <span className="text-primary font-black">{faqs.length}</span>
         </div>
 
@@ -215,13 +215,13 @@ export default function TeamFaqsPage() {
       ) : filteredFaqs.length === 0 ? (
         <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiHelpCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-800">No FAQs found</h3>
+          <h3 className="text-lg font-semibold text-slate-800">No FAQs found</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-6">
             There are no FAQ entries matching your search.
           </p>
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark transition-all shadow-md shadow-primary/20 cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-all shadow-md shadow-primary/20 cursor-pointer"
           >
             <FiPlus className="w-4 h-4" /> Add First FAQ
           </button>
@@ -242,15 +242,15 @@ export default function TeamFaqsPage() {
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {filteredFaqs.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-bold">#{item.order_num || 0}</td>
+                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
                     <td className="py-4 px-6 max-w-xl">
-                      <p className="font-bold text-slate-900">{item.question}</p>
+                      <p className="font-semibold text-slate-900">{item.question}</p>
                       <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">{item.answer}</p>
                     </td>
                     <td className="py-4 px-6">
                       <button
                         onClick={() => handleTogglePublish(item)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                           item.is_published
                             ? 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20'
                             : 'bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary/20'

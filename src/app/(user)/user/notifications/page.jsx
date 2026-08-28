@@ -61,10 +61,10 @@ export default function UserNotificationsPage() {
       
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
             <FiBell className="text-primary" /> Notifications
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full bg-primary text-white text-xs font-extrabold shadow-sm">
+              <span className="px-2.5 py-0.5 rounded-full bg-primary text-white text-xs font-semibold shadow-sm">
                 {unreadCount} New
               </span>
             )}
@@ -77,7 +77,7 @@ export default function UserNotificationsPage() {
         {unreadCount > 0 && (
           <button
             onClick={() => handleMarkAsRead(null)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-dark transition-all cursor-pointer shadow-md shadow-primary/20"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-dark transition-all cursor-pointer shadow-md shadow-primary/20"
           >
             <FiCheckCircle size={14} /> Mark All as Read
           </button>
@@ -95,7 +95,7 @@ export default function UserNotificationsPage() {
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
               filter === tab.key
                 ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm'
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -117,7 +117,7 @@ export default function UserNotificationsPage() {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center">
             <FiBell size={24} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">No Notifications</h3>
+          <h3 className="text-lg font-semibold text-slate-900">No Notifications</h3>
           <p className="text-slate-500 text-sm max-w-sm mx-auto">
             You are all caught up! There are no notifications in this view.
           </p>
@@ -154,7 +154,7 @@ export default function UserNotificationsPage() {
 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-slate-900 text-sm">{n.title}</h4>
+                    <h4 className="font-semibold text-slate-900 text-sm">{n.title}</h4>
                     {!n.is_read && (
                       <span className="w-2 h-2 rounded-full bg-primary inline-block"></span>
                     )}
@@ -171,7 +171,7 @@ export default function UserNotificationsPage() {
                   <Link
                     href={n.link}
                     onClick={() => !n.is_read && handleMarkAsRead(n.id)}
-                    className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-primary hover:border-primary/30 text-xs font-bold transition-all"
+                    className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-primary hover:border-primary/30 text-xs font-semibold transition-all"
                   >
                     <FiExternalLink size={14} />
                   </Link>
@@ -179,7 +179,7 @@ export default function UserNotificationsPage() {
                 {!n.is_read && (
                   <button
                     onClick={() => handleMarkAsRead(n.id)}
-                    className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 hover:text-primary hover:border-primary/30 transition-all cursor-pointer"
+                    className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-600 hover:text-primary hover:border-primary/30 transition-all cursor-pointer"
                   >
                     Mark Read
                   </button>

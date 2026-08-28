@@ -15,7 +15,7 @@ export default function LegalDocumentForm({
   return (
     <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-6 sm:p-8 mb-8 animate-in fade-in duration-200">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <FiFileText className="text-primary" />
           {isEditing ? `Edit ${documentName} Item` : `Add New ${documentName} Item`}
         </h3>
@@ -32,7 +32,7 @@ export default function LegalDocumentForm({
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
               Item Title / Section Heading <span className="text-rose-500">*</span>
             </label>
             <input
@@ -46,7 +46,7 @@ export default function LegalDocumentForm({
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
               Display Order Number
             </label>
             <input
@@ -59,7 +59,7 @@ export default function LegalDocumentForm({
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
             Item Details / Content <span className="text-rose-500">*</span>
           </label>
           <textarea

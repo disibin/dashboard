@@ -14,7 +14,7 @@ const CareerModal = ({ isOpen, onClose, onSuccess, initialData }) => {
       <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
 
         <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-violet-600 to-indigo-600">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <FiBriefcase size={18} />
             {title}
           </h2>

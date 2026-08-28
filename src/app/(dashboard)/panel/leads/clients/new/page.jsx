@@ -54,7 +54,7 @@ export default function NewClientLeadPage() {
 
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
               <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                 <FiUsers size={20} />
               </span>
@@ -70,7 +70,7 @@ export default function NewClientLeadPage() {
       {/* Form Card */}
       <form onSubmit={handleSubmit} className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Client / Business Name *</label>
+          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Client / Business Name *</label>
           <input
             type="text"
             required
@@ -83,7 +83,7 @@ export default function NewClientLeadPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address *</label>
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address *</label>
             <input
               type="email"
               required
@@ -95,7 +95,7 @@ export default function NewClientLeadPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number</label>
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Phone Number</label>
             <input
               type="text"
               value={form.phone}
@@ -107,7 +107,7 @@ export default function NewClientLeadPage() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Address / Location</label>
+          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Address / Location</label>
           <input
             type="text"
             value={form.address}
@@ -118,7 +118,7 @@ export default function NewClientLeadPage() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Notes & Special Requirements</label>
+          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Notes & Special Requirements</label>
           <textarea
             rows={4}
             value={form.note}
@@ -138,7 +138,7 @@ export default function NewClientLeadPage() {
           <button
             type="submit"
             disabled={loading}
-            className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-primary text-white font-bold transition-all text-sm disabled:opacity-50 flex items-center gap-2 shadow-md"
+            className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-primary text-white font-semibold transition-all text-sm disabled:opacity-50 flex items-center gap-2 shadow-md"
           >
             {loading ? <FiLoader className="animate-spin" size={16} /> : <FiPlus size={16} />}
             {loading ? 'Creating...' : 'Create Client Lead'}

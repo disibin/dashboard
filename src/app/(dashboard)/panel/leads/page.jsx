@@ -36,12 +36,12 @@ export default function LeadsOverviewPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
             <FiUserCheck className="text-primary" /> Leads & Sales Inquiries
           </h1>
           <p className="text-slate-500 text-sm mt-1 font-medium">
@@ -52,13 +52,13 @@ export default function LeadsOverviewPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/panel/leads/clients/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
           >
             <FiPlus size={14} /> New Client Lead
           </Link>
           <Link
             href="/panel/leads/business/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20 font-bold text-xs hover:bg-primary/20 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20 font-semibold text-xs hover:bg-primary/20 transition-all"
           >
             <FiPlus size={14} /> New Business Lead
           </Link>
@@ -72,8 +72,8 @@ export default function LeadsOverviewPage() {
             <FiUsers size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Captured Leads</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Captured Leads</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">
               {loading ? '...' : clientLeadsCount + businessLeadsCount}
             </h3>
           </div>
@@ -84,8 +84,8 @@ export default function LeadsOverviewPage() {
             <FiUserCheck size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Client Leads</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Client Leads</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">
               {loading ? '...' : clientLeadsCount}
             </h3>
           </div>
@@ -96,8 +96,8 @@ export default function LeadsOverviewPage() {
             <FiBriefcase size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Business / B2B Leads</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Business / B2B Leads</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">
               {loading ? '...' : businessLeadsCount}
             </h3>
           </div>
@@ -113,19 +113,19 @@ export default function LeadsOverviewPage() {
             <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
               <FiUserCheck size={24} />
             </div>
-            <h2 className="text-xl font-extrabold text-slate-900">Client Leads Directory</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Client Leads Directory</h2>
             <p className="text-slate-500 text-sm leading-relaxed">
               Track individual customer signups, contact inquiries, notes, and custom project requests.
             </p>
           </div>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
               {clientLeadsCount} Registered Lead{clientLeadsCount === 1 ? '' : 's'}
             </span>
             <Link
               href="/panel/leads/clients"
-              className="inline-flex items-center gap-2 text-primary font-extrabold text-sm hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all"
             >
               Manage Client Leads <FiArrowRight size={16} />
             </Link>
@@ -138,19 +138,19 @@ export default function LeadsOverviewPage() {
             <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
               <FiBriefcase size={24} />
             </div>
-            <h2 className="text-xl font-extrabold text-slate-900">Business & Enterprise Leads</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Business & Enterprise Leads</h2>
             <p className="text-slate-500 text-sm leading-relaxed">
               Manage enterprise deals, company inquiries, business partnerships, and high-value sales pipelines.
             </p>
           </div>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
               {businessLeadsCount} B2B Lead{businessLeadsCount === 1 ? '' : 's'}
             </span>
             <Link
               href="/panel/leads/business"
-              className="inline-flex items-center gap-2 text-primary font-extrabold text-sm hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all"
             >
               Manage Business Leads <FiArrowRight size={16} />
             </Link>

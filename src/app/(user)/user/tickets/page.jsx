@@ -51,7 +51,7 @@ export default function UserTicketsListPage() {
       {/* Clean Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Support Tickets</h1>
+          <h1 className="text-xl font-semibold text-slate-900">Support Tickets</h1>
           <p className="text-xs text-slate-500">Track and manage your support inquiries</p>
         </div>
 
@@ -117,7 +117,7 @@ export default function UserTicketsListPage() {
                 <div className="min-w-0 space-y-0.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-semibold text-slate-400">#{t.id}</span>
-                    <h3 className="text-sm font-bold text-slate-800 hover:text-primary truncate">
+                    <h3 className="text-sm font-semibold text-slate-800 hover:text-primary truncate">
                       {t.title}
                     </h3>
                   </div>

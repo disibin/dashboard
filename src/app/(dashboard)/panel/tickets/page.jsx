@@ -45,13 +45,13 @@ export default function TeamTicketsListPage() {
   });
 
   return (
-    <div className="p-4 max-w-5xl mx-auto space-y-4">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Support Tickets</h1>
+          <h1 className="text-xl font-semibold text-slate-900">Support Tickets</h1>
           <p className="text-xs text-slate-500">Manage customer support tickets</p>
         </div>
 
@@ -108,7 +108,7 @@ export default function TeamTicketsListPage() {
                 <div className="min-w-0 space-y-0.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-semibold text-slate-400">#{t.id}</span>
-                    <h3 className="text-sm font-bold text-slate-800 hover:text-primary truncate">
+                    <h3 className="text-sm font-semibold text-slate-800 hover:text-primary truncate">
                       {t.title}
                     </h3>
                   </div>

@@ -5,7 +5,7 @@ export const pool = new Pool({
   user: PG_USER,
   password: PG_PASSWORD,
   host: PG_HOST,
-  port: PG_PORT,
+  port: parseInt(PG_PORT || "5432", 10),
   database: PG_DATABASE,
   ssl: {
     rejectUnauthorized: false,

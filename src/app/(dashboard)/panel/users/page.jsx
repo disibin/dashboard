@@ -52,13 +52,13 @@ export default function RegisteredUsersPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiUsers size={20} />
             </span>
@@ -82,7 +82,7 @@ export default function RegisteredUsersPage() {
       {/* Quick Email Lookup Bar */}
       <form onSubmit={handleEmailLookup} className="bg-gradient-to-r from-slate-900 to-slate-800 p-6 rounded-3xl text-white shadow-md space-y-3">
         <div className="space-y-1">
-          <h2 className="text-base font-bold flex items-center gap-2">
+          <h2 className="text-base font-semibold flex items-center gap-2">
             <FiMail className="text-primary-light" size={18} />
             Direct Email Profile Lookup
           </h2>
@@ -102,7 +102,7 @@ export default function RegisteredUsersPage() {
           />
           <button
             type="submit"
-            className="px-6 py-2.5 bg-primary hover:bg-sky-400 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 shrink-0"
+            className="px-6 py-2.5 bg-primary hover:bg-sky-400 text-white rounded-xl text-xs font-semibold transition-all shadow-md flex items-center justify-center gap-2 shrink-0"
           >
             Lookup Profile <FiArrowRight size={14} />
           </button>
@@ -142,13 +142,13 @@ export default function RegisteredUsersPage() {
         ) : filteredUsers.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiUsers className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No registered users found</p>
+            <p className="font-semibold text-slate-800 text-base">No registered users found</p>
             <p className="text-xs text-slate-500">There are no user accounts matching your search query.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">User Details</th>
                   <th className="px-6 py-4">Email Address</th>
@@ -163,25 +163,25 @@ export default function RegisteredUsersPage() {
                   <tr key={u.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-bold flex items-center justify-center text-sm shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-semibold flex items-center justify-center text-sm shrink-0">
                           {u.name?.charAt(0) || u.email?.charAt(0) || 'U'}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900">{u.name}</p>
+                          <p className="font-semibold text-slate-900">{u.name}</p>
                           <p className="text-[11px] text-slate-400 font-mono">User #{u.id}</p>
                         </div>
                       </div>
                     </td>
 
                     <td className="px-6 py-4">
-                      <a href={`mailto:${u.email}`} className="font-bold text-slate-800 hover:text-primary transition-colors">
+                      <a href={`mailto:${u.email}`} className="font-semibold text-slate-800 hover:text-primary transition-colors">
                         {u.email}
                       </a>
                       {u.phone && <p className="text-xs text-slate-400">{u.phone}</p>}
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                         u.is_verified
                           ? 'bg-primary/10 text-primary border border-primary/20'
                           : 'bg-secondary/10 text-secondary border border-secondary/20'
@@ -212,7 +212,7 @@ export default function RegisteredUsersPage() {
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/panel/users/${encodeURIComponent(u.email)}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-semibold transition-all shadow-sm"
                       >
                         View Profile →
                       </Link>

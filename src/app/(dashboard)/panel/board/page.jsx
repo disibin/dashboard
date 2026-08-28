@@ -160,13 +160,13 @@ export default function TeamBoardPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/100/10 text-primary flex items-center justify-center shrink-0">
               <FiLayout size={20} />
             </span>
@@ -188,7 +188,7 @@ export default function TeamBoardPage() {
           </button>
           <button
             onClick={openCreateForm}
-            className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-bold text-xs sm:text-sm transition-all shadow-md shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-md shrink-0"
           >
             <FiPlus size={16} /> Add Board Member
           </button>
@@ -199,7 +199,7 @@ export default function TeamBoardPage() {
       {showForm && (
         <div className="bg-white p-6 rounded-3xl border border-violet-100 shadow-lg space-y-4 animate-fade-down">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-            <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FiBriefcase className="text-primary" size={18} />
               {editingId ? 'Edit Board Member' : 'Add New Executive / Advisory Board Member'}
             </h2>
@@ -214,7 +214,7 @@ export default function TeamBoardPage() {
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Full Name *
                 </label>
                 <input
@@ -228,7 +228,7 @@ export default function TeamBoardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Post Title / Role *
                 </label>
                 <input
@@ -244,7 +244,7 @@ export default function TeamBoardPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Email Address (Optional)
                 </label>
                 <input
@@ -257,7 +257,7 @@ export default function TeamBoardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Profile Photo (Cloudinary)
                 </label>
                 <input
@@ -271,7 +271,7 @@ export default function TeamBoardPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-slate-200"
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 border border-slate-200"
                   >
                     <FiUploadCloud size={15} />
                     {imageFile ? 'Change Photo' : 'Upload Photo'}
@@ -288,7 +288,7 @@ export default function TeamBoardPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Biography / Summary
               </label>
               <textarea
@@ -311,7 +311,7 @@ export default function TeamBoardPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+                className="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
               >
                 {saving ? <FiLoader className="animate-spin" size={14} /> : null}
                 {saving ? 'Saving Member...' : editingId ? 'Update Board Member' : 'Add Board Member'}
@@ -354,13 +354,13 @@ export default function TeamBoardPage() {
         ) : filtered.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiLayout className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No board members recorded</p>
+            <p className="font-semibold text-slate-800 text-base">No board members recorded</p>
             <p className="text-xs text-slate-500">Click "Add Board Member" to add your first executive or advisory member.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Board Member</th>
                   <th className="px-6 py-4">Post Title / Position</th>
@@ -377,11 +377,11 @@ export default function TeamBoardPage() {
                         {m.image ? (
                           <img src={m.image} alt={m.name} className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm shrink-0" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-sm shrink-0 border border-violet-100">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center text-sm shrink-0 border border-violet-100">
                             {m.name?.charAt(0) || 'B'}
                           </div>
                         )}
-                        <Link href={`/panel/board/${m.id}`} className="font-bold text-slate-900 hover:text-primary transition-colors">
+                        <Link href={`/panel/board/${m.id}`} className="font-semibold text-slate-900 hover:text-primary transition-colors">
                           {m.name}
                         </Link>
                       </div>

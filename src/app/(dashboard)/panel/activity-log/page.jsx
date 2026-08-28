@@ -43,13 +43,13 @@ export default function ActivityLogPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/100/10 text-purple-600 flex items-center justify-center shrink-0">
               <FiActivity size={20} />
             </span>
@@ -103,13 +103,13 @@ export default function ActivityLogPage() {
         ) : filteredLogs.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiActivity className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No activity logs found</p>
+            <p className="font-semibold text-slate-800 text-base">No activity logs found</p>
             <p className="text-xs text-slate-500">There are no operational activity records matching your search query.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Action Event</th>
                   <th className="px-6 py-4">Performed By</th>
@@ -121,7 +121,7 @@ export default function ActivityLogPage() {
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4 font-mono">
-                      <span className="inline-flex items-center px-3 py-1 rounded-xl text-xs font-extrabold uppercase bg-primary/10 text-purple-700 border border-purple-100">
+                      <span className="inline-flex items-center px-3 py-1 rounded-xl text-xs font-semibold uppercase bg-primary/10 text-purple-700 border border-purple-100">
                         {log.action}
                       </span>
                     </td>
@@ -129,7 +129,7 @@ export default function ActivityLogPage() {
                     <td className="px-6 py-4">
                       {log.staff_name ? (
                         <div className="space-y-0.5">
-                          <p className="font-bold text-slate-900 text-xs">{log.staff_name}</p>
+                          <p className="font-semibold text-slate-900 text-xs">{log.staff_name}</p>
                           <p className="text-[10px] text-slate-400 capitalize">{log.staff_role || 'Staff'} · {log.staff_email}</p>
                         </div>
                       ) : (

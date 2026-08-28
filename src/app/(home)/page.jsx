@@ -33,11 +33,11 @@ const Hero = () => {
       className="w-full h-screen flex flex-col items-center justify-center gap-6 p-4 md:p-6 relative overflow-hidden"
     >
       <motion.div variants={itemVariants} className="w-auto flex flex-col items-center justify-center gap-2 text-center">
-        <p className="text-5xl md:text-8xl font-bold font-poppins text-slate-900 tracking-tight">
-          We Build <span className="text-primary font-bold">Brands</span>
+        <p className="text-5xl md:text-8xl font-semibold font-poppins text-slate-900 tracking-tight">
+          We Build <span className="text-primary font-semibold">Brands</span>
         </p>
         <p className="text-5xl md:text-7xl font-semibold font-poppins text-slate-800 tracking-tight">
-          You Build <span className="text-secondary font-bold">Success</span>
+          You Build <span className="text-secondary font-semibold">Success</span>
         </p>
       </motion.div>
 

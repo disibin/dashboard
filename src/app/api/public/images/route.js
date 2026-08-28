@@ -6,21 +6,18 @@ export async function GET() {
     try {
         const res = await dbQuery(`
             SELECT 
-                pi.id, 
-                pi.title, 
-                pi.image, 
-                pi.public_id, 
-                pi.is_primary, 
-                pi.created_at,
-                p.id AS product_id,
+                p.id,
                 p.name AS product_name,
+                p.title AS product_title,
                 p.slug AS product_slug,
-                p.demo_url
-            FROM product_images pi
-            JOIN products p ON pi.product_id = p.id
-            WHERE p.is_published = true
-            ORDER BY pi.is_primary DESC, pi.created_at DESC
-        `).catch(() => ({ rows: [] }));
+                p.image,
+                p.image_id AS public_id,
+                p.link,
+                p.created_at
+            FROM products p
+            WHERE p.image IS NOT NULL AND p.image != ''
+            ORDER BY p.created_at DESC
+        `);
 
         return NextResponse.json({ success: true, data: res.rows });
     } catch (error) {

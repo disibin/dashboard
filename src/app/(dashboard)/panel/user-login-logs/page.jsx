@@ -49,13 +49,13 @@ export default function UserLoginLogsPage() {
   const failCount = logs.filter(l => l.status === 'fail').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiUsers size={20} />
             </span>
@@ -87,7 +87,7 @@ export default function UserLoginLogsPage() {
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                 statusFilter === tab.id
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -125,13 +125,13 @@ export default function UserLoginLogsPage() {
         ) : filteredLogs.length === 0 ? (
           <div className="py-16 text-center space-y-3 px-4">
             <FiUsers className="mx-auto text-slate-300" size={32} />
-            <p className="font-bold text-slate-800 text-base">No user login logs found</p>
+            <p className="font-semibold text-slate-800 text-base">No user login logs found</p>
             <p className="text-xs text-slate-500">There are no customer authentication records matching your filter criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">User Account</th>
                   <th className="px-6 py-4">Status</th>
@@ -143,12 +143,12 @@ export default function UserLoginLogsPage() {
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
-                      <p className="font-bold text-slate-900 text-xs">{log.user_name || 'Customer User'}</p>
+                      <p className="font-semibold text-slate-900 text-xs">{log.user_name || 'Customer User'}</p>
                       <p className="text-[10px] text-slate-400">{log.user_email}</p>
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                         log.status === 'success'
                           ? 'bg-primary/10 text-primary border border-primary/20'
                           : 'bg-rose-50 text-rose-600 border border-rose-100'

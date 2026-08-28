@@ -104,13 +104,13 @@ export default function NewsLetterPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <FiMail size={20} />
             </span>
@@ -146,7 +146,7 @@ export default function NewsLetterPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">All Audience</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-2xl font-semibold text-slate-900">
               {loadingMetrics ? '...' : metrics.totalAudience}
             </p>
           </div>
@@ -165,7 +165,7 @@ export default function NewsLetterPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Client Leads</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-2xl font-semibold text-slate-900">
               {loadingMetrics ? '...' : metrics.clientLeadsCount}
             </p>
           </div>
@@ -184,7 +184,7 @@ export default function NewsLetterPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Business Leads</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-2xl font-semibold text-slate-900">
               {loadingMetrics ? '...' : metrics.businessLeadsCount}
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function NewsLetterPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Registered Users</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-2xl font-semibold text-slate-900">
               {loadingMetrics ? '...' : metrics.registeredUsersCount}
             </p>
           </div>
@@ -217,7 +217,7 @@ export default function NewsLetterPage() {
           <div className="flex items-center gap-1 bg-slate-200/60 p-1 rounded-xl">
             <button
               onClick={() => setActiveTab('compose')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'compose' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -225,7 +225,7 @@ export default function NewsLetterPage() {
             </button>
             <button
               onClick={() => setActiveTab('preview')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'preview' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -233,8 +233,8 @@ export default function NewsLetterPage() {
             </button>
           </div>
 
-          <div className="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
-            Targeting: <span className="text-primary capitalize font-extrabold">{targetGroup}</span> ({getRecipientCount()} Recipient{getRecipientCount() !== 1 ? 's' : ''})
+          <div className="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+            Targeting: <span className="text-primary capitalize font-semibold">{targetGroup}</span> ({getRecipientCount()} Recipient{getRecipientCount() !== 1 ? 's' : ''})
           </div>
         </div>
 
@@ -242,7 +242,7 @@ export default function NewsLetterPage() {
         {activeTab === 'compose' ? (
           <form onSubmit={handleSendCampaign} className="p-6 space-y-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Email Subject Line *
               </label>
               <input
@@ -256,7 +256,7 @@ export default function NewsLetterPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Email Body Message *
               </label>
               <TiptapEditor
@@ -269,7 +269,7 @@ export default function NewsLetterPage() {
             {/* Test Email Bar */}
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex-1 w-full">
-                <label className="block text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                   Send Test Email First
                 </label>
                 <input
@@ -284,7 +284,7 @@ export default function NewsLetterPage() {
                 type="button"
                 onClick={handleSendTestEmail}
                 disabled={sendingTest || !testEmail}
-                className="w-full sm:w-auto px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:text-primary hover:border-primary/30 rounded-xl font-bold text-xs transition-all disabled:opacity-50 shadow-sm cursor-pointer flex items-center justify-center gap-1.5 shrink-0 self-end"
+                className="w-full sm:w-auto px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:text-primary hover:border-primary/30 rounded-xl font-semibold text-xs transition-all disabled:opacity-50 shadow-sm cursor-pointer flex items-center justify-center gap-1.5 shrink-0 self-end"
               >
                 {sendingTest ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
                 Send Test Email
@@ -299,7 +299,7 @@ export default function NewsLetterPage() {
               <button
                 type="submit"
                 disabled={sending || getRecipientCount() === 0}
-                className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-2xl font-bold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-md shadow-primary/20 shrink-0 cursor-pointer"
+                className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-md shadow-primary/20 shrink-0 cursor-pointer"
               >
                 {sending ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
                 {sending ? 'Dispatching Newsletter...' : `Dispatch to ${getRecipientCount()} Recipient(s)`}
@@ -312,7 +312,7 @@ export default function NewsLetterPage() {
             <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-md space-y-4">
               <div className="border-b border-slate-100 pb-4 space-y-1">
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Subject Line</p>
-                <h2 className="text-xl font-bold text-slate-900">{subject || 'No subject line specified'}</h2>
+                <h2 className="text-xl font-semibold text-slate-900">{subject || 'No subject line specified'}</h2>
                 <p className="text-xs text-slate-500 pt-1">
                   From: Disibin Newsletter &lt;no-reply@disibin.com&gt;
                 </p>

@@ -48,33 +48,33 @@ function VerifyContent() {
         {loading ? (
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>
-            <h2 className="text-xl font-bold text-slate-800">Verifying Your Account...</h2>
+            <h2 className="text-xl font-semibold text-slate-800">Verifying Your Account...</h2>
             <p className="text-sm text-slate-500">Please wait while we confirm your email address.</p>
           </div>
         ) : success ? (
           <div className="flex flex-col items-center text-center gap-4">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold">
+            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-semibold">
               ✓
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">Email Verified!</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">Email Verified!</h2>
             <p className="text-sm text-slate-600 font-medium">{message}</p>
             <Link
               href="/user-auth/login"
-              className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
+              className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
             >
               Proceed to Login
             </Link>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center gap-4">
-            <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-3xl font-bold">
+            <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-3xl font-semibold">
               ✕
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">Verification Failed</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">Verification Failed</h2>
             <p className="text-sm text-slate-600 font-medium">{message}</p>
             <Link
               href="/user-auth/login"
-              className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
+              className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-900/10 mt-2"
             >
               Back to Login
             </Link>

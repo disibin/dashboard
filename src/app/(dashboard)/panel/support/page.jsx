@@ -76,13 +76,13 @@ export default function SupportsManagement() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
               <FiLifeBuoy size={20} />
             </span>
@@ -111,7 +111,7 @@ export default function SupportsManagement() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Inquiries</p>
-            <p className="text-2xl font-bold text-slate-900">{loading ? '...' : totalCount}</p>
+            <p className="text-2xl font-semibold text-slate-900">{loading ? '...' : totalCount}</p>
           </div>
         </div>
 
@@ -121,7 +121,7 @@ export default function SupportsManagement() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending Reply</p>
-            <p className="text-2xl font-bold text-slate-900">{loading ? '...' : pendingCount}</p>
+            <p className="text-2xl font-semibold text-slate-900">{loading ? '...' : pendingCount}</p>
           </div>
         </div>
 
@@ -131,7 +131,7 @@ export default function SupportsManagement() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Replied</p>
-            <p className="text-2xl font-bold text-slate-900">{loading ? '...' : repliedCount}</p>
+            <p className="text-2xl font-semibold text-slate-900">{loading ? '...' : repliedCount}</p>
           </div>
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function SupportsManagement() {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
-                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                   filter === tab.id
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-600 hover:text-slate-900'
@@ -197,7 +197,7 @@ export default function SupportsManagement() {
               <FiLifeBuoy size={32} />
             </div>
             <div className="space-y-1 max-w-sm mx-auto">
-              <h3 className="font-bold text-slate-800 text-base">No support requests found</h3>
+              <h3 className="font-semibold text-slate-800 text-base">No support requests found</h3>
               <p className="text-xs text-slate-500">
                 {search || filter !== 'all'
                   ? 'No inquiries match your filter criteria.'
@@ -208,7 +208,7 @@ export default function SupportsManagement() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-100">
+              <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Sender Info</th>
                   <th className="px-6 py-4">Subject</th>
@@ -227,7 +227,7 @@ export default function SupportsManagement() {
                       className="hover:bg-slate-50/70 cursor-pointer transition-colors group"
                     >
                       <td className="px-6 py-4">
-                        <div className="font-bold text-slate-900">{item.name}</div>
+                        <div className="font-semibold text-slate-900">{item.name}</div>
                         <div className="text-xs text-slate-400 font-medium">{item.email}</div>
                       </td>
 
@@ -239,7 +239,7 @@ export default function SupportsManagement() {
                       </td>
 
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold ${
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
                           isPending
                             ? 'bg-secondary/10 text-secondary border border-secondary/20'
                             : 'bg-primary/10 text-primary border border-primary/20'
@@ -256,7 +256,7 @@ export default function SupportsManagement() {
                       <td className="px-6 py-4 text-right space-x-1" onClick={e => e.stopPropagation()}>
                         <Link
                           href={`/panel/support/${item.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-lg text-xs font-bold transition-all shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
                         >
                           <FiMessageSquare size={13} /> {isPending ? 'Reply' : 'View Details'}
                         </Link>

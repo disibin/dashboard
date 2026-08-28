@@ -46,14 +46,14 @@ const ResetPasswordForm = () => {
   };
 
   const inputCls = 'input-style';
-  const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-400 ml-1';
+  const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1';
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
       <div className="w-full max-w-4xl bg-white flex flex-col md:flex-row items-center justify-center gap-4 p-4 rounded-lg">
 
         <div className='w-full flex flex-col items-center justify-center gap-2'>
-          <h1 className="text-3xl font-bold mb-2 tracking-tight text-slate-900">New Password</h1>
+          <h1 className="text-3xl font-semibold mb-2 tracking-tight text-slate-900">New Password</h1>
           <p className="text-slate-500 text-sm mb-10 font-medium text-center">Create a strong password to protect your account.</p>
         </div>
         <form className="w-full flex flex-col items-center justify-center gap-4" onSubmit={handleSubmit}>
@@ -67,13 +67,13 @@ const ResetPasswordForm = () => {
           </div>
           <button
             disabled={loading}
-            className="w-full py-2 cursor-pointer rounded-lg bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 mt-4 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
+            className="w-full py-2 cursor-pointer rounded-lg bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 mt-4 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
           >
             {loading ? 'Resetting...' : 'Reset Password'}
           </button>
           <p className="mt-8 text-center text-sm text-slate-500 font-medium">
             Remember your password?{' '}
-            <Link href="/login" className="text-primary font-bold hover:underline">Log in</Link>
+            <Link href="/login" className="text-primary font-semibold hover:underline">Log in</Link>
           </p>
         </form>
 

@@ -169,7 +169,7 @@ export default function UserSecurityPage() {
   };
 
   const inputCls = 'input-style';
-  const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 block';
+  const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 block';
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
@@ -181,7 +181,7 @@ export default function UserSecurityPage() {
           <FiShield size={22} />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Security & Credentials</h1>
+          <h1 className="text-xl font-semibold text-slate-900">Security & Credentials</h1>
           <p className="text-slate-500 text-sm mt-0.5">
             Manage two-factor authentication, password, email address verification, and account deletion.
           </p>
@@ -200,9 +200,9 @@ export default function UserSecurityPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-slate-900">Two-Factor Authentication (2FA)</h2>
+              <h2 className="text-lg font-semibold text-slate-900">Two-Factor Authentication (2FA)</h2>
               <span
-                className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                   is2faActive ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'
                 }`}
               >
@@ -234,7 +234,7 @@ export default function UserSecurityPage() {
 
         {/* Password Update Card */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
               <FiLock size={16} />
             </span>
@@ -281,7 +281,7 @@ export default function UserSecurityPage() {
             <button
               type="submit"
               disabled={pwdLoading}
-              className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-all shadow-md disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all shadow-md disabled:opacity-50"
             >
               {pwdLoading ? 'Updating Password...' : 'Update Password'}
             </button>
@@ -290,7 +290,7 @@ export default function UserSecurityPage() {
 
         {/* Email Address Update Card */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <FiMail size={16} />
             </span>
@@ -329,7 +329,7 @@ export default function UserSecurityPage() {
               <button
                 type="submit"
                 disabled={emailLoading}
-                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary transition-all shadow-md shadow-primary/20 disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary transition-all shadow-md shadow-primary/20 disabled:opacity-50"
               >
                 <FiSend size={15} />
                 {emailLoading ? 'Sending Verification Code...' : 'Send Verification Code to Current Email'}
@@ -350,7 +350,7 @@ export default function UserSecurityPage() {
                   placeholder="123456"
                   value={emailForm.code}
                   onChange={(e) => setEmailForm({ ...emailForm, code: e.target.value })}
-                  className={`${inputCls} text-center tracking-[0.4em] font-mono text-lg font-bold`}
+                  className={`${inputCls} text-center tracking-[0.4em] font-mono text-lg font-semibold`}
                   required
                 />
               </div>
@@ -359,14 +359,14 @@ export default function UserSecurityPage() {
                 <button
                   type="button"
                   onClick={() => setEmailStep('request')}
-                  className="w-1/3 py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-all"
+                  className="w-1/3 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 transition-all"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
                   disabled={emailLoading}
-                  className="w-2/3 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-500 transition-all shadow-md shadow-emerald-600/20 disabled:opacity-50"
+                  className="w-2/3 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-500 transition-all shadow-md shadow-emerald-600/20 disabled:opacity-50"
                 >
                   <FiCheckCircle size={15} />
                   {emailLoading ? 'Verifying Code...' : 'Confirm & Update Email'}
@@ -384,14 +384,14 @@ export default function UserSecurityPage() {
                 <FiAlertTriangle size={20} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-rose-900">Danger Zone — Delete Account</h3>
+                <h3 className="text-base font-semibold text-rose-900">Danger Zone — Delete Account</h3>
                 <p className="text-xs text-rose-600 mt-0.5">Permanently delete your profile and account credentials.</p>
               </div>
             </div>
 
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-all shadow-md shadow-rose-600/20"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 text-white font-semibold text-xs hover:bg-rose-700 transition-all shadow-md shadow-rose-600/20"
             >
               <FiTrash2 size={14} /> Delete Account
             </button>
@@ -408,7 +408,7 @@ export default function UserSecurityPage() {
               <div className="w-10 h-10 rounded-2xl bg-rose-100 flex items-center justify-center">
                 <FiTrash2 size={20} />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Confirm Account Deletion</h3>
+              <h3 className="text-lg font-semibold text-slate-900">Confirm Account Deletion</h3>
             </div>
 
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -432,14 +432,14 @@ export default function UserSecurityPage() {
                 <button
                   type="button"
                   onClick={() => setShowDeleteModal(false)}
-                  className="w-1/2 py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-all"
+                  className="w-1/2 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={deleteLoading}
-                  className="w-1/2 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-all shadow-md shadow-rose-600/20 disabled:opacity-50"
+                  className="w-1/2 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-600 text-white font-semibold text-xs hover:bg-rose-700 transition-all shadow-md shadow-rose-600/20 disabled:opacity-50"
                 >
                   {deleteLoading ? 'Deleting...' : 'Delete Permanently'}
                 </button>

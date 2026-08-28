@@ -38,7 +38,7 @@ const ReviewForm = ({ onSuccess }) => {
     <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
       {/* Star picker */}
       <div className="space-y-2">
-        <label className="text-sm font-bold text-slate-700">Your Rating</label>
+        <label className="text-sm font-semibold text-slate-700">Your Rating</label>
         <div className="flex items-center gap-2">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -57,7 +57,7 @@ const ReviewForm = ({ onSuccess }) => {
 
       {/* Comment */}
       <div className="space-y-2">
-        <label className="text-sm font-bold text-slate-700">Your Comment</label>
+        <label className="text-sm font-semibold text-slate-700">Your Comment</label>
         <textarea
           required
           rows={4}
@@ -72,7 +72,7 @@ const ReviewForm = ({ onSuccess }) => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-primary transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
+          className="px-8 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-primary transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
         >
           {submitting ? 'Submitting...' : 'Submit Review'}
         </button>

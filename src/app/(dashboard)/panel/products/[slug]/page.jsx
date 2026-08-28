@@ -29,7 +29,7 @@ const ProductEditPage = ({ params }) => {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header */}
@@ -44,11 +44,11 @@ const ProductEditPage = ({ params }) => {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-extrabold text-slate-900">
+              <h1 className="text-xl font-semibold text-slate-900">
                 {product?.name === 'enter title' ? 'New Product' : product?.name || 'Edit Product'}
               </h1>
               {product && (
-                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                   product.is_published ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-500'
                 }`}>
                   {product.is_published ? 'Published' : 'Draft'}
@@ -68,7 +68,7 @@ const ProductEditPage = ({ params }) => {
       ) : (
         <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
           <FiPackage size={36} className="mx-auto mb-2 opacity-40" />
-          <p className="text-sm font-bold text-slate-700">Product details loading or not found...</p>
+          <p className="text-sm font-semibold text-slate-700">Product details loading or not found...</p>
           <Link href="/panel/products" className="text-primary hover:underline text-xs font-semibold mt-2 inline-block">
             Return to Products List
           </Link>

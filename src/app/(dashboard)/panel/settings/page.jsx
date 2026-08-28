@@ -6,7 +6,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import { FiUser, FiPhone, FiMapPin, FiSave, FiSettings } from 'react-icons/fi';
 
 const inputCls = 'w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm font-medium outline-none focus:bg-white focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-all placeholder-slate-400';
-const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 block';
+const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 block';
 
 export default function TeamSettingsPage() {
   const { staffData, setStaffData } = useContext(Context);
@@ -63,7 +63,7 @@ export default function TeamSettingsPage() {
           <FiSettings size={22} />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Staff Profile Settings</h1>
+          <h1 className="text-xl font-semibold text-slate-900">Staff Profile Settings</h1>
           <p className="text-slate-500 text-sm mt-0.5">Update your contact information and office address details.</p>
         </div>
       </div>
@@ -72,7 +72,7 @@ export default function TeamSettingsPage() {
 
         {/* Personal Details */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-4">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
               <FiUser size={16} />
             </span>
@@ -129,7 +129,7 @@ export default function TeamSettingsPage() {
 
         {/* Address Information */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-4">
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
               <FiMapPin size={16} />
             </span>
@@ -216,7 +216,7 @@ export default function TeamSettingsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
           >
             <FiSave size={16} />
             {loading ? 'Saving Changes...' : 'Save Settings'}

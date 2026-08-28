@@ -51,7 +51,7 @@ export default function UserPurchasesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
             <FiShoppingBag className="text-primary" /> My Purchases & Billing
           </h1>
           <p className="text-slate-500 text-sm mt-1 font-medium">
@@ -60,7 +60,7 @@ export default function UserPurchasesPage() {
         </div>
         <Link
           href="/products"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
         >
           Browse Products
         </Link>
@@ -73,8 +73,8 @@ export default function UserPurchasesPage() {
             <FiCreditCard size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Invested</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">${totalSpent.toLocaleString()}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Invested</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalSpent.toLocaleString()}</h3>
           </div>
         </div>
 
@@ -83,8 +83,8 @@ export default function UserPurchasesPage() {
             <FiCheckCircle size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Completed Orders</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">{completedCount} Item{completedCount === 1 ? '' : 's'}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Completed Orders</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{completedCount} Item{completedCount === 1 ? '' : 's'}</h3>
           </div>
         </div>
 
@@ -93,8 +93,8 @@ export default function UserPurchasesPage() {
             <FiAlertCircle size={22} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Pending Balance</p>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">${totalDue.toLocaleString()}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Balance</p>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalDue.toLocaleString()}</h3>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function UserPurchasesPage() {
             <button
               key={tab}
               onClick={() => setFilterStatus(tab)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all whitespace-nowrap cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all whitespace-nowrap cursor-pointer ${
                 filterStatus === tab
                   ? 'bg-slate-900 text-white shadow-md'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -141,14 +141,14 @@ export default function UserPurchasesPage() {
             <FiShoppingBag size={28} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">No Purchases Found</h3>
+            <h3 className="text-lg font-semibold text-slate-900">No Purchases Found</h3>
             <p className="text-slate-500 text-sm max-w-md mx-auto mt-1">
               You have not placed any orders or acquired custom solutions yet.
             </p>
           </div>
           <Link
             href="/products"
-            className="inline-block px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-primary transition-all"
+            className="inline-block px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-primary transition-all"
           >
             Explore Services
           </Link>
@@ -162,28 +162,28 @@ export default function UserPurchasesPage() {
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                     Order #{item.purchase_id}
                   </span>
                   <StatusBadge status={item.payment_status || item.purchase_status} />
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-base line-clamp-1">
+                <h3 className="font-semibold text-slate-900 text-base line-clamp-1">
                   {item.package_title || 'Software Package Purchase'}
                 </h3>
 
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                   <div>
                     <span className="text-xs text-slate-400 block font-medium">Price</span>
-                    <span className="text-lg font-extrabold text-slate-900">
+                    <span className="text-lg font-semibold text-slate-900">
                       ${Number(item.price || 0).toLocaleString()}
                     </span>
                   </div>
 
                   {item.due > 0 && (
                     <div className="text-right">
-                      <span className="text-xs text-amber-500 block font-bold">Due Amount</span>
-                      <span className="text-sm font-extrabold text-amber-600">
+                      <span className="text-xs text-amber-500 block font-semibold">Due Amount</span>
+                      <span className="text-sm font-semibold text-amber-600">
                         ${Number(item.due).toLocaleString()}
                       </span>
                     </div>
@@ -198,7 +198,7 @@ export default function UserPurchasesPage() {
 
                 <button
                   onClick={() => setSelectedReceipt(item)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <FiFileText size={13} /> Receipt
                 </button>
@@ -213,12 +213,12 @@ export default function UserPurchasesPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
                 <FiFileText className="text-primary" /> Order Receipt
               </h2>
               <button
                 onClick={() => setSelectedReceipt(null)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-xl cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 font-semibold text-xl cursor-pointer"
               >
                 ✕
               </button>
@@ -227,11 +227,11 @@ export default function UserPurchasesPage() {
             <div className="bg-slate-50 rounded-2xl p-4 space-y-3">
               <div className="flex justify-between text-xs text-slate-500">
                 <span>Receipt No:</span>
-                <span className="font-mono font-bold text-slate-800">#REC-{selectedReceipt.purchase_id}</span>
+                <span className="font-mono font-semibold text-slate-800">#REC-{selectedReceipt.purchase_id}</span>
               </div>
               <div className="flex justify-between text-xs text-slate-500">
                 <span>Date:</span>
-                <span className="font-bold text-slate-800">{new Date(selectedReceipt.created_at).toLocaleString()}</span>
+                <span className="font-semibold text-slate-800">{new Date(selectedReceipt.created_at).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-xs text-slate-500">
                 <span>Status:</span>
@@ -242,33 +242,33 @@ export default function UserPurchasesPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500 font-medium">Item / Service:</span>
-                <span className="font-bold text-slate-900">{selectedReceipt.product_title || 'Custom System Solution'}</span>
+                <span className="font-semibold text-slate-900">{selectedReceipt.product_title || 'Custom System Solution'}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500 font-medium">Total Price:</span>
-                <span className="font-bold text-slate-900">${Number(selectedReceipt.price || 0).toLocaleString()}</span>
+                <span className="font-semibold text-slate-900">${Number(selectedReceipt.price || 0).toLocaleString()}</span>
               </div>
               {selectedReceipt.discount > 0 && (
                 <div className="flex justify-between text-sm text-emerald-600">
                   <span className="font-medium">Discount Applied:</span>
-                  <span className="font-bold">-${Number(selectedReceipt.discount).toLocaleString()}</span>
+                  <span className="font-semibold">-${Number(selectedReceipt.discount).toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500 font-medium">Paid Amount:</span>
-                <span className="font-bold text-emerald-600">${Number(selectedReceipt.paid || selectedReceipt.price || 0).toLocaleString()}</span>
+                <span className="font-semibold text-emerald-600">${Number(selectedReceipt.paid || selectedReceipt.price || 0).toLocaleString()}</span>
               </div>
               {selectedReceipt.due > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500 font-medium">Remaining Due:</span>
-                  <span className="font-bold text-amber-600">${Number(selectedReceipt.due).toLocaleString()}</span>
+                  <span className="font-semibold text-amber-600">${Number(selectedReceipt.due).toLocaleString()}</span>
                 </div>
               )}
             </div>
 
             <button
               onClick={() => setSelectedReceipt(null)}
-              className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-primary transition-colors cursor-pointer"
+              className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-primary transition-colors cursor-pointer"
             >
               Close Receipt
             </button>
@@ -285,20 +285,20 @@ function StatusBadge({ status }) {
 
   if (normalized === 'paid' || normalized === 'complete') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-bold uppercase tracking-wider">
+      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-semibold uppercase tracking-wider">
         Paid
       </span>
     );
   }
   if (normalized === 'due') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 text-[10px] font-bold uppercase tracking-wider">
+      <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 text-[10px] font-semibold uppercase tracking-wider">
         Partial Due
       </span>
     );
   }
   return (
-    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-wider">
+    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-semibold uppercase tracking-wider">
       {normalized}
     </span>
   );

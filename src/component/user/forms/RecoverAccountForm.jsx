@@ -65,14 +65,14 @@ const RecoverAccountForm = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
         <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-lg">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Set New Password</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Set New Password</h1>
           <p className="text-slate-500 text-sm font-medium text-center">
             Enter your new password below to reset your account credentials.
           </p>
 
           <form className="w-full flex flex-col gap-3" onSubmit={handleResetPassword}>
             <div className="w-full flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 ml-1">New Password</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1">New Password</label>
               <input
                 type="password"
                 placeholder="Enter new password"
@@ -83,7 +83,7 @@ const RecoverAccountForm = () => {
               />
             </div>
             <div className="w-full flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 ml-1">Confirm New Password</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1">Confirm New Password</label>
               <input
                 type="password"
                 placeholder="Confirm new password"
@@ -95,7 +95,7 @@ const RecoverAccountForm = () => {
             </div>
             <button
               disabled={loading}
-              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
+              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
             >
               {loading ? 'Updating Password...' : 'Reset Password'}
             </button>
@@ -103,7 +103,7 @@ const RecoverAccountForm = () => {
 
           <p className="mt-6 text-center text-sm text-slate-500 font-medium">
             Remember your password?{' '}
-            <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
+            <Link href="/user-auth/login" className="text-primary font-semibold hover:underline">Login</Link>
           </p>
         </div>
       </div>
@@ -113,7 +113,7 @@ const RecoverAccountForm = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
       <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-lg">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Reset Password</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Reset Password</h1>
         <p className="text-slate-500 text-sm font-medium text-center">
           {submitted
             ? 'Check your inbox for a reset link.'
@@ -123,7 +123,7 @@ const RecoverAccountForm = () => {
         {!submitted ? (
           <form className="w-full flex flex-col gap-3" onSubmit={handleRequestReset}>
             <div className="w-full flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 ml-1">Email Address</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 ml-1">Email Address</label>
               <input
                 type="email"
                 placeholder="name@company.com"
@@ -135,7 +135,7 @@ const RecoverAccountForm = () => {
             </div>
             <button
               disabled={loading}
-              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-bold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
+              className="w-full py-3 rounded-xl cursor-pointer bg-primary text-white font-semibold hover:bg-primary-dark transition-all duration-200 mt-4 shadow-lg shadow-primary/20 disabled:bg-slate-300"
             >
               {loading ? 'Sending Link...' : 'Send Reset Link'}
             </button>
@@ -144,7 +144,7 @@ const RecoverAccountForm = () => {
           <div className="text-center">
             <button
               onClick={() => setSubmitted(false)}
-              className="text-primary font-bold hover:underline"
+              className="text-primary font-semibold hover:underline"
             >
               Didn&apos;t receive the email? Try again
             </button>
@@ -153,7 +153,7 @@ const RecoverAccountForm = () => {
 
         <p className="mt-6 text-center text-sm text-slate-500 font-medium">
           Remember your password?{' '}
-          <Link href="/user-auth/login" className="text-primary font-bold hover:underline">Login</Link>
+          <Link href="/user-auth/login" className="text-primary font-semibold hover:underline">Login</Link>
         </p>
       </div>
     </div>

@@ -37,7 +37,7 @@ const ROLES = [
 ];
 
 const inputCls = 'input-style';
-const labelCls = 'text-xs font-bold uppercase tracking-wider text-slate-500';
+const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500';
 
 const NewStaffMemberForm = () => {
   const router = useRouter();
@@ -100,7 +100,7 @@ const NewStaffMemberForm = () => {
               <FiUserPlus className="text-white" size={22} />
             </div>
             <div>
-              <h1 className="text-xl font-extrabold text-slate-900">Add Staff Member</h1>
+              <h1 className="text-xl font-semibold text-slate-900">Add Staff Member</h1>
               <p className="text-sm text-slate-500 mt-0.5">
                 An invitation email with login credentials will be sent automatically.
               </p>
@@ -200,7 +200,7 @@ const NewStaffMemberForm = () => {
                       form.role === r.value ? r.active : `${r.color} hover:opacity-80`
                     }`}
                   >
-                    <span className="font-bold text-sm capitalize">{r.label}</span>
+                    <span className="font-semibold text-sm capitalize">{r.label}</span>
                     <span
                       className={`text-xs leading-snug ${
                         form.role === r.value ? 'text-white/80' : 'opacity-70'
@@ -235,7 +235,7 @@ const NewStaffMemberForm = () => {
                 id="create-staff-member-btn"
                 type="submit"
                 disabled={loading || !form.role}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>

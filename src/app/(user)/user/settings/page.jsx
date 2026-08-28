@@ -11,7 +11,7 @@ const UserSettingsPage = () => (
         <FiSettings size={22} />
       </div>
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Profile & Address Settings</h1>
+        <h1 className="text-xl font-semibold text-slate-900">Profile & Address Settings</h1>
         <p className="text-slate-500 text-sm mt-0.5">Update your personal contact details and billing address.</p>
       </div>
     </div>

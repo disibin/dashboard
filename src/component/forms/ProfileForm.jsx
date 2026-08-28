@@ -62,13 +62,13 @@ const ProfileForm = ({ onSaved }) => {
   };
 
   const inputCls = 'input-style';
-  const labelCls = 'text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1';
+  const labelCls = 'text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400 ml-1';
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* Personal Info card */}
       <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-        <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-4">
           <FiUser className="text-primary" /> Personal Info
         </h2>
 
@@ -99,7 +99,7 @@ const ProfileForm = ({ onSaved }) => {
 
       {/* Address card */}
       <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-        <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-4">
           <FiMapPin className="text-primary" /> Address Details
         </h2>
 
@@ -140,7 +140,7 @@ const ProfileForm = ({ onSaved }) => {
       <div className="md:col-span-2 flex justify-end mt-4">
         <button
           disabled={loading}
-          className="flex items-center gap-2 px-10 py-4 rounded-2xl bg-slate-900 text-white font-bold hover:bg-primary transition-all duration-300 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
+          className="flex items-center gap-2 px-10 py-4 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
         >
           <FiSave /> {loading ? 'Saving Changes...' : 'Save Changes'}
         </button>

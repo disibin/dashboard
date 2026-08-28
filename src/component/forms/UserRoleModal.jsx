@@ -53,14 +53,14 @@ const UserRoleModal = ({ isOpen, user, onClose, onSuccess }) => {
             <FiShield size={24} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Change Member Role</h3>
+            <h3 className="text-lg font-semibold text-slate-900">Change Member Role</h3>
             <p className="text-xs text-slate-500">{user.name} ({user.email})</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
           <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
               Select Role
             </label>
             <select
@@ -78,14 +78,14 @@ const UserRoleModal = ({ isOpen, user, onClose, onSuccess }) => {
             <button
               type="button"
               onClick={onClose}
-              className="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50"
+              className="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="w-1/2 py-2.5 rounded-xl bg-slate-900 text-white font-bold hover:bg-primary transition-colors disabled:opacity-50"
+              className="w-1/2 py-2.5 rounded-xl bg-slate-900 text-white font-semibold hover:bg-primary transition-colors disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Role'}
             </button>

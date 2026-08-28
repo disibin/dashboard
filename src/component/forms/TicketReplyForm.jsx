@@ -135,7 +135,7 @@ export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
         <button
           type="submit"
           disabled={(!message.trim() && images.length === 0) || uploading || sending}
-          className="p-3.5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-bold transition-all disabled:opacity-30 disabled:hover:bg-primary shrink-0 shadow-md flex items-center justify-center"
+          className="p-3.5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold transition-all disabled:opacity-30 disabled:hover:bg-primary shrink-0 shadow-md flex items-center justify-center"
         >
           {sending ? <FiLoader className="animate-spin" size={18} /> : <FiSend size={18} />}
         </button>

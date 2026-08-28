@@ -91,10 +91,10 @@ export default function SupportDetailPage() {
         <Toaster position="top-center" />
         <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
           <FiAlertCircle className="mx-auto text-secondary" size={36} />
-          <h2 className="text-lg font-bold text-slate-800">Support Request Not Found</h2>
+          <h2 className="text-lg font-semibold text-slate-800">Support Request Not Found</h2>
           <Link
             href="/panel/support"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-primary transition-all shadow-md"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-semibold text-xs hover:bg-primary transition-all shadow-md"
           >
             <FiArrowLeft size={14} /> Back to Support Inbox
           </Link>
@@ -106,7 +106,7 @@ export default function SupportDetailPage() {
   const isPending = support.status === 'pending';
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Navigation & Actions */}
@@ -121,7 +121,7 @@ export default function SupportDetailPage() {
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-bold border border-rose-100 transition-all disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-semibold border border-rose-100 transition-all disabled:opacity-50"
         >
           {deleting ? <FiLoader className="animate-spin" size={13} /> : <FiTrash2 size={13} />}
           Delete Request
@@ -133,7 +133,7 @@ export default function SupportDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                 isPending ? 'bg-secondary/10 text-secondary border border-secondary/20' : 'bg-primary/10 text-primary border border-primary/20'
               }`}>
                 {isPending ? <FiClock size={11} /> : <FiCheckCircle size={11} />}
@@ -141,7 +141,7 @@ export default function SupportDetailPage() {
               </span>
               <span className="text-xs font-mono text-slate-400">#{support.id}</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">{support.subject || 'No Subject'}</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">{support.subject || 'No Subject'}</h1>
           </div>
         </div>
 
@@ -151,7 +151,7 @@ export default function SupportDetailPage() {
             <FiUser className="text-primary shrink-0" size={14} />
             <div>
               <p className="text-slate-400 font-medium">Submitter</p>
-              <p className="font-bold">{support.name}</p>
+              <p className="font-semibold">{support.name}</p>
             </div>
           </div>
 
@@ -159,7 +159,7 @@ export default function SupportDetailPage() {
             <FiMail className="text-primary shrink-0" size={14} />
             <div>
               <p className="text-slate-400 font-medium">Email Address</p>
-              <a href={`mailto:${support.email}`} className="font-bold hover:underline">{support.email}</a>
+              <a href={`mailto:${support.email}`} className="font-semibold hover:underline">{support.email}</a>
             </div>
           </div>
 
@@ -167,7 +167,7 @@ export default function SupportDetailPage() {
             <FiCalendar className="text-primary shrink-0" size={14} />
             <div>
               <p className="text-slate-400 font-medium">Submitted On</p>
-              <p className="font-bold">{new Date(support.created_at).toLocaleString()}</p>
+              <p className="font-semibold">{new Date(support.created_at).toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function SupportDetailPage() {
 
       {/* Message Body */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Original Inquiry</h3>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Original Inquiry</h3>
         <div
           className="text-slate-800 text-sm leading-relaxed prose prose-slate max-w-none"
           dangerouslySetInnerHTML={{ __html: support.description }}
@@ -185,7 +185,7 @@ export default function SupportDetailPage() {
       {/* Saved Reply Callout (if available) */}
       {support.reply && (
         <div className="bg-primary/10 p-6 sm:p-8 rounded-2xl border border-primary/20 shadow-sm space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-primary">
+          <div className="flex items-center justify-between text-xs font-semibold text-primary">
             <span className="flex items-center gap-1.5 uppercase tracking-wider">
               <FiCheckCircle size={13} /> Saved Reply Sent to Submitter
             </span>
@@ -203,7 +203,7 @@ export default function SupportDetailPage() {
       {/* Reply Composer — Only show if pending (not replied yet) */}
       {isPending ? (
         <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Compose Email Reply
           </h3>
 
@@ -220,7 +220,7 @@ export default function SupportDetailPage() {
             <button
               onClick={handleSendReply}
               disabled={replyLoading}
-              className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl font-bold text-xs transition-all disabled:opacity-50 shadow-md shrink-0"
+              className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl font-semibold text-xs transition-all disabled:opacity-50 shadow-md shrink-0"
             >
               {replyLoading ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
               {replyLoading ? 'Sending...' : 'Send Email Reply'}

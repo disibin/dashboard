@@ -116,11 +116,11 @@ export default function BoardMemberDetailPage() {
         <Toaster position="top-center" />
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <FiAlertCircle className="mx-auto text-secondary" size={36} />
-          <h2 className="text-lg font-bold text-slate-800">Board Member Not Found</h2>
+          <h2 className="text-lg font-semibold text-slate-800">Board Member Not Found</h2>
           <p className="text-xs text-slate-500">The requested board member record does not exist.</p>
           <Link
             href="/panel/board"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-primary transition-all shadow-md"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl font-semibold text-xs hover:bg-primary transition-all shadow-md"
           >
             <FiArrowLeft size={14} /> Back to Board Members
           </Link>
@@ -130,7 +130,7 @@ export default function BoardMemberDetailPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Top Bar */}
@@ -144,7 +144,7 @@ export default function BoardMemberDetailPage() {
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition-all border border-rose-100 disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-semibold transition-all border border-rose-100 disabled:opacity-50"
         >
           {deleting ? <FiLoader className="animate-spin" size={14} /> : <FiTrash2 size={14} />}
           Delete Member
@@ -161,14 +161,14 @@ export default function BoardMemberDetailPage() {
               className="w-24 h-24 rounded-full object-cover border-2 border-primary/20 shadow-md shrink-0"
             />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-primary/10 text-primary font-extrabold text-3xl flex items-center justify-center shrink-0 border-2 border-primary/20 shadow-md">
+            <div className="w-24 h-24 rounded-full bg-primary/10 text-primary font-semibold text-3xl flex items-center justify-center shrink-0 border-2 border-primary/20 shadow-md">
               {form.name?.charAt(0) || 'B'}
             </div>
           )}
 
           <div className="space-y-2 text-center sm:text-left">
-            <h1 className="text-2xl font-extrabold text-slate-900">{form.name || 'Board Member'}</h1>
-            <p className="text-xs font-bold text-primary bg-primary/10 inline-block px-3 py-1 rounded-full">
+            <h1 className="text-2xl font-semibold text-slate-900">{form.name || 'Board Member'}</h1>
+            <p className="text-xs font-semibold text-primary bg-primary/10 inline-block px-3 py-1 rounded-full">
               {form.post || 'Executive Role'}
             </p>
             <div>
@@ -182,7 +182,7 @@ export default function BoardMemberDetailPage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="mt-1 text-xs font-bold text-slate-600 hover:text-primary flex items-center gap-1.5 mx-auto sm:mx-0"
+                className="mt-1 text-xs font-semibold text-slate-600 hover:text-primary flex items-center gap-1.5 mx-auto sm:mx-0"
               >
                 <FiUploadCloud size={14} /> Change Profile Photo
               </button>
@@ -193,7 +193,7 @@ export default function BoardMemberDetailPage() {
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Full Name *
               </label>
               <input
@@ -206,7 +206,7 @@ export default function BoardMemberDetailPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Post Title / Position *
               </label>
               <input
@@ -220,7 +220,7 @@ export default function BoardMemberDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Email Address
             </label>
             <input
@@ -232,7 +232,7 @@ export default function BoardMemberDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Biography / Summary
             </label>
             <textarea
@@ -247,7 +247,7 @@ export default function BoardMemberDetailPage() {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+              className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
             >
               {saving ? <FiLoader className="animate-spin" size={14} /> : <FiSave size={14} />}
               {saving ? 'Saving Changes...' : 'Save Profile Changes'}

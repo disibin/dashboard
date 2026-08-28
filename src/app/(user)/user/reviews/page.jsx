@@ -79,7 +79,7 @@ export default function UserReviewsPage() {
       <Toaster position="top-center" />
 
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-1">
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2.5">
+        <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
           <span className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
             <FiStar size={20} />
           </span>
@@ -100,7 +100,7 @@ export default function UserReviewsPage() {
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                 review.is_approved
                   ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                   : 'bg-amber-50 text-amber-600 border border-amber-100'
@@ -113,7 +113,7 @@ export default function UserReviewsPage() {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-bold border border-rose-100 transition-all self-start sm:self-auto disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-semibold border border-rose-100 transition-all self-start sm:self-auto disabled:opacity-50"
             >
               {deleting ? <FiLoader className="animate-spin" size={13} /> : <FiTrash2 size={13} />}
               Delete Review
@@ -122,7 +122,7 @@ export default function UserReviewsPage() {
 
           {/* Star Rating Display */}
           <div className="space-y-2">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Rating</p>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Rating</p>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <FiStar
@@ -136,7 +136,7 @@ export default function UserReviewsPage() {
 
           {/* Comment */}
           <div className="space-y-1">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Review</p>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Review</p>
             <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-2xl border border-slate-100">
               {review.comment || 'No comment text provided.'}
             </p>
@@ -148,7 +148,7 @@ export default function UserReviewsPage() {
           {/* Manager Staff Reply */}
           {review.reply && (
             <div className="bg-primary/10/70 p-5 rounded-2xl border border-primary/20 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-primary-dark">
+              <div className="flex items-center gap-2 text-xs font-semibold text-primary-dark">
                 <FiCornerDownRight size={14} />
                 Official Response from Disibin Staff
               </div>
@@ -162,14 +162,14 @@ export default function UserReviewsPage() {
         /* New Review Form */
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
           <div className="space-y-1">
-            <h2 className="text-lg font-bold text-slate-900">Submit a Review</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Submit a Review</h2>
             <p className="text-xs text-slate-500">How would you rate your experience working with us?</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Interactive Rating Picker */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Rating *</label>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Rating *</label>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -184,7 +184,7 @@ export default function UserReviewsPage() {
                     />
                   </button>
                 ))}
-                <span className="text-xs font-bold text-slate-600 ml-2">
+                <span className="text-xs font-semibold text-slate-600 ml-2">
                   {rating} of 5 Stars
                 </span>
               </div>
@@ -192,7 +192,7 @@ export default function UserReviewsPage() {
 
             {/* Comment Area */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Review Comments (Optional)
               </label>
               <textarea
@@ -207,7 +207,7 @@ export default function UserReviewsPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-amber-500 text-white rounded-2xl font-bold text-sm transition-all shadow-md disabled:opacity-50"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-amber-500 text-white rounded-2xl font-semibold text-sm transition-all shadow-md disabled:opacity-50"
             >
               {submitting ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
               {submitting ? 'Submitting Review...' : 'Submit Review'}

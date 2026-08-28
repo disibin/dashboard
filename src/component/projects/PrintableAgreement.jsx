@@ -29,14 +29,14 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
         
         {/* Top Control Bar - Hidden when printing */}
         <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between print:hidden">
-          <div className="flex items-center gap-2 font-bold text-sm">
+          <div className="flex items-center gap-2 font-semibold text-sm">
             <FiFileText size={18} className="text-primary-light" />
             <span>Printable Project Agreement Document</span>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all shadow-md active:scale-95"
             >
               <FiPrinter size={15} /> Print Agreement / Save PDF
             </button>
@@ -62,7 +62,7 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
               </p>
             </div>
             <div className="text-left sm:text-right">
-              <span className="inline-block text-xs font-extrabold uppercase tracking-wider px-3 py-1 bg-slate-100 text-slate-800 border border-slate-300 rounded-md">
+              <span className="inline-block text-xs font-semibold uppercase tracking-wider px-3 py-1 bg-slate-100 text-slate-800 border border-slate-300 rounded-md">
                 Official Contract
               </span>
               <p className="text-[11px] text-slate-400 mt-1">Ref ID: AGREEMENT-{agreement.id}</p>
@@ -72,8 +72,8 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
           {/* Title Banner */}
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-2">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-xl font-bold text-slate-900">{agreement.title}</h2>
-              <span className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide border ${
+              <h2 className="text-xl font-semibold text-slate-900">{agreement.title}</h2>
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${
                 agreement.status === 'signed' || agreement.status === 'completed'
                   ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                   : agreement.status === 'active'
@@ -92,26 +92,26 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs bg-slate-50/60 p-4 rounded-xl border border-slate-100">
             <div>
               <span className="block font-semibold text-slate-400 uppercase text-[10px]">Project Name</span>
-              <span className="font-bold text-slate-800">{project?.title || `Project #${agreement.project_id}`}</span>
+              <span className="font-semibold text-slate-800">{project?.title || `Project #${agreement.project_id}`}</span>
             </div>
             <div>
               <span className="block font-semibold text-slate-400 uppercase text-[10px]">Client / Account</span>
-              <span className="font-bold text-slate-800">{project?.user_name || 'Customer'}</span>
+              <span className="font-semibold text-slate-800">{project?.user_name || 'Customer'}</span>
               <span className="block text-[10px] text-slate-500 truncate">{project?.user_email}</span>
             </div>
             <div>
               <span className="block font-semibold text-slate-400 uppercase text-[10px]">Start Date</span>
-              <span className="font-bold text-slate-800">{formatDate(agreement.start_date)}</span>
+              <span className="font-semibold text-slate-800">{formatDate(agreement.start_date)}</span>
             </div>
             <div>
               <span className="block font-semibold text-slate-400 uppercase text-[10px]">Expiration Date</span>
-              <span className="font-bold text-slate-800">{formatDate(agreement.expire_date)}</span>
+              <span className="font-semibold text-slate-800">{formatDate(agreement.expire_date)}</span>
             </div>
           </div>
 
           {/* Agreement Body / Description (Tiptap Rich Text HTML) */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5">
+            <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1.5">
               Agreement Terms & Scope
             </h3>
             {agreement.description ? (
@@ -128,7 +128,7 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
           <div className="pt-12 border-t border-slate-200 grid grid-cols-2 gap-12 text-xs">
             <div className="space-y-8">
               <div className="border-b border-slate-400 pb-1">
-                <p className="font-bold text-slate-900">Disibin Authorized Representative</p>
+                <p className="font-semibold text-slate-900">Disibin Authorized Representative</p>
                 <p className="text-[10px] text-slate-500">Service Provider Signature & Stamp</p>
               </div>
               <div className="flex justify-between text-[11px] text-slate-500">
@@ -139,7 +139,7 @@ export default function PrintableAgreement({ agreement, project, onClose }) {
 
             <div className="space-y-8">
               <div className="border-b border-slate-400 pb-1">
-                <p className="font-bold text-slate-900">{project?.user_name || 'Client Representative'}</p>
+                <p className="font-semibold text-slate-900">{project?.user_name || 'Client Representative'}</p>
                 <p className="text-[10px] text-slate-500">Client Signature & Acceptance</p>
               </div>
               <div className="flex justify-between text-[11px] text-slate-500">

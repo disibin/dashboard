@@ -2,22 +2,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import {
   FiPlus, FiEdit2, FiTrash2, FiSearch, FiPackage,
-  FiEye, FiEyeOff, FiStar, FiTag, FiExternalLink, FiLoader
+  FiExternalLink, FiX, FiGlobe, FiUser, FiCheck, FiUpload, FiLoader
 } from 'react-icons/fi';
-import Link from 'next/link';
 import Image from 'next/image';
+import ProductCard from '@/component/cards/ProductCard';
 
 const ProductsManagement = () => {
-  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [deleting, setDeleting] = useState(null);
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [form, setForm] = useState({
+    name: '',
+    title: '',
+    image: '',
+    image_id: '',
+    link: '',
+  });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -36,260 +45,317 @@ const ProductsManagement = () => {
     }
   };
 
-  const handleCreateProduct = async () => {
-    setCreating(true);
-    try {
-      const res = await axios.post('/api/staff/product', {
-        name: 'enter title',
-        price: 0,
-        discount: 0,
-        is_published: false,
-        is_featured: false,
+  const handleOpenForm = (prod = null) => {
+    if (prod) {
+      setEditingProduct(prod);
+      setForm({
+        name: prod.name || '',
+        title: prod.title || '',
+        image: prod.image || '',
+        image_id: prod.image_id || '',
+        link: prod.link || '',
       });
-
-      if (res.data.success && res.data.data?.slug) {
-        toast.success('Draft product initialized');
-        router.push(`/panel/products/${res.data.data.slug}`);
-      } else {
-        toast.error(res.data.message || 'Failed to create product');
-        setCreating(false);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to create product');
-      setCreating(false);
+      setImagePreview(prod.image || '');
+      setImageFile(null);
+    } else {
+      setEditingProduct(null);
+      setForm({ name: '', title: '', image: '', image_id: '', link: '' });
+      setImagePreview('');
+      setImageFile(null);
     }
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDelete = async (slug, name) => {
-    if (!window.confirm(`Are you sure you want to delete "${name}"?`)) return;
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingProduct(null);
+    setForm({ name: '', title: '', image: '', image_id: '', link: '' });
+    setImagePreview('');
+    setImageFile(null);
+  };
 
-    setDeleting(slug);
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+    setForm((prev) => ({ ...prev, image: '', image_id: '' }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name.trim()) return toast.error('Product name is required');
+
+    setSubmitting(true);
     try {
-      const res = await axios.delete(`/api/staff/product/${slug}`);
-      if (res.data.success) {
-        toast.success('Product deleted');
-        setProducts(products.filter(p => p.slug !== slug));
+      let finalImageUrl = form.image;
+      let finalImageId = form.image_id;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        const uploadRes = await axios.post('/api/image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (uploadRes.data.success) {
+          finalImageUrl = uploadRes.data.data.url;
+          finalImageId = uploadRes.data.data.public_id;
+        } else {
+          throw new Error(uploadRes.data.message || 'Image upload failed');
+        }
+      }
+
+      const payload = {
+        ...form,
+        image: finalImageUrl,
+        image_id: finalImageId,
+      };
+
+      if (editingProduct) {
+        const res = await axios.put('/api/staff/product', { id: editingProduct.id, ...payload });
+        if (res.data.success) {
+          toast.success(res.data.message);
+          fetchProducts();
+          handleCloseForm();
+        }
       } else {
-        toast.error(res.data.message || 'Failed to delete product');
+        const res = await axios.post('/api/staff/product', payload);
+        if (res.data.success) {
+          toast.success(res.data.message);
+          fetchProducts();
+          handleCloseForm();
+        }
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to delete product');
+      toast.error(error.response?.data?.message || error.message || 'Action failed');
     } finally {
-      setDeleting(null);
+      setSubmitting(false);
     }
   };
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.slug.toLowerCase().includes(searchTerm.toLowerCase());
-
-    if (!matchesSearch) return false;
-    if (statusFilter === 'published') return p.is_published;
-    if (statusFilter === 'draft') return !p.is_published;
-    if (statusFilter === 'featured') return p.is_featured;
-    return true;
-  });
-
-  const getPrimaryImage = (images) => {
-    if (!images || images.length === 0) return null;
-    return images.find(i => i.is_primary)?.image || images[0]?.image || null;
+  const handleDelete = async (id, name, public_id) => {
+    if (!window.confirm(`Permanently delete product "${name}"?`)) return;
+    try {
+      if (public_id) {
+        await axios.delete(`/api/image?public_id=${encodeURIComponent(public_id)}`).catch(() => {});
+      }
+      const res = await axios.delete(`/api/staff/product?id=${id}`);
+      if (res.data.success) {
+        toast.success(res.data.message);
+        setProducts((prev) => prev.filter((p) => p.id !== id));
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Delete failed');
+    }
   };
+
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.slug.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const inputCls = 'input-style';
+  const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
-      {/* Simple Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <FiPackage size={18} />
-            </span>
-            Products Management
-          </h1>
-          <p className="text-slate-500 text-xs sm:text-sm pl-10">Manage platform products, pricing, and feature specs</p>
+      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+            <FiPackage size={24} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-900">Products Management</h1>
+            <p className="text-slate-500 text-sm mt-0.5">
+              Manage platform software products, landing pages, and external demo links.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/panel/products/features"
-            className="flex items-center gap-1.5 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-colors"
-          >
-            <FiTag size={14} className="text-primary" /> Features List
-          </Link>
-          <button
-            onClick={handleCreateProduct}
-            disabled={creating}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold text-xs transition-colors disabled:opacity-50 shadow-sm"
-          >
-            {creating ? <FiLoader className="animate-spin" size={14} /> : <FiPlus size={14} />}
-            {creating ? 'Creating...' : 'Add Product'}
-          </button>
-        </div>
+        <button
+          onClick={() => (showForm ? handleCloseForm() : handleOpenForm())}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all shadow-md cursor-pointer"
+        >
+          {showForm ? <FiX size={16} /> : <FiPlus size={16} />}
+          {showForm ? 'Close Form' : 'Add New Product'}
+        </button>
       </div>
 
-      {/* Main Table Card */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-        {/* Filters */}
-        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50">
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 w-full sm:w-72">
-            <FiSearch className="text-slate-400 shrink-0" size={14} />
+      {showForm && (
+        <div className="bg-white rounded-3xl p-7 border border-indigo-100 shadow-lg space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 className="text-lg font-semibold text-slate-900">
+              {editingProduct ? `Edit Product: "${editingProduct.name}"` : 'Create New Product'}
+            </h3>
+            <button onClick={handleCloseForm} className="text-slate-400 hover:text-slate-600 cursor-pointer">
+              <FiX size={18} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Product Name *</label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className={inputCls}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={labelCls}>Display Title</label>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>External Demo Link</label>
+                <input
+                  type="url"
+                  value={form.link}
+                  onChange={(e) => setForm({ ...form, link: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+
+              <div>
+                <label className={labelCls}>Product Image</label>
+                {imagePreview ? (
+                  <div className="flex items-center gap-3 p-2 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <Image
+                      width={50}
+                      height={50}
+                      src={imagePreview}
+                      alt="Selected product image"
+                      className="w-12 h-12 rounded-xl object-cover border border-slate-200"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-slate-700 truncate">
+                        {imageFile ? imageFile.name : 'Current Image'}
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-mono truncate">
+                        {imageFile ? `${(imageFile.size / 1024).toFixed(1)} KB (Uploads on save)` : form.image_id || 'Cloudinary'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-all cursor-pointer"
+                      title="Remove Image"
+                    >
+                      <FiX size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      id="product-image-upload"
+                    />
+                    <label
+                      htmlFor="product-image-upload"
+                      className="flex items-center justify-center gap-2 p-3 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:border-indigo-300 transition-all cursor-pointer"
+                    >
+                      <FiUpload size={16} className="text-slate-400" />
+                      <span>Select Image File</span>
+                    </label>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleCloseForm}
+                className="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+              >
+                {submitting ? (
+                  <>
+                    <FiLoader size={16} className="animate-spin" />
+                    <span>Uploading &amp; Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <FiCheck size={16} />
+                    <span>{editingProduct ? 'Update Product' : 'Save Product'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-3 bg-slate-50/50">
+          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 w-full sm:w-80 shadow-xs">
+            <FiSearch className="text-slate-400 shrink-0" size={16} />
             <input
               type="text"
-              placeholder="Search products..."
-              className="w-full text-xs bg-transparent focus:outline-none text-slate-800"
+              className="w-full text-xs bg-transparent focus:outline-none text-slate-800 font-medium"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
-            {[
-              { id: 'all', label: 'All' },
-              { id: 'published', label: 'Published' },
-              { id: 'draft', label: 'Drafts' },
-              { id: 'featured', label: 'Featured' },
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setStatusFilter(tab.id)}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${statusFilter === tab.id
-                    ? 'bg-white text-slate-900 shadow-2xs'
-                    : 'text-slate-500 hover:text-slate-900'
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <span className="text-xs font-semibold text-slate-400">Total: {filteredProducts.length}</span>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-50/80 text-slate-400 text-[11px] uppercase tracking-wider font-bold border-b border-slate-100">
-              <tr>
-                <th className="px-6 py-3.5">Product</th>
-                <th className="px-6 py-3.5">Price ($)</th>
-                <th className="px-6 py-3.5">Features</th>
-                <th className="px-6 py-3.5">Status</th>
-                <th className="px-6 py-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
-              {loading ? (
-                <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">Loading products...</td>
-                </tr>
-              ) : filteredProducts.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
-                    {searchTerm || statusFilter !== 'all' ? 'No products match your filter.' : 'No products found. Add your first product!'}
-                  </td>
-                </tr>
-              ) : (
-                filteredProducts.map((product) => {
-                  const primaryImage = getPrimaryImage(product.images);
-                  const price = Number(product.price) || 0;
-                  const discount = Number(product.discount) || 0;
-                  const finalPrice = Math.max(0, price - discount);
-
-                  return (
-                    <tr key={product.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-3.5">
-                        <div className="flex items-center gap-3">
-                          {primaryImage ? (
-                            <Image
-                              src={primaryImage}
-                              alt={product.name}
-                              width={40}
-                              height={40}
-                              className="w-10 h-10 rounded-xl object-cover border border-slate-100 shrink-0"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 text-slate-400">
-                              <FiPackage size={18} />
-                            </div>
-                          )}
-                          <div className="min-w-0">
-                            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                              <span className="truncate max-w-xs">{product.name}</span>
-                              {product.demo_url && (
-                                <a
-                                  href={product.demo_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-slate-400 hover:text-primary transition-colors"
-                                  title="View Demo Link"
-                                >
-                                  <FiExternalLink size={12} />
-                                </a>
-                              )}
-                            </div>
-                            <div className="text-[11px] text-slate-400 truncate max-w-xs font-mono">{product.slug}</div>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-3.5">
-                        <div className="font-bold text-slate-900">
-                          ${finalPrice}
-                          {discount > 0 && (
-                            <span className="ml-1.5 text-[11px] text-slate-400 line-through">
-                              ${price}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-3.5">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">
-                          <FiTag size={10} />
-                          {product.features?.length || 0}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-3.5">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold ${
-                            product.is_published ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-500'
-                          }`}>
-                            {product.is_published ? <FiEye size={11} /> : <FiEyeOff size={11} />}
-                            {product.is_published ? 'Published' : 'Draft'}
-                          </span>
-                          {product.is_featured && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-600 border border-amber-100">
-                              <FiStar size={11} /> Featured
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-3.5 text-right space-x-1">
-                        <Link
-                          href={`/panel/products/${product.slug}`}
-                          className="inline-block p-1.5 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                          title="Edit product"
-                        >
-                          <FiEdit2 size={15} />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(product.slug, product.name)}
-                          disabled={deleting === product.slug}
-                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-40"
-                          title="Delete product"
-                        >
-                          <FiTrash2 size={15} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+      {loading ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+          Loading products...
         </div>
+      ) : filteredProducts.length === 0 ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+          <FiPackage size={32} className="mx-auto mb-2 text-slate-300" />
+          <p className="font-semibold text-sm">
+            {searchTerm ? 'No products match your filter.' : 'No products found. Add your first product!'}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.map((prod) => (
+            <ProductCard
+              key={prod.id}
+              product={prod}
+              onEdit={handleOpenForm}
+              onDelete={handleDelete}
+              isStaff={true}
+            />
+          ))}
+        </div>
+      )}
       </div>
     </div>
   );
