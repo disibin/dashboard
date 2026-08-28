@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
   image TEXT,
   image_id TEXT,
   link TEXT,
@@ -120,6 +121,7 @@ CREATE TRIGGER update_products_modtime
 BEFORE UPDATE ON products 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
+CREATE INDEX idx_products_slug ON products(slug);
 CREATE INDEX idx_products_created_by ON products(created_by);
 
 CREATE TABLE IF NOT EXISTS features (
@@ -131,6 +133,105 @@ CREATE TABLE IF NOT EXISTS features (
 
 CREATE INDEX idx_features_name ON features(name);
 CREATE INDEX idx_features_slug ON features(slug);
+
+CREATE TABLE IF NOT EXISTS packages (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  price INT DEFAULT 0,
+  discount INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_packages_modtime 
+BEFORE UPDATE ON packages 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_packages_tenant_id ON packages(tenant_id);
+CREATE INDEX idx_packages_slug ON packages(slug);
+
+CREATE TABLE IF NOT EXISTS package_features (
+  id SERIAL PRIMARY KEY,
+  package_id INT REFERENCES packages(id) ON DELETE CASCADE,
+  feature_id INT REFERENCES features(id) ON DELETE CASCADE,
+  value BOOLEAN DEFAULT TRUE,
+  UNIQUE(package_id, feature_id)
+);
+
+CREATE INDEX idx_package_features_package_id ON package_features(package_id);
+CREATE INDEX idx_package_features_feature_id ON package_features(feature_id);
+
+CREATE TABLE IF NOT EXISTS package_chats (
+  id SERIAL PRIMARY KEY,
+  package_id INT REFERENCES packages(id) ON DELETE CASCADE,
+  title TEXT,
+  is_group BOOLEAN DEFAULT FALSE,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_package_chats_package_id ON package_chats(package_id);
+CREATE INDEX idx_package_chats_created_by ON package_chats(created_by);
+
+CREATE TABLE IF NOT EXISTS package_chats_participants (
+  id SERIAL PRIMARY KEY,
+  chat_id INT REFERENCES package_chats(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
+  CHECK (
+    (user_id IS NOT NULL AND staff_id IS NULL)
+    OR
+    (user_id IS NULL AND staff_id IS NOT NULL)
+  ),
+  last_read_at TIMESTAMP,
+  joined_at TIMESTAMP DEFAULT now(),
+  UNIQUE(chat_id, user_id, staff_id)
+);
+
+CREATE INDEX idx_package_chats_participants_chat_id ON package_chats_participants(chat_id);
+CREATE INDEX idx_package_chats_participants_user_id ON package_chats_participants(user_id);
+CREATE INDEX idx_package_chats_participants_staff_id ON package_chats_participants(staff_id);
+
+CREATE TABLE IF NOT EXISTS package_chats_messages (
+  id SERIAL PRIMARY KEY,
+  chat_id INT REFERENCES package_chats(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
+  CHECK (
+    (user_id IS NOT NULL AND staff_id IS NULL)
+    OR
+    (user_id IS NULL AND staff_id IS NOT NULL)
+  ),
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_package_chats_messages_chat_id ON package_chats_messages(chat_id);
+CREATE INDEX idx_package_chats_messages_user_id ON package_chats_messages(user_id);
+CREATE INDEX idx_package_chats_messages_staff_id ON package_chats_messages(staff_id);
+CREATE INDEX idx_package_chats_messages_created_at ON package_chats_messages(chat_id, created_at);
+
+CREATE TABLE IF NOT EXISTS package_chats_files (
+  id SERIAL PRIMARY KEY,
+  chat_id INT REFERENCES package_chats(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
+  CHECK (
+    (user_id IS NOT NULL AND staff_id IS NULL)
+    OR
+    (user_id IS NULL AND staff_id IS NOT NULL)
+  ),
+  file_url TEXT NOT NULL,
+  file_id TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_package_chats_files_chat_id ON package_chats_files(chat_id);
+CREATE INDEX idx_package_chats_files_user_id ON package_chats_files(user_id);
+CREATE INDEX idx_package_chats_files_staff_id ON package_chats_files(staff_id);
 
 -- =====================================================
 -- 3. INTERNAL MESSAGING SYSTEM
@@ -351,6 +452,7 @@ CREATE INDEX idx_career_applications_status ON career_applications(status);
 CREATE TABLE IF NOT EXISTS reviews (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+  tenant_name TEXT,
   rating INT CHECK (rating BETWEEN 1 AND 5),
   comment TEXT,
   reply TEXT,
@@ -452,6 +554,143 @@ CREATE TABLE IF NOT EXISTS client_leads (
 );
 
 CREATE INDEX idx_client_leads_email ON client_leads(email);
+
+-- =====================================================
+-- 7. PURCHASES, PAYMENTS & PAYROLL
+-- =====================================================
+CREATE TABLE IF NOT EXISTS purchases (
+  id SERIAL PRIMARY KEY,
+  package_id INT REFERENCES packages(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  price INT NOT NULL,
+  discount INT DEFAULT 0,
+  status TEXT DEFAULT 'incomplete' CHECK (status IN ('incomplete','complete')),
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_purchases_modtime 
+BEFORE UPDATE ON purchases 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_purchases_package_id ON purchases(package_id);
+CREATE INDEX idx_purchases_user_id ON purchases(user_id);
+CREATE INDEX idx_purchases_status ON purchases(status);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id SERIAL PRIMARY KEY,
+  purchase_id INT NOT NULL REFERENCES purchases(id) ON DELETE CASCADE,
+  price INT NOT NULL,
+  paid INT DEFAULT 0,
+  due INT DEFAULT 0,
+  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid','due','paid')),
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_payments_modtime 
+BEFORE UPDATE ON payments 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_payments_purchase_id ON payments(purchase_id);
+CREATE INDEX idx_payments_status ON payments(status);
+
+CREATE TABLE IF NOT EXISTS payroll (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  month INT CHECK (month BETWEEN 1 AND 12),
+  year INT NOT NULL,
+  total_amount INT DEFAULT 0,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'processed')),
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_payroll_modtime 
+BEFORE UPDATE ON payroll 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_payroll_year_month ON payroll(year, month);
+
+CREATE TABLE IF NOT EXISTS salary (
+  id SERIAL PRIMARY KEY,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
+  payroll_id INT REFERENCES payroll(id) ON DELETE CASCADE,
+  amount INT NOT NULL,
+  paid_amount INT DEFAULT 0,
+  due_amount INT DEFAULT 0,
+  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'partially_paid', 'paid')),
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_salary_modtime 
+BEFORE UPDATE ON salary 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_salary_staff_id ON salary(staff_id);
+CREATE INDEX idx_salary_payroll_id ON salary(payroll_id);
+CREATE INDEX idx_salary_status ON salary(status);
+
+CREATE TABLE IF NOT EXISTS salary_payments (
+  id SERIAL PRIMARY KEY,
+  salary_id INT REFERENCES salary(id) ON DELETE CASCADE,
+  amount INT NOT NULL,
+  payment_method TEXT,
+  note TEXT,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_salary_payments_modtime 
+BEFORE UPDATE ON salary_payments 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_salary_payments_salary_id ON salary_payments(salary_id);
+
+CREATE TABLE IF NOT EXISTS services (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  price INT DEFAULT 0,
+  discount INT DEFAULT 0,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'completed', 'cancelled')),
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_services_modtime 
+BEFORE UPDATE ON services 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_services_tenant_id ON services(tenant_id);
+CREATE INDEX idx_services_user_id ON services(user_id);
+CREATE INDEX idx_services_slug ON services(slug);
+CREATE INDEX idx_services_status ON services(status);
+
+CREATE TABLE IF NOT EXISTS service_payments (
+  id SERIAL PRIMARY KEY,
+  service_id INT NOT NULL REFERENCES services(id) ON DELETE CASCADE,
+  price INT NOT NULL,
+  paid INT DEFAULT 0,
+  due INT DEFAULT 0,
+  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'due', 'paid')),
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_service_payments_modtime 
+BEFORE UPDATE ON service_payments 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_service_payments_service_id ON service_payments(service_id);
+CREATE INDEX idx_service_payments_status ON service_payments(status);
 
 -- =====================================================
 -- 7. NEWSLETTERS
