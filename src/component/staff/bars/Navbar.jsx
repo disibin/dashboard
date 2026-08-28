@@ -106,10 +106,8 @@ const Navbar = () => {
           </span>
         </button>
 
-        <Link href="/panel" className="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          <span className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-black shadow-sm">
-            D
-          </span>
+        <Link href="/panel" className="text-lg font-semibold text-slate-900 tracking-tight flex items-center gap-2">
+
           <span className="hidden md:inline">Management</span>
         </Link>
       </div>
@@ -128,26 +126,22 @@ const Navbar = () => {
               setIsOpen(true)
             }}
             onFocus={() => setIsOpen(true)}
-            className='input-style'    />
-          {search ? (
+            className='input-style' />
+          {search && (
             <button
               onClick={() => setSearch('')}
               className="text-slate-400 hover:text-slate-600 p-0.5"
             >
               <FiX size={14} />
             </button>
-          ) : (
-            <kbd className="hidden md:inline-block px-1.5 py-0.5 text-[10px] font-bold text-slate-400 bg-slate-200/70 rounded">
-              Ctrl K
-            </kbd>
           )}
         </div>
 
         {isOpen && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden max-h-80 overflow-y-auto z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+            <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
               <span>Accessible Folders ({filteredRoutes.length})</span>
-              <span className="capitalize text-indigo-600 font-bold">Role: {role}</span>
+              <span className="capitalize text-indigo-600 font-semibold">Role: {role}</span>
             </div>
 
             {filteredRoutes.length === 0 ? (
@@ -167,9 +161,9 @@ const Navbar = () => {
                       <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center transition-colors shrink-0">
                         <IconComponent size={16} />
                       </div>
-                      <p className="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
-                          {route.name}
-                        </p>
+                      <p className="text-xs font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                        {route.name}
+                      </p>
                     </div>
 
                     <FiArrowRight size={14} className="text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-indigo-600 transition-all transform -translate-x-1 group-hover:translate-x-0" />
@@ -184,13 +178,13 @@ const Navbar = () => {
       {/* Right User Logout & Status */}
       <div className="flex items-center gap-3 shrink-0">
         {staffData?.name && (
-          <span className="hidden sm:block text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full capitalize">
+          <span className="hidden sm:block text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full capitalize">
             {staffData.name} ({staffData.role})
           </span>
         )}
         <button
           onClick={staffLogout}
-          className="px-4 py-1.5 rounded-xl cursor-pointer bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm"
+          className="px-4 py-1.5 rounded-xl cursor-pointer bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-all shadow-sm"
         >
           Logout
         </button>

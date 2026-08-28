@@ -31,7 +31,7 @@ export default function UserPurchasesPage() {
   };
 
   const filteredPurchases = purchases.filter((item) => {
-    const titleMatch = (item.product_title || item.project_title || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const titleMatch = (item.package_title || '').toLowerCase().includes(searchQuery.toLowerCase());
     const status = (item.payment_status || item.purchase_status || '').toLowerCase();
     
     if (filterStatus === 'paid') return titleMatch && status === 'paid';
@@ -169,12 +169,8 @@ export default function UserPurchasesPage() {
                 </div>
 
                 <h3 className="font-bold text-slate-900 text-base line-clamp-1">
-                  {item.product_title || item.project_title || 'Custom System Order'}
+                  {item.package_title || 'Software Package Purchase'}
                 </h3>
-                
-                {item.project_title && item.product_title && (
-                  <p className="text-slate-500 text-xs mt-1">Project: {item.project_title}</p>
-                )}
 
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                   <div>

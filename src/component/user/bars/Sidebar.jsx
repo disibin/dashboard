@@ -26,9 +26,7 @@ const Sidebar = () => {
       label: 'My Workspace',
       links: [
         { name: 'Profile',      href: '/user/profile',      icon: <FiUser /> },
-        { name: 'Projects',     href: '/user/projects',     icon: <FiClipboard /> },
         { name: 'Purchases',    href: '/user/purchases',    icon: <FiCreditCard /> },
-        { name: 'Agreements',   href: '/user/agreements',   icon: <FiBookOpen /> },
       ],
     },
     {
@@ -67,7 +65,7 @@ const Sidebar = () => {
       )}
 
       <aside
-        className={`fixed top-14 left-0 z-50 h-[calc(100vh-3.5rem)] w-64 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-14 left-0 z-50 h-[calc(100vh-3.5rem)] w-64 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 ease-in-out ${
           userSidebar ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

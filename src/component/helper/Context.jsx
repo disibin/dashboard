@@ -9,7 +9,7 @@ const ContextProvider = ({ children }) => {
   const router = useRouter();
   const [sidebar, setSidebar] = useState(false);
   const [dashboardSidebar, setDashboardSidebar] = useState(true);
-  const [userSidebar, setUserSidebar] = useState(false);
+  const [userSidebar, setUserSidebar] = useState(true);
   const [userData, setUserData] = useState(null);
   const [staffData, setStaffData] = useState(null);
   const isLoggedIn = !!userData;
