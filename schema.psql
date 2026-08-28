@@ -13,7 +13,7 @@ $$ language 'plpgsql';
 -- =====================================================
 -- 1. USERS & ACCESS CONTROL
 -- =====================================================
-CREATE TABLE IF NOT EXISTS teams (
+CREATE TABLE IF NOT EXISTS staffs (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
@@ -43,13 +43,13 @@ CREATE TABLE IF NOT EXISTS teams (
   updated_at TIMESTAMP DEFAULT now()
 );
 
-CREATE TRIGGER update_teams_modtime 
-BEFORE UPDATE ON teams 
+CREATE TRIGGER update_staffs_modtime 
+BEFORE UPDATE ON staffs 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE INDEX idx_teams_email ON teams(email);
-CREATE INDEX idx_teams_role ON teams(role);
-CREATE INDEX idx_teams_is_active ON teams(is_active);
+CREATE INDEX idx_staffs_email ON staffs(email);
+CREATE INDEX idx_staffs_role ON staffs(role);
+CREATE INDEX idx_staffs_is_active ON staffs(is_active);
 
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
@@ -87,20 +87,31 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_is_active ON users(is_active);
 
+CREATE TABLE IF NOT EXISTS tenants (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  url TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_tenants_modtime 
+BEFORE UPDATE ON tenants 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_tenants_url ON tenants(url);
+
 -- =====================================================
 -- 2. PRODUCTS & FEATURES
 -- =====================================================
 CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  description TEXT,
-  demo_url TEXT,
-  price INT DEFAULT 0,
-  discount INT DEFAULT 0,
-  is_featured BOOLEAN DEFAULT TRUE,
-  is_published BOOLEAN DEFAULT TRUE,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  title TEXT NOT NULL,
+  image TEXT,
+  image_id TEXT,
+  link TEXT,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -109,44 +120,17 @@ CREATE TRIGGER update_products_modtime
 BEFORE UPDATE ON products 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE INDEX idx_products_slug ON products(slug);
 CREATE INDEX idx_products_created_by ON products(created_by);
-CREATE INDEX idx_products_is_featured ON products(is_featured);
-CREATE INDEX idx_products_is_published ON products(is_published);
-
-CREATE TABLE IF NOT EXISTS product_images (
-  id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  image TEXT NOT NULL,
-  public_id TEXT NOT NULL,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  is_primary BOOLEAN DEFAULT FALSE, 
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE INDEX idx_product_images_product_id ON product_images(product_id);
-CREATE INDEX idx_product_images_is_primary ON product_images(product_id, is_primary);
 
 CREATE TABLE IF NOT EXISTS features (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
-  description TEXT
+  created_at TIMESTAMP DEFAULT now()
 );
 
 CREATE INDEX idx_features_name ON features(name);
 CREATE INDEX idx_features_slug ON features(slug);
-
-CREATE TABLE IF NOT EXISTS product_features (
-  id SERIAL PRIMARY KEY,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  feature_id INT REFERENCES features(id) ON DELETE CASCADE,
-  value BOOLEAN DEFAULT TRUE,
-  UNIQUE(product_id, feature_id)
-);
-
-CREATE INDEX idx_product_features_product_id ON product_features(product_id);
-CREATE INDEX idx_product_features_feature_id ON product_features(feature_id);
 
 -- =====================================================
 -- 3. INTERNAL MESSAGING SYSTEM
@@ -155,7 +139,7 @@ CREATE TABLE IF NOT EXISTS chats (
   id SERIAL PRIMARY KEY,
   title TEXT,
   is_group BOOLEAN DEFAULT FALSE,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now()
 );
 
@@ -164,19 +148,19 @@ CREATE INDEX idx_chats_created_by ON chats(created_by);
 CREATE TABLE IF NOT EXISTS chat_participants (
   id SERIAL PRIMARY KEY,
   chat_id INT REFERENCES chats(id) ON DELETE CASCADE,
-  team_id INT REFERENCES teams(id) ON DELETE CASCADE,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
   last_read_at TIMESTAMP,
   joined_at TIMESTAMP DEFAULT now(),
-  UNIQUE(chat_id, team_id)
+  UNIQUE(chat_id, staff_id)
 );
 
 CREATE INDEX idx_chat_participants_chat_id ON chat_participants(chat_id);
-CREATE INDEX idx_chat_participants_team_id ON chat_participants(team_id);
+CREATE INDEX idx_chat_participants_staff_id ON chat_participants(staff_id);
 
 CREATE TABLE IF NOT EXISTS chat_messages (
   id SERIAL PRIMARY KEY,
   chat_id INT REFERENCES chats(id) ON DELETE CASCADE,
-  sender_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  sender_id INT REFERENCES staffs(id) ON DELETE SET NULL,
   content TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT now()
 );
@@ -188,7 +172,7 @@ CREATE INDEX idx_chat_messages_created_at ON chat_messages(chat_id, created_at);
 CREATE TABLE IF NOT EXISTS chat_attachments (
   id SERIAL PRIMARY KEY,
   chat_id INT REFERENCES chats(id) ON DELETE CASCADE,
-  sender_id INT REFERENCES teams(id) ON DELETE CASCADE,
+  sender_id INT REFERENCES staffs(id) ON DELETE CASCADE,
   image TEXT NOT NULL,
   image_id TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT now()
@@ -198,7 +182,7 @@ CREATE INDEX idx_chat_attachments_chat_id ON chat_attachments(chat_id);
 CREATE INDEX idx_chat_attachments_sender_id ON chat_attachments(sender_id);
 
 -- =====================================================
--- 4. SUPPORT & TICKET SYSTEMS
+-- 3. SUPPORT & TICKET SYSTEMS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS supports (
   id SERIAL PRIMARY KEY,
@@ -208,7 +192,7 @@ CREATE TABLE IF NOT EXISTS supports (
   description TEXT NOT NULL,
   reply TEXT,                 
   status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'replied')),
-  responded_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  responded_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -229,7 +213,7 @@ CREATE TABLE IF NOT EXISTS reports (
   description TEXT NOT NULL,
   reply TEXT,                 
   status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'replied')),
-  responded_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  responded_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -245,7 +229,7 @@ CREATE INDEX idx_reports_responded_by ON reports(responded_by);
 CREATE TABLE IF NOT EXISTS tickets (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -260,30 +244,30 @@ CREATE TABLE IF NOT EXISTS ticket_participants (
   id SERIAL PRIMARY KEY,
   ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
   user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  team_id INT REFERENCES teams(id) ON DELETE CASCADE,
+  staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
   CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
+    (user_id IS NOT NULL AND staff_id IS NULL)
     OR
-    (user_id IS NULL AND team_id IS NOT NULL)
+    (user_id IS NULL AND staff_id IS NOT NULL)
   ),
   last_read_at TIMESTAMP,
   joined_at TIMESTAMP DEFAULT now(),
-  UNIQUE(ticket_id, user_id, team_id)
+  UNIQUE(ticket_id, user_id, staff_id)
 );
 
 CREATE INDEX idx_ticket_participants_ticket_id ON ticket_participants(ticket_id);
 CREATE INDEX idx_ticket_participants_user_id ON ticket_participants(user_id);
-CREATE INDEX idx_ticket_participants_team_id ON ticket_participants(team_id);
+CREATE INDEX idx_ticket_participants_staff_id ON ticket_participants(staff_id);
 
 CREATE TABLE IF NOT EXISTS ticket_messages (
   id SERIAL PRIMARY KEY,
   ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
   user_id INT REFERENCES users(id) ON DELETE SET NULL,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
   CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
+    (user_id IS NOT NULL AND staff_id IS NULL)
     OR
-    (user_id IS NULL AND team_id IS NOT NULL)
+    (user_id IS NULL AND staff_id IS NOT NULL)
   ),
   message TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT now()
@@ -291,18 +275,18 @@ CREATE TABLE IF NOT EXISTS ticket_messages (
 
 CREATE INDEX idx_ticket_messages_ticket_id ON ticket_messages(ticket_id);
 CREATE INDEX idx_ticket_messages_user_id ON ticket_messages(user_id);
-CREATE INDEX idx_ticket_messages_team_id ON ticket_messages(team_id);
+CREATE INDEX idx_ticket_messages_staff_id ON ticket_messages(staff_id);
 CREATE INDEX idx_ticket_messages_created_at ON ticket_messages(ticket_id, created_at);
 
 CREATE TABLE IF NOT EXISTS ticket_attachments (
   id SERIAL PRIMARY KEY,
   ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
   user_id INT REFERENCES users(id) ON DELETE SET NULL,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
   CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
+    (user_id IS NOT NULL AND staff_id IS NULL)
     OR
-    (user_id IS NULL AND team_id IS NOT NULL)
+    (user_id IS NULL AND staff_id IS NOT NULL)
   ),
   file_url TEXT NOT NULL,
   file_id TEXT,
@@ -311,10 +295,10 @@ CREATE TABLE IF NOT EXISTS ticket_attachments (
 
 CREATE INDEX idx_ticket_attachments_ticket_id ON ticket_attachments(ticket_id);
 CREATE INDEX idx_ticket_attachments_user_id ON ticket_attachments(user_id);
-CREATE INDEX idx_ticket_attachments_team_id ON ticket_attachments(team_id);
+CREATE INDEX idx_ticket_attachments_staff_id ON ticket_attachments(staff_id);
 
 -- =====================================================
--- 5. COMPANY, CAREERS & BOARDS
+-- 4. COMPANY, CAREERS & BOARDS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS boards (
   id SERIAL PRIMARY KEY,
@@ -362,7 +346,7 @@ CREATE INDEX idx_career_applications_job_id ON career_applications(job_id);
 CREATE INDEX idx_career_applications_status ON career_applications(status);
 
 -- =====================================================
--- 6. REVIEWS, NOTIFICATIONS & LOGS
+-- 5. REVIEWS, NOTIFICATIONS & LOGS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS reviews (
   id SERIAL PRIMARY KEY,
@@ -392,7 +376,7 @@ CREATE INDEX idx_notifications_is_read ON notifications(user_id, is_read);
 
 CREATE TABLE IF NOT EXISTS activity_logs (
   id SERIAL PRIMARY KEY,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
   action TEXT NOT NULL,
   entity_type TEXT,
   entity_id INT,
@@ -400,12 +384,12 @@ CREATE TABLE IF NOT EXISTS activity_logs (
   created_at TIMESTAMP DEFAULT now()
 );
 
-CREATE INDEX idx_activity_logs_team_id ON activity_logs(team_id);
+CREATE INDEX idx_activity_logs_staff_id ON activity_logs(staff_id);
 CREATE INDEX idx_activity_logs_entity ON activity_logs(entity_type, entity_id);
 
-CREATE TABLE IF NOT EXISTS team_login_logs (
+CREATE TABLE IF NOT EXISTS staff_login_logs (
   id SERIAL PRIMARY KEY,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
   action TEXT NOT NULL,
   entity_type TEXT,
   entity_id INT,
@@ -414,7 +398,7 @@ CREATE TABLE IF NOT EXISTS team_login_logs (
   created_at TIMESTAMP DEFAULT now()
 );
 
-CREATE INDEX idx_team_login_logs_team_id ON team_login_logs(team_id);
+CREATE INDEX idx_staff_login_logs_staff_id ON staff_login_logs(staff_id);
 
 CREATE TABLE IF NOT EXISTS user_login_logs (
   id SERIAL PRIMARY KEY,
@@ -430,7 +414,7 @@ CREATE TABLE IF NOT EXISTS user_login_logs (
 CREATE INDEX idx_user_login_logs_user_id ON user_login_logs(user_id);
 
 -- =====================================================
--- 7. PARTNERS & LEADS
+-- 6. PARTNERS & LEADS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS partners (
   id SERIAL PRIMARY KEY,
@@ -470,129 +454,7 @@ CREATE TABLE IF NOT EXISTS client_leads (
 CREATE INDEX idx_client_leads_email ON client_leads(email);
 
 -- =====================================================
--- 8. PROJECTS & PURCHASES
--- =====================================================
-CREATE TABLE IF NOT EXISTS projects (
-  id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  team_id INT REFERENCES teams(id) ON DELETE CASCADE,
-  CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
-    OR
-    (user_id IS NULL AND team_id IS NOT NULL)
-  ),
-  status TEXT DEFAULT 'pending' CHECK(status IN ('pending','working','ready','ontest','fixing', 'approved')),
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TRIGGER update_projects_modtime 
-BEFORE UPDATE ON projects 
-FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-CREATE INDEX idx_projects_product_id ON projects(product_id);
-CREATE INDEX idx_projects_user_id ON projects(user_id);
-CREATE INDEX idx_projects_team_id ON projects(team_id);
-CREATE INDEX idx_projects_status ON projects(status);
-
-CREATE TABLE IF NOT EXISTS project_participants (
-  id SERIAL PRIMARY KEY,
-  project_id INT REFERENCES projects(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  team_id INT REFERENCES teams(id) ON DELETE CASCADE,
-  CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
-    OR
-    (user_id IS NULL AND team_id IS NOT NULL)
-  ),
-  last_read_at TIMESTAMP,
-  joined_at TIMESTAMP DEFAULT now(),
-  UNIQUE(project_id, user_id, team_id)
-);
-
-CREATE INDEX idx_project_participants_project_id ON project_participants(project_id);
-CREATE INDEX idx_project_participants_user_id ON project_participants(user_id);
-CREATE INDEX idx_project_participants_team_id ON project_participants(team_id);
-
-CREATE TABLE IF NOT EXISTS project_messages (
-  id SERIAL PRIMARY KEY,
-  project_id INT REFERENCES projects(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE SET NULL,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
-  CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
-    OR
-    (user_id IS NULL AND team_id IS NOT NULL)
-  ),
-  message TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE INDEX idx_project_messages_project_id ON project_messages(project_id);
-CREATE INDEX idx_project_messages_user_id ON project_messages(user_id);
-CREATE INDEX idx_project_messages_team_id ON project_messages(team_id);
-CREATE INDEX idx_project_messages_created_at ON project_messages(project_id, created_at);
-
-CREATE TABLE IF NOT EXISTS project_attachments (
-  id SERIAL PRIMARY KEY,
-  project_id INT REFERENCES projects(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE SET NULL,
-  team_id INT REFERENCES teams(id) ON DELETE SET NULL,
-  CHECK (
-    (user_id IS NOT NULL AND team_id IS NULL)
-    OR
-    (user_id IS NULL AND team_id IS NOT NULL)
-  ),
-  file_url TEXT NOT NULL,
-  file_id TEXT,
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE INDEX idx_project_attachments_project_id ON project_attachments(project_id);
-CREATE INDEX idx_project_attachments_user_id ON project_attachments(user_id);
-CREATE INDEX idx_project_attachments_team_id ON project_attachments(team_id);
-
-CREATE TABLE IF NOT EXISTS purchases (
-  id SERIAL PRIMARY KEY,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  project_id INT REFERENCES projects(id) ON DELETE CASCADE,
-  price INT NOT NULL,
-  discount INT DEFAULT 0,
-  status TEXT DEFAULT 'incomplete' CHECK (status IN ('incomplete','complete')),
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TRIGGER update_purchases_modtime 
-BEFORE UPDATE ON purchases 
-FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-CREATE INDEX idx_purchases_product_id ON purchases(product_id);
-CREATE INDEX idx_purchases_project_id ON purchases(project_id);
-CREATE INDEX idx_purchases_status ON purchases(status);
-
-CREATE TABLE IF NOT EXISTS payments (
-  id SERIAL PRIMARY KEY,
-  purchase_id INT NOT NULL REFERENCES purchases(id) ON DELETE CASCADE,
-  price INT NOT NULL,
-  paid INT DEFAULT 0,
-  due INT DEFAULT 0,
-  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid','due','paid')),
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TRIGGER update_payments_modtime 
-BEFORE UPDATE ON payments 
-FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-CREATE INDEX idx_payments_purchase_id ON payments(purchase_id);
-CREATE INDEX idx_payments_status ON payments(status);
-
--- =====================================================
--- 9. NEWSLETTERS
+-- 7. NEWSLETTERS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS news_letters (
   id SERIAL PRIMARY KEY,
@@ -600,7 +462,7 @@ CREATE TABLE IF NOT EXISTS news_letters (
   description TEXT,
   image TEXT NOT NULL,
   image_id TEXT NOT NULL,
-  created_by INT REFERENCES teams(id) ON DELETE CASCADE,
+  created_by INT REFERENCES staffs(id) ON DELETE CASCADE,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -612,88 +474,49 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 CREATE INDEX idx_news_letters_created_by ON news_letters(created_by);
 
 -- =====================================================
--- 10. BOARDS (ADVISORY & EXECUTIVE BOARD)
--- =====================================================
-CREATE TABLE IF NOT EXISTS boards (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  post TEXT NOT NULL,
-  email TEXT UNIQUE,
-  image TEXT,
-  image_id TEXT,
-  bio TEXT,
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE INDEX idx_boards_email ON boards(email);
-
--- =====================================================
--- 11. AGREEMENTS
--- =====================================================
-CREATE TABLE IF NOT EXISTS agreements (
-  id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  project_id INT REFERENCES projects(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  description TEXT,
-  start_date TIMESTAMP DEFAULT now(),
-  expire_date TIMESTAMP,
-  status TEXT DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TRIGGER update_agreements_modtime 
-BEFORE UPDATE ON agreements 
-FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-CREATE INDEX idx_agreements_project_id ON agreements(project_id);
-CREATE INDEX idx_agreements_user_id ON agreements(user_id);
-
--- =====================================================
--- 12. PRIVACY POLICIES
+-- 8. PRIVACY POLICIES
 -- =====================================================
 CREATE TABLE IF NOT EXISTS privacy_policies (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
-  updated_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
 -- =====================================================
--- 13. TERMS AND CONDITIONS
+-- 9. TERMS AND CONDITIONS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS terms_and_conditions (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
-  updated_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
 -- =====================================================
--- 14. REFUND CONDITIONS
+-- 10. REFUND CONDITIONS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS refund_conditions (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
-  updated_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
 -- =====================================================
--- 15. FAQS
+-- 11. FAQS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS faqs (
   id SERIAL PRIMARY KEY,
@@ -701,8 +524,8 @@ CREATE TABLE IF NOT EXISTS faqs (
   answer TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
   order_num INT DEFAULT 0,
-  created_by INT REFERENCES teams(id) ON DELETE SET NULL,
-  updated_by INT REFERENCES teams(id) ON DELETE SET NULL,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
