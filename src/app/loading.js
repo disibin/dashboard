@@ -16,7 +16,7 @@ import { motion } from 'framer-motion'
  * @param {string} [props.iconSrc='/icon.png'] - Public icon path (default: /icon.png)
  */
 export default function Loading({
-  fullScreen = false,
+  fullScreen = true,
   size = 'md',
   blur = true,
   className = '',
@@ -32,7 +32,7 @@ export default function Loading({
   const selectedSize = sizeMap[size] || sizeMap.md
 
   const content = (
-    <div className={`flex flex-col items-center justify-center ${className}`}>
+    <div className={`flex flex-col items-center justify-center ${className} `}>
       <div className="relative flex items-center justify-center">
         <motion.div
           className={`absolute rounded-full border-2 border-transparent border-t-teal-600 border-r-teal-400 ${selectedSize.ring}`}

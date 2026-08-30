@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { FiCheck, FiEdit2, FiTrash2, FiGlobe, FiBox } from 'react-icons/fi';
+import { CURRENCY } from '@/lib/database/secret';
 
 const fmtDate = (d) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
@@ -36,9 +37,9 @@ export default function PackageCard({ pkg, onEdit, onDelete, isStaff = false }) 
             <h3 className="text-lg font-semibold text-slate-900 mt-2">{pkg.name}</h3>
           </div>
           <div className="text-right">
-            <div className="text-xl font-semibold text-slate-900">${finalPrice}</div>
+            <div className="text-xl font-semibold text-slate-900">{CURRENCY}{finalPrice}</div>
             {pkg.discount > 0 && (
-              <div className="text-xs text-slate-400 line-through">${pkg.price}</div>
+              <div className="text-xs text-slate-400 line-through">{CURRENCY}{pkg.price}</div>
             )}
           </div>
         </div>

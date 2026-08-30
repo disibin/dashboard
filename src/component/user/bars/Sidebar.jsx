@@ -15,7 +15,8 @@ import {
   FiPackage,
   FiBox,
   FiBriefcase,
-  FiFolder
+  FiFolder,
+  FiBookOpen
 } from 'react-icons/fi'
 import { FaGlobeAsia } from 'react-icons/fa'
 
@@ -38,6 +39,7 @@ const Sidebar = () => {
         { name: 'Service Packages',  href: '/user/packages', icon: <FiBox /> },
         { name: 'My Services',       href: '/user/services', icon: <FiBriefcase /> },
         { name: 'My Projects',       href: '/user/projects', icon: <FiFolder /> },
+        { name: 'Blogs',             href: '/user/blogs',    icon: <FiBookOpen /> },
       ],
     },
     {
@@ -91,13 +93,13 @@ const Sidebar = () => {
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                    className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       isActive(link.href)
                         ? 'bg-primary/10 text-primary font-semibold shadow-sm'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <span className="text-base flex-shrink-0">{link.icon}</span>
+                    <span className="text-base shrink-0">{link.icon}</span>
                     <span>{link.name}</span>
                   </Link>
                 ))}
@@ -108,14 +110,14 @@ const Sidebar = () => {
 
         <div className="px-4 py-4 border-t border-slate-100 space-y-2">
           <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-            <p className="text-xs font-semibold text-slate-900 truncate">{userData?.name || 'Customer Account'}</p>
+            <p className="text-sm font-semibold text-slate-900 truncate">{userData?.name || 'Customer Account'}</p>
             <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5 truncate">{userData?.email || 'User'}</p>
           </div>
           <button 
             onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-semibold text-rose-500 hover:bg-rose-50 transition-all duration-200"
+            className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold text-rose-500 hover:bg-rose-50 transition-all duration-200"
           >
-            <FiLogOut className="text-base flex-shrink-0" />
+            <FiLogOut className="text-base shrink-0" />
             <span>Log Out</span>
           </button>
         </div>

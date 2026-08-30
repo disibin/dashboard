@@ -45,9 +45,7 @@ export default function UserProfilePage() {
       <div className="relative overflow-hidden bg-primary rounded-3xl p-8 text-white shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl  flex items-center justify-center text-3xl font-semibold text-white shadow-lg shadow-sky-500/20">
-              {(user?.name || 'U').charAt(0).toUpperCase()}
-            </div>
+            
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-black tracking-tight">{user?.name || 'User Profile'}</h1>
@@ -72,13 +70,13 @@ export default function UserProfilePage() {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/user/settings"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-sky-400 transition-all shadow-md shadow-sky-500/20"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-white font-semibold text-sm hover:bg-tertiary-light hover:text-primary transition-all"
             >
               <FiEdit3 size={15} /> Edit Profile
             </Link>
             <Link
               href="/user/security"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md transition-all border border-white/10"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md transition-all border border-white/10"
             >
               <FiLock size={15} /> Security
             </Link>
@@ -92,7 +90,7 @@ export default function UserProfilePage() {
         {/* Personal & Contact Details */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
-            <span className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
               <FiUser size={16} />
             </span>
             Personal & Contact Details
@@ -135,7 +133,7 @@ export default function UserProfilePage() {
         {/* Address Information */}
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
-            <span className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <span className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
               <FiMapPin size={16} />
             </span>
             Address Information
@@ -179,7 +177,7 @@ export default function UserProfilePage() {
         {/* Account Status & Timestamps */}
         <div className="md:col-span-2 bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
-            <span className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <span className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
               <FiShield size={16} />
             </span>
             Account Status & System Meta

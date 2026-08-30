@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiCreditCard, FiCheckCircle, FiAlertCircle, FiSearch, FiDollarSign, FiEdit2, FiUser, FiFolder } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { CURRENCY, formatCurrency } from '@/lib/database/secret';
 
 export default function TeamPaymentsPage() {
   const [payments, setPayments] = useState([]);
@@ -105,7 +106,7 @@ export default function TeamPaymentsPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Collected</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalRevenue.toLocaleString()}</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalRevenue)}</h3>
           </div>
         </div>
 
@@ -115,7 +116,7 @@ export default function TeamPaymentsPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Outstanding Dues</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalOutstanding.toLocaleString()}</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalOutstanding)}</h3>
           </div>
         </div>
 
@@ -206,15 +207,15 @@ export default function TeamPaymentsPage() {
                     </td>
 
                     <td className="py-4 px-6 font-semibold text-slate-900">
-                      ${Number(item.total_price || 0).toLocaleString()}
+                      {formatCurrency(item.total_price)}
                     </td>
 
                     <td className="py-4 px-6 font-semibold text-primary">
-                      ${Number(item.paid_amount || 0).toLocaleString()}
+                      {formatCurrency(item.paid_amount)}
                     </td>
 
                     <td className="py-4 px-6 font-semibold text-secondary">
-                      ${Number(item.due_amount || 0).toLocaleString()}
+                      {formatCurrency(item.due_amount)}
                     </td>
 
                     <td className="py-4 px-6">
@@ -260,12 +261,12 @@ export default function TeamPaymentsPage() {
             <form onSubmit={handleUpdatePayment} className="space-y-4">
               <div className="bg-slate-50 p-4 rounded-2xl space-y-1">
                 <p className="text-xs text-slate-400 font-medium">Customer: <strong className="text-slate-800">{editingPayment.user_name}</strong></p>
-                <p className="text-xs text-slate-400 font-medium">Total Price: <strong className="text-slate-800">${Number(editingPayment.total_price || 0).toLocaleString()}</strong></p>
+                <p className="text-xs text-slate-400 font-medium">Total Price: <strong className="text-slate-800">{formatCurrency(editingPayment.total_price)}</strong></p>
               </div>
 
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-1.5">
-                  Amount Paid ($)
+                  Amount Paid ({CURRENCY})
                 </label>
                 <input
                   type="number"

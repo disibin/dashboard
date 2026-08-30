@@ -9,7 +9,7 @@ import {
   FiShield, FiUsers, FiUserCheck, FiBriefcase, FiGlobe, FiBox,
   FiTag, FiLayout, FiCreditCard, FiFileText, FiCheckSquare,
   FiMessageSquare, FiAlertCircle, FiLifeBuoy, FiStar, FiMail,
-  FiInbox, FiHelpCircle, FiArrowRight
+  FiInbox, FiHelpCircle, FiArrowRight, FiBookOpen
 } from 'react-icons/fi'
 import { FaHandshake } from 'react-icons/fa'
 
@@ -26,6 +26,7 @@ const ALL_PANEL_ROUTES = [
   { name: 'Products', href: '/panel/products', category: 'Operations', icon: FiBox },
   { name: 'Packages', href: '/panel/packages', category: 'Operations', icon: FiBox },
   { name: 'Services', href: '/panel/services', category: 'Operations', icon: FiBriefcase },
+  { name: 'Blogs', href: '/panel/blogs', category: 'Operations', icon: FiBookOpen },
   { name: 'Features', href: '/panel/products/features', category: 'Operations', icon: FiTag },
   { name: 'Projects Board', href: '/panel/board', category: 'Operations', icon: FiLayout },
   { name: 'Partners', href: '/panel/partners', category: 'Operations', icon: FaHandshake },
@@ -100,21 +101,23 @@ const Navbar = () => {
           title={dashboardSidebar ? "Hide Sidebar Menu" : "Show Sidebar Menu"}
           aria-label="Toggle sidebar menu"
         >
-          <FiSidebar size={18} className={`transition-transform duration-200 ${dashboardSidebar ? 'rotate-180 text-indigo-600' : 'text-slate-500'}`} />
+          <FiSidebar size={18} className={`transition-transform duration-200 ${dashboardSidebar ? 'rotate-180 text-primary' : 'text-slate-500'}`} />
           <span className="hidden sm:inline text-xs font-semibold tracking-tight">
             Menu
           </span>
         </button>
 
         <Link href="/panel" className="text-lg font-semibold text-slate-900 tracking-tight flex items-center gap-2">
-
-          <span className="hidden md:inline">Management</span>
+          <span className="hidden md:inline font-bold text-slate-900">Management</span>
         </Link>
       </div>
 
+      {/* Search Input Bar */}
       <div className="relative flex-1 max-w-md mx-4" ref={dropdownRef}>
         <div
-          className={`flex items-center gap-2 px-3 py-1.5  `}
+          className={`flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl transition-all ${
+            isOpen ? 'bg-white border-primary ring-2 ring-primary/20 shadow-sm' : 'hover:border-slate-300'
+          }`}
         >
           <FiSearch className="text-slate-400 shrink-0" size={16} />
           <input
@@ -126,11 +129,12 @@ const Navbar = () => {
               setIsOpen(true)
             }}
             onFocus={() => setIsOpen(true)}
-            className='input-style' />
+            className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none placeholder:text-slate-400"
+          />
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="text-slate-400 hover:text-slate-600 p-0.5"
+              className="text-slate-400 hover:text-slate-600 p-0.5 rounded-md hover:bg-slate-100 transition-colors"
             >
               <FiX size={14} />
             </button>
@@ -141,7 +145,7 @@ const Navbar = () => {
           <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden max-h-80 overflow-y-auto z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-150">
             <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
               <span>Accessible Folders ({filteredRoutes.length})</span>
-              <span className="capitalize text-indigo-600 font-semibold">Role: {role}</span>
+              <span className="capitalize text-primary font-semibold">Role: {role}</span>
             </div>
 
             {filteredRoutes.length === 0 ? (
@@ -158,15 +162,15 @@ const Navbar = () => {
                     className="w-full cursor-pointer text-left px-3 py-2 rounded-xl hover:bg-slate-50 flex items-center justify-between group transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center transition-colors shrink-0">
+                      <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center transition-colors shrink-0">
                         <IconComponent size={16} />
                       </div>
-                      <p className="text-xs font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                      <p className="text-xs font-semibold text-slate-800 group-hover:text-primary transition-colors">
                         {route.name}
                       </p>
                     </div>
 
-                    <FiArrowRight size={14} className="text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-indigo-600 transition-all transform -translate-x-1 group-hover:translate-x-0" />
+                    <FiArrowRight size={14} className="text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all transform -translate-x-1 group-hover:translate-x-0" />
                   </button>
                 )
               })

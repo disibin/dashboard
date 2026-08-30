@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { FiCreditCard, FiCheckCircle, FiClock, FiAlertCircle, FiSearch, FiFileText, FiShoppingBag } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '@/lib/database/secret';
 
 export default function UserPurchasesPage() {
   const [purchases, setPurchases] = useState([]);
@@ -74,7 +75,7 @@ export default function UserPurchasesPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Invested</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalSpent.toLocaleString()}</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalSpent)}</h3>
           </div>
         </div>
 
@@ -94,7 +95,7 @@ export default function UserPurchasesPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Balance</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">${totalDue.toLocaleString()}</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalDue)}</h3>
           </div>
         </div>
       </div>
@@ -148,22 +149,22 @@ export default function UserPurchasesPage() {
           </div>
           <Link
             href="/products"
-            className="inline-block px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-primary transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-all shadow-md"
           >
-            Explore Services
+            Explore Solutions
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredPurchases.map((item) => (
             <div
               key={item.purchase_id}
-              className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+              className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow space-y-4"
             >
               <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Order #{item.purchase_id}
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] font-semibold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono">
+                    #REC-{item.purchase_id}
                   </span>
                   <StatusBadge status={item.payment_status || item.purchase_status} />
                 </div>
@@ -176,7 +177,7 @@ export default function UserPurchasesPage() {
                   <div>
                     <span className="text-xs text-slate-400 block font-medium">Price</span>
                     <span className="text-lg font-semibold text-slate-900">
-                      ${Number(item.price || 0).toLocaleString()}
+                      {formatCurrency(item.price)}
                     </span>
                   </div>
 
@@ -184,7 +185,7 @@ export default function UserPurchasesPage() {
                     <div className="text-right">
                       <span className="text-xs text-amber-500 block font-semibold">Due Amount</span>
                       <span className="text-sm font-semibold text-amber-600">
-                        ${Number(item.due).toLocaleString()}
+                        {formatCurrency(item.due)}
                       </span>
                     </div>
                   )}
@@ -246,22 +247,22 @@ export default function UserPurchasesPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500 font-medium">Total Price:</span>
-                <span className="font-semibold text-slate-900">${Number(selectedReceipt.price || 0).toLocaleString()}</span>
+                <span className="font-semibold text-slate-900">{formatCurrency(selectedReceipt.price)}</span>
               </div>
               {selectedReceipt.discount > 0 && (
                 <div className="flex justify-between text-sm text-emerald-600">
                   <span className="font-medium">Discount Applied:</span>
-                  <span className="font-semibold">-${Number(selectedReceipt.discount).toLocaleString()}</span>
+                  <span className="font-semibold">-{formatCurrency(selectedReceipt.discount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500 font-medium">Paid Amount:</span>
-                <span className="font-semibold text-emerald-600">${Number(selectedReceipt.paid || selectedReceipt.price || 0).toLocaleString()}</span>
+                <span className="font-semibold text-emerald-600">{formatCurrency(selectedReceipt.paid || selectedReceipt.price)}</span>
               </div>
               {selectedReceipt.due > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500 font-medium">Remaining Due:</span>
-                  <span className="font-semibold text-amber-600">${Number(selectedReceipt.due).toLocaleString()}</span>
+                  <span className="font-semibold text-amber-600">{formatCurrency(selectedReceipt.due)}</span>
                 </div>
               )}
             </div>

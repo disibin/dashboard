@@ -7,6 +7,7 @@ import {
   FiX, FiCheckCircle,
   FiChevronDown, FiChevronUp, FiCheck
 } from 'react-icons/fi';
+import { CURRENCY, formatCurrency } from '@/lib/database/secret';
 
 const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -213,7 +214,7 @@ export default function PayrollPage() {
             </div>
 
             <div>
-              <label className={labelCls}>Staff Salary Amounts ($)</label>
+              <label className={labelCls}>Staff Salary Amounts ({CURRENCY})</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-56 overflow-y-auto p-3 border border-slate-200 rounded-2xl bg-slate-50/50">
                 {staffList.map((s) => (
                   <div key={s.id} className="flex items-center justify-between gap-3 text-xs bg-white p-3 rounded-xl border border-slate-100 shadow-2xs">
@@ -310,9 +311,9 @@ export default function PayrollPage() {
 
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <div className="text-lg font-semibold text-slate-900">${p.total_amount}</div>
+                      <div className="text-lg font-semibold text-slate-900">{formatCurrency(p.total_amount)}</div>
                       <div className="text-xs text-slate-400">
-                        Paid: ${totalPaid} · Due: ${totalDue}
+                        Paid: {formatCurrency(totalPaid)} · Due: {formatCurrency(totalDue)}
                       </div>
                     </div>
 
@@ -368,11 +369,11 @@ export default function PayrollPage() {
                                       {sal.staff_role}
                                     </td>
 
-                                    <td className="py-3 px-4 font-semibold text-slate-900">${sal.amount}</td>
+                                    <td className="py-3 px-4 font-semibold text-slate-900">{formatCurrency(sal.amount)}</td>
 
                                     <td className="py-3 px-4 text-xs">
-                                      <span className="text-emerald-600 font-semibold">${sal.paid_amount}</span> /{' '}
-                                      <span className="text-rose-500 font-semibold">${sal.due_amount}</span>
+                                      <span className="text-emerald-600 font-semibold">{formatCurrency(sal.paid_amount)}</span> /{' '}
+                                      <span className="text-rose-500 font-semibold">{formatCurrency(sal.due_amount)}</span>
                                     </td>
 
                                     <td className="py-3 px-4">

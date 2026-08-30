@@ -807,3 +807,27 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX idx_staff_todos_staff_id ON staff_todos(staff_id);
 CREATE INDEX idx_staff_todos_is_completed ON staff_todos(staff_id, is_completed);
+
+-- =====================================================
+-- 13. BLOGS
+-- =====================================================
+CREATE TABLE IF NOT EXISTS blogs (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  image TEXT,
+  image_id TEXT,
+  tenant_id INT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TRIGGER update_blogs_modtime 
+BEFORE UPDATE ON blogs 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE INDEX idx_blogs_slug ON blogs(slug);
+CREATE INDEX idx_blogs_tenant_id ON blogs(tenant_id);
+CREATE INDEX idx_blogs_created_by ON blogs(created_by);

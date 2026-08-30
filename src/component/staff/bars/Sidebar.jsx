@@ -69,6 +69,7 @@ const roleLinks = {
         { name: 'Terms of Service', href: '/panel/terms-of-service',    icon: <FiFileText /> },
         { name: 'Refund Policy', href: '/panel/refund-policy',          icon: <FiFileText /> },
         { name: 'FAQs',          href: '/panel/faqs',                  icon: <FiHelpCircle /> },
+        { name: 'Blogs',         href: '/panel/blogs',                 icon: <FiBookOpen /> },
       ],
     },
     {

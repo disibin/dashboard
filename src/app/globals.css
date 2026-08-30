@@ -126,6 +126,7 @@
 /* ── Form Controls & Inputs ────────────────────────── */
 .input-style {
   width: 100%;
+  min-width: 100px;
   padding: 8px 12px;
   border-radius: 8px;
   background-color: #f8fafc;

@@ -5,8 +5,8 @@ import "./globals.css";
 
 
 export const metadata = {
-  title:'Disibin',
-  description: "Main home page",
+  title:'Dashboard | Disibin',
+  description: "Dashboard Panel ",
 };
 
 export default function RootLayout({ children }) {

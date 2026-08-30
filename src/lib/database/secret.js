@@ -35,3 +35,11 @@ export const DEMO_PASSWORD = process.env.DEMO_PASSWORD;
 export const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
 export const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME;
 export const BREVO_API_KEY = process.env.BREVO_API_KEY;
+
+export const CURRENCY = process.env.CURRENCY;
+export const CURRENCY_CODE =process.env.CURRENCY_CODE;
+
+export const formatCurrency = (amount) => {
+    const num = Number(amount) || 0;
+    return `${CURRENCY}${num.toLocaleString()}`;
+};
