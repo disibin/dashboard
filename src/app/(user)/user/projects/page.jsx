@@ -6,6 +6,7 @@ import {
   FiFolder, FiSearch, FiMessageSquare, FiX, FiCheckCircle, FiClock,
   FiBriefcase, FiBox, FiSend
 } from 'react-icons/fi';
+import ProjectCard from '@/component/cards/ProjectCard';
 
 export default function UserProjectsPage() {
   const [projects, setProjects] = useState([]);
@@ -89,52 +90,13 @@ export default function UserProjectsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((proj) => (
-            <div
+          {filtered.map((proj, idx) => (
+            <ProjectCard
               key={`${proj.project_type}-${proj.id}`}
-              className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-all space-y-4 group"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className={`text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full ${
-                    proj.project_type === 'package' ? 'bg-amber-50 text-amber-700' : 'bg-cyan-50 text-cyan-700'
-                  }`}>
-                    {proj.project_type === 'package' ? <FiBox className="inline mr-1" /> : <FiBriefcase className="inline mr-1" />}
-                    {proj.project_type}
-                  </span>
-                  <span className="text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
-                    {proj.project_status || 'active'}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                  {proj.project_title || 'Client Project'}
-                </h3>
-
-                {proj.description && (
-                  <div
-                    className="text-xs text-slate-500 line-clamp-3 mt-2 prose prose-slate max-w-none"
-                    dangerouslySetInnerHTML={{ __html: proj.description }}
-                  />
-                )}
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-semibold text-slate-900">${proj.net_price || 0}</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">
-                    Payment: {proj.payment_status || 'due'}
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => openDiscussion(proj)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-sm cursor-pointer"
-                >
-                  <FiMessageSquare size={14} /> Project Chat
-                </button>
-              </div>
-            </div>
+              project={proj}
+              index={idx}
+              onOpenDiscussion={openDiscussion}
+            />
           ))}
         </div>
       )}

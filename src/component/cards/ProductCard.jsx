@@ -1,83 +1,105 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { FiPackage, FiGlobe, FiExternalLink, FiEdit2, FiTrash2, FiUser } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiEdit2, FiTrash2, FiGlobe } from 'react-icons/fi';
 
-export default function ProductCard({ product, onEdit, onDelete, isStaff = false }) {
+const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) => {
+  const imageSrc = product?.image;
+  const targetLink = product?.link || '#';
+  const formattedNumber = String(index + 1).padStart(2, '0');
+
   return (
-    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-all group relative overflow-hidden space-y-4">
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          {product.image ? (
-            <Image
-              width={500}
-              height={500}
-              src={product.image}
-              alt={product.name}
-              className="w-12 h-12 rounded-2xl object-cover border border-slate-100 shrink-0"
-            />
-          ) : (
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-              <FiPackage size={22} />
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3 }}
+      className="h-full"
+    >
+      <div className="group flex flex-col justify-between bg-white overflow-hidden box-border h-full border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 relative">
+        <a
+          href={targetLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col no-underline grow"
+        >
+          <div className="p-6 flex flex-col gap-4 grow">
+            <div className="flex items-center justify-between">
+              <p className="text-[14px] font-semibold text-gray-500 m-0">
+                {formattedNumber}
+              </p>
+              {product?.link && (
+                <span className="text-xs text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1">
+                  <FiGlobe size={13} /> Live Demo
+                </span>
+              )}
             </div>
-          )}
-          <div className="min-w-0">
-            <h3 className="font-semibold text-slate-900 text-base truncate group-hover:text-indigo-600 transition-colors">
-              {product.name}
+
+            <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors m-0 font-poppins">
+              {product?.name}
             </h3>
+
+            <p className="text-[16px] leading-normal text-gray-900 m-0 font-poppins line-clamp-3">
+              {product?.title}
+            </p>
           </div>
-        </div>
 
-        {product.title && (
-          <p className="text-xs font-semibold text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            {product.title}
-          </p>
-        )}
+          <div className="relative w-full overflow-hidden px-4 flex items-end bg-emerald-50 aspect-video">
+            {imageSrc ? (
+              <Image
+                src={imageSrc}
+                alt={product?.name || 'Product Image'}
+                width={600}
+                height={350}
+                className="w-full aspect-video h-auto block will-change-[transform,border-color] transition-[transform,border-color] duration-500 ease-[cubic-bezier(0,0,0,0.98)] object-cover"
+                unoptimized
+              />
+            ) : (
+              <div className="w-full h-48 bg-slate-50 flex items-center justify-center text-slate-400 text-sm font-poppins border border-[#360065]/13">
+                No preview image
+              </div>
+            )}
 
-        {isStaff && product.created_by_name && (
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
-            <FiUser size={13} /> Created by: {product.created_by_name}
+            <div className="absolute inset-0 pointer-events-none" />
           </div>
-        )}
-      </div>
+        </a>
 
-      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-        {product.link ? (
-          <a
-            href={product.link}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-sm"
-          >
-            <FiGlobe size={13} /> Live Demo <FiExternalLink size={11} />
-          </a>
-        ) : (
-          <span className="text-xs text-slate-400 italic">No public demo link</span>
-        )}
-
-        {isStaff && (
-          <div className="flex items-center gap-1">
+        {isStaff && (onEdit || onDelete) && (
+          <div className="p-3 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-2">
             {onEdit && (
               <button
-                onClick={() => onEdit(product)}
-                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all cursor-pointer"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onEdit(product);
+                }}
+                className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
                 title="Edit Product"
               >
-                <FiEdit2 size={16} />
+                <FiEdit2 size={14} /> Edit
               </button>
             )}
             {onDelete && (
               <button
-                onClick={() => onDelete(product.id, product.name, product.image_id)}
-                className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(product.id, product.name, product.image_id);
+                }}
+                className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
                 title="Delete Product"
               >
-                <FiTrash2 size={16} />
+                <FiTrash2 size={14} /> Delete
               </button>
             )}
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
-}
+};
+
+export default ProductCard;

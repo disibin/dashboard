@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import { FiBriefcase, FiSearch, FiGlobe, FiX, FiCheckCircle } from 'react-icons/fi';
+import ServiceCard from '@/component/cards/ServiceCard';
 
 export default function UserServicesPage() {
   const [services, setServices] = useState([]);
@@ -31,19 +32,6 @@ export default function UserServicesPage() {
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       (s.tenant_name || '').toLowerCase().includes(search.toLowerCase())
   );
-
-  const getStatusBadge = (st) => {
-    switch (st) {
-      case 'active':
-        return 'bg-emerald-50 text-emerald-600 border-emerald-200';
-      case 'completed':
-        return 'bg-blue-50 text-blue-600 border-blue-200';
-      case 'cancelled':
-        return 'bg-rose-50 text-rose-600 border-rose-200';
-      default:
-        return 'bg-amber-50 text-amber-600 border-amber-200';
-    }
-  };
 
   return (
     <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
@@ -78,90 +66,20 @@ export default function UserServicesPage() {
         )}
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-12 text-center text-slate-400">Loading your services...</div>
-        ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
-            <FiBriefcase size={32} className="mx-auto mb-2 text-slate-300" />
-            <p className="font-semibold text-sm">No custom services assigned yet</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  <th className="py-4 px-6">Service Name</th>
-                  <th className="py-4 px-6">Tenant</th>
-                  <th className="py-4 px-6">Net Price</th>
-                  <th className="py-4 px-6">Service Status</th>
-                  <th className="py-4 px-6">Payment Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
-                {filtered.map((srv) => {
-                  const netPrice = Math.max(0, srv.price - (srv.discount || 0));
-
-                  return (
-                    <tr key={srv.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="py-4 px-6">
-                        <div className="font-semibold text-slate-900">{srv.name}</div>
-                        {srv.description && (
-                          <div
-                            className="text-xs text-slate-500 line-clamp-2 mt-1 prose prose-slate max-w-none"
-                            dangerouslySetInnerHTML={{ __html: srv.description }}
-                          />
-                        )}
-                      </td>
-
-                      <td className="py-4 px-6 text-xs text-slate-600 font-semibold">
-                        {srv.tenant_name ? (
-                          <span className="inline-flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-full text-slate-600">
-                            <FiGlobe size={12} /> {srv.tenant_name}
-                          </span>
-                        ) : (
-                          '—'
-                        )}
-                      </td>
-
-                      <td className="py-4 px-6">
-                        <div className="font-semibold text-slate-900">${netPrice}</div>
-                        <div className="text-[11px] text-slate-400">
-                          Paid: ${srv.paid_amount || 0} · Due: ${srv.due_amount || netPrice}
-                        </div>
-                      </td>
-
-                      <td className="py-4 px-6">
-                        <span
-                          className={`text-xs font-semibold px-3 py-1 rounded-full border uppercase tracking-wider inline-block ${getStatusBadge(
-                            srv.status
-                          )}`}
-                        >
-                          {srv.status}
-                        </span>
-                      </td>
-
-                      <td className="py-4 px-6">
-                        <span
-                          className={`inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full ${
-                            srv.payment_status === 'paid'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : srv.payment_status === 'due'
-                              ? 'bg-amber-100 text-amber-700'
-                              : 'bg-rose-100 text-rose-700'
-                          }`}
-                        >
-                          <FiCheckCircle size={11} /> {srv.payment_status}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">Loading your services...</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+          <FiBriefcase size={32} className="mx-auto mb-2 text-slate-300" />
+          <p className="font-semibold text-sm">No custom services assigned yet</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((srv, idx) => (
+            <ServiceCard key={srv.id} service={srv} index={idx} isStaff={false} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -78,8 +78,8 @@ export default function UserProductsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((prod) => (
-            <ProductCard key={prod.id} product={prod} isStaff={false} />
+          {filtered.map((prod, idx) => (
+            <ProductCard key={prod.id} product={prod} index={idx} isStaff={false} />
           ))}
         </div>
       )}

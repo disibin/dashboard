@@ -13,6 +13,7 @@ import {
   FiArrowRight,
   FiClock
 } from 'react-icons/fi';
+import BlogCard from '@/component/cards/BlogCard';
 
 export default function UserBlogsPage() {
   const [blogs, setBlogs] = useState([]);
@@ -125,81 +126,13 @@ export default function UserBlogsPage() {
           </div>
           <h3 className="text-lg font-semibold text-slate-800">No blog posts found</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto">
-            We couldn't find any articles matching your search criteria. Check back soon for new updates!
+            We couldn&apos;t find any articles matching your search criteria. Check back soon for new updates!
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBlogs.map((blog) => (
-            <Link
-              key={blog.id}
-              href={`/user/blogs/${blog.slug}`}
-              className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between"
-            >
-              <div>
-                {/* Cover Image */}
-                <div className="h-52 bg-slate-100 relative overflow-hidden">
-                  {blog.image ? (
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2 bg-gradient-to-br from-primary/10 via-slate-50 to-primary/20">
-                      <FiBookOpen size={40} className="text-primary" />
-                      <span className="text-xs font-semibold text-slate-400">Read Article</span>
-                    </div>
-                  )}
-
-                  {/* Tenant Tag Badge */}
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm flex items-center gap-1.5 border border-slate-100">
-                    <FiGlobe size={12} />
-                    <span>{blog.tenant_name || 'Tenant'}</span>
-                  </div>
-                </div>
-
-                {/* Article Info */}
-                <div className="p-6 space-y-3">
-                  <div className="flex items-center gap-3 text-xs text-slate-400 font-medium">
-                    <span className="flex items-center gap-1">
-                      <FiCalendar size={13} />
-                      {new Date(blog.created_at).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <FiClock size={13} />
-                      {getReadingTime(blog.description)}
-                    </span>
-                  </div>
-
-                  <h2 className="text-xl font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-                    {blog.title}
-                  </h2>
-
-                  <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed">
-                    {getExcerpt(blog.description)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Card Footer */}
-              <div className="px-6 py-4 bg-slate-50/60 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-primary group-hover:text-primary-dark">
-                <span className="flex items-center gap-1.5">
-                  <FiUser size={13} className="text-slate-400" />
-                  <span className="text-slate-700">{blog.creator_name || 'Editorial Team'}</span>
-                </span>
-
-                <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  <span>Read Post</span>
-                  <FiArrowRight size={14} />
-                </span>
-              </div>
-            </Link>
+          {filteredBlogs.map((blog, idx) => (
+            <BlogCard key={blog.id} blog={blog} index={idx} isStaff={false} />
           ))}
         </div>
       )}

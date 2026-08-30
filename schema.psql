@@ -655,13 +655,11 @@ CREATE INDEX idx_salary_payments_salary_id ON salary_payments(salary_id);
 CREATE TABLE IF NOT EXISTS services (
   id SERIAL PRIMARY KEY,
   tenant_id INT REFERENCES tenants(id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   description TEXT,
   price INT DEFAULT 0,
   discount INT DEFAULT 0,
-  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'completed', 'cancelled')),
   created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
@@ -672,9 +670,7 @@ BEFORE UPDATE ON services
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX idx_services_tenant_id ON services(tenant_id);
-CREATE INDEX idx_services_user_id ON services(user_id);
 CREATE INDEX idx_services_slug ON services(slug);
-CREATE INDEX idx_services_status ON services(status);
 
 CREATE TABLE IF NOT EXISTS service_payments (
   id SERIAL PRIMARY KEY,

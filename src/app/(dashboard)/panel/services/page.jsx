@@ -7,24 +7,21 @@ import {
   FiDollarSign, FiX, FiUser, FiGlobe, FiCheck
 } from 'react-icons/fi';
 import TiptapEditor from '@/component/helper/TiptapEditor';
+import ServiceCard from '@/component/cards/ServiceCard';
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [tenants, setTenants] = useState([]);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
 
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     tenant_id: '',
-    user_id: '',
     name: '',
     description: '',
     price: 0,
     discount: 0,
-    status: 'pending',
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,15 +35,13 @@ export default function ServicesPage() {
 
   const fetchInitialData = async () => {
     try {
-      const [srvRes, tenantRes, userRes] = await Promise.all([
+      const [srvRes, tenantRes] = await Promise.all([
         axios.get('/api/staff/services'),
         axios.get('/api/staff/tenants').catch(() => ({ data: { data: [] } })),
-        axios.get('/api/staff/users').catch(() => ({ data: { data: [] } })),
       ]);
 
       if (srvRes.data.success) setServices(srvRes.data.data);
       if (tenantRes.data.data) setTenants(tenantRes.data.data);
-      if (userRes.data.data) setUsers(userRes.data.data);
     } catch (err) {
       toast.error('Failed to load service data');
     } finally {
@@ -65,7 +60,7 @@ export default function ServicesPage() {
         toast.success(res.data.message);
         fetchInitialData();
         setShowForm(false);
-        setForm({ tenant_id: '', user_id: '', name: '', description: '', price: 0, discount: 0, status: 'pending' });
+        setForm({ tenant_id: '', name: '', description: '', price: 0, discount: 0 });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to create service');
@@ -128,24 +123,9 @@ export default function ServicesPage() {
   const filtered = services.filter((s) => {
     const matchSearch =
       s.name.toLowerCase().includes(search.toLowerCase()) ||
-      (s.user_name || '').toLowerCase().includes(search.toLowerCase()) ||
       (s.tenant_name || '').toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === 'all' || s.status === statusFilter;
-    return matchSearch && matchStatus;
+    return matchSearch;
   });
-
-  const getStatusBadge = (st) => {
-    switch (st) {
-      case 'active':
-        return 'bg-emerald-50 text-emerald-600 border-emerald-200';
-      case 'completed':
-        return 'bg-blue-50 text-blue-600 border-blue-200';
-      case 'cancelled':
-        return 'bg-rose-50 text-rose-600 border-rose-200';
-      default:
-        return 'bg-amber-50 text-amber-600 border-amber-200';
-    }
-  };
 
   const inputCls = 'input-style';
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
@@ -179,45 +159,27 @@ export default function ServicesPage() {
       {showForm && (
         <div className="bg-white rounded-3xl p-7 border border-cyan-100 shadow-lg space-y-5 animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 className="text-lg font-semibold text-slate-900">Add New Client Service</h3>
+            <h3 className="text-lg font-semibold text-slate-900">Add New Service</h3>
             <button onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
               <FiX size={18} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className={labelCls}>Client / User</label>
-                <select
-                  value={form.user_id}
-                  onChange={(e) => setForm({ ...form, user_id: e.target.value })}
-                  className={inputCls}
-                >
-                  <option value="">Select Client User...</option>
-                  {users.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.name} ({u.email})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className={labelCls}>Tenant Assignment</label>
-                <select
-                  value={form.tenant_id}
-                  onChange={(e) => setForm({ ...form, tenant_id: e.target.value })}
-                  className={inputCls}
-                >
-                  <option value="">Global / No Specific Tenant</option>
-                  {tenants.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name} ({t.url})
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label className={labelCls}>Tenant Assignment</label>
+              <select
+                value={form.tenant_id}
+                onChange={(e) => setForm({ ...form, tenant_id: e.target.value })}
+                className={inputCls}
+              >
+                <option value="">Global / No Specific Tenant</option>
+                {tenants.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name} ({t.url})
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -284,181 +246,92 @@ export default function ServicesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-3 bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center gap-3">
-          <FiSearch className="text-slate-400 ml-2" size={18} />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input-style text-sm flex-1 border-none shadow-none"
-          />
-          {search && (
-            <button onClick={() => setSearch('')} className="p-1 text-slate-400 hover:text-slate-600">
-              <FiX size={16} />
-            </button>
-          )}
-        </div>
-
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="input-style text-sm bg-white rounded-2xl border border-slate-100 p-3 shadow-sm"
-        >
-          <option value="all">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="active">Active</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+      <div className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center gap-3 max-w-md">
+        <FiSearch className="text-slate-400 ml-2" size={18} />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search services..."
+          className="input-style text-sm flex-1 border-none shadow-none"
+        />
+        {search && (
+          <button onClick={() => setSearch('')} className="p-1 text-slate-400 hover:text-slate-600">
+            <FiX size={16} />
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-12 text-center text-slate-400">Loading services...</div>
-        ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
-            <FiBriefcase size={32} className="mx-auto mb-2 text-slate-300" />
-            <p className="font-semibold text-sm">No services found</p>
+      {loading ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">Loading services...</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+          <FiBriefcase size={32} className="mx-auto mb-2 text-slate-300" />
+          <p className="font-semibold text-sm">No services found</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((srv, idx) => (
+              <ServiceCard
+                key={srv.id}
+                service={srv}
+                index={idx}
+                isStaff={true}
+                onDelete={handleDelete}
+                onRecordPayment={(service) => setPayServiceId(payServiceId === service.id ? null : service.id)}
+              />
+            ))}
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  <th className="py-4 px-6">Service & Client</th>
-                  <th className="py-4 px-6">Tenant</th>
-                  <th className="py-4 px-6">Billing & Due</th>
-                  <th className="py-4 px-6">Status</th>
-                  <th className="py-4 px-6">Payment</th>
-                  <th className="py-4 px-6 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
-                {filtered.map((srv) => {
-                  const netPrice = Math.max(0, srv.price - (srv.discount || 0));
-                  const isPayingThis = payServiceId === srv.id;
 
-                  return (
-                    <React.Fragment key={srv.id}>
-                      <tr className="hover:bg-slate-50/50 transition-colors">
-                        <td className="py-4 px-6">
-                          <div className="font-semibold text-slate-900">{srv.name}</div>
-                          <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                            <FiUser size={12} /> {srv.user_name || 'Unassigned User'} ({srv.user_email || '—'})
-                          </div>
-                        </td>
+          {payServiceId && (
+            <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 shadow-sm animate-in fade-in duration-200">
+              {(() => {
+                const srv = services.find((s) => s.id === payServiceId);
+                if (!srv) return null;
 
-                        <td className="py-4 px-6 text-xs text-slate-600 font-semibold">
-                          {srv.tenant_name ? (
-                            <span className="inline-flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-full text-slate-600">
-                              <FiGlobe size={12} /> {srv.tenant_name}
-                            </span>
-                          ) : (
-                            '—'
-                          )}
-                        </td>
-
-                        <td className="py-4 px-6">
-                          <div className="font-semibold text-slate-900">${netPrice}</div>
-                          <div className="text-[11px] text-slate-400">
-                            Paid: ${srv.paid_amount || 0} · Due: ${srv.due_amount || netPrice}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-6">
-                          <select
-                            value={srv.status}
-                            onChange={(e) => handleStatusChange(srv.id, e.target.value)}
-                            className={`text-xs font-semibold px-2.5 py-1 rounded-full border outline-none cursor-pointer ${getStatusBadge(
-                              srv.status
-                            )}`}
-                          >
-                            <option value="pending">pending</option>
-                            <option value="active">active</option>
-                            <option value="completed">completed</option>
-                            <option value="cancelled">cancelled</option>
-                          </select>
-                        </td>
-
-                        <td className="py-4 px-6">
-                          <span
-                            className={`inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full ${
-                              srv.payment_status === 'paid'
-                                ? 'bg-emerald-100 text-emerald-700'
-                                : srv.payment_status === 'due'
-                                ? 'bg-amber-100 text-amber-700'
-                                : 'bg-rose-100 text-rose-700'
-                            }`}
-                          >
-                            {srv.payment_status}
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-6 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => setPayServiceId(isPayingThis ? null : srv.id)}
-                              className="p-2 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all cursor-pointer"
-                              title="Record Payment Inline"
-                            >
-                              <FiDollarSign size={16} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(srv.id, srv.name)}
-                              className="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
-                              title="Delete Service"
-                            >
-                              <FiTrash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-
-                      {isPayingThis && (
-                        <tr className="bg-emerald-50/50">
-                          <td colSpan="6" className="p-4 border-b border-emerald-100">
-                            <form
-                              onSubmit={(e) => handleRecordPayment(e, srv)}
-                              className="flex items-center justify-end gap-3 text-xs"
-                            >
-                              <span className="font-semibold text-slate-700">
-                                Record Payment for {srv.name} (Due: ${srv.due_amount}):
-                              </span>
-                              <input
-                                type="number"
-                                min="1"
-                                max={srv.due_amount}
-                                value={payAmount}
-                                onChange={(e) => setPayAmount(e.target.value)}
-                                className="input-style w-48 text-xs py-1.5"
-                                required
-                              />
-                              <button
-                                type="submit"
-                                disabled={paying}
-                                className="px-4 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-all cursor-pointer disabled:opacity-50"
-                              >
-                                {paying ? 'Saving...' : 'Record Payment'}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setPayServiceId(null)}
-                                className="p-1.5 text-slate-400 hover:text-slate-600"
-                              >
-                                <FiX size={16} />
-                              </button>
-                            </form>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                return (
+                  <form
+                    onSubmit={(e) => handleRecordPayment(e, srv)}
+                    className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
+                  >
+                    <span className="font-semibold text-slate-800">
+                      Record Payment for &quot;{srv.name}&quot; (Due: ${srv.due_amount || Math.max(0, srv.price - (srv.discount || 0))}):
+                    </span>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <input
+                        type="number"
+                        min="1"
+                        max={srv.due_amount || Math.max(0, srv.price - (srv.discount || 0))}
+                        value={payAmount}
+                        onChange={(e) => setPayAmount(e.target.value)}
+                        placeholder="Amount ($)"
+                        className="input-style text-xs py-2 bg-white flex-1 sm:w-44"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        disabled={paying}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-all cursor-pointer disabled:opacity-50 shrink-0"
+                      >
+                        {paying ? 'Saving...' : 'Record Payment'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPayServiceId(null)}
+                        className="p-2 text-slate-400 hover:text-slate-600 shrink-0"
+                      >
+                        <FiX size={18} />
+                      </button>
+                    </div>
+                  </form>
+                );
+              })()}
+            </div>
+          )}
+        </div>
+      )}
       </div>
     </div>
   );

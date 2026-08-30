@@ -16,6 +16,7 @@ import {
   FiExternalLink,
   FiFilter
 } from 'react-icons/fi';
+import BlogCard from '@/component/cards/BlogCard';
 
 export default function BlogsManagerPage() {
   const [blogs, setBlogs] = useState([]);
@@ -168,88 +169,15 @@ export default function BlogsManagerPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBlogs.map((blog) => (
-            <div
+          {filteredBlogs.map((blog, idx) => (
+            <BlogCard
               key={blog.id}
-              className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between"
-            >
-              <div>
-                {/* Image Banner */}
-                <div className="h-44 bg-slate-100 relative overflow-hidden">
-                  {blog.image ? (
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2 bg-gradient-to-br from-primary/10 to-slate-100">
-                      <FiBookOpen size={36} className="text-primary" />
-                      <span className="text-xs font-semibold">No Image</span>
-                    </div>
-                  )}
-
-                  {/* Tenant Tag */}
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm flex items-center gap-1.5 border border-slate-100">
-                    <FiGlobe size={12} />
-                    <span>{blog.tenant_name || 'Tenant'}</span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 space-y-3">
-                  <h2 className="text-lg font-bold text-slate-900 line-clamp-2 leading-snug hover:text-primary transition-colors">
-                    {blog.title}
-                  </h2>
-
-                  <p className="text-xs font-mono text-slate-400 bg-slate-50 px-2.5 py-1 rounded-lg truncate border border-slate-100">
-                    /{blog.slug}
-                  </p>
-
-                  <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-                    <span className="flex items-center gap-1">
-                      <FiUser size={13} className="text-slate-400" />
-                      {blog.creator_name || 'Staff'}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <FiCalendar size={13} className="text-slate-400" />
-                      {new Date(blog.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions Footer */}
-              <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between gap-2">
-                <Link
-                  href={`/user/blogs/${blog.slug}`}
-                  target="_blank"
-                  className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-primary flex items-center gap-1 transition-colors"
-                >
-                  <FiExternalLink size={13} />
-                  <span>Preview</span>
-                </Link>
-
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/panel/blogs/${blog.id}`}
-                    className="p-2 rounded-xl text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-primary transition-all text-xs font-semibold flex items-center gap-1.5"
-                  >
-                    <FiEdit size={14} />
-                    <span>Edit</span>
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(blog.id, blog.title)}
-                    disabled={deletingId === blog.id}
-                    className="p-2 rounded-xl text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-100 transition-all text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50"
-                  >
-                    <FiTrash2 size={14} />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+              blog={blog}
+              index={idx}
+              isStaff={true}
+              onEdit={() => {}}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       )}

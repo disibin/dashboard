@@ -14,7 +14,7 @@ export async function GET() {
                 srv.id, 
                 srv.name AS project_title, 
                 'service' AS project_type,
-                srv.status AS project_status, 
+                'available' AS project_status, 
                 srv.description,
                 srv.price - srv.discount AS net_price,
                 srv.created_at,
@@ -22,9 +22,7 @@ export async function GET() {
                 sp.status AS payment_status
              FROM services srv
              LEFT JOIN tenants t ON t.id = srv.tenant_id
-             LEFT JOIN service_payments sp ON sp.service_id = srv.id
-             WHERE srv.user_id = $1`,
-            [userId]
+             LEFT JOIN service_payments sp ON sp.service_id = srv.id`
         );
 
         const purchasesRes = await dbQuery(

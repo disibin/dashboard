@@ -10,10 +10,9 @@ export async function GET() {
 
         const res = await dbQuery(
             `SELECT 
-                srv.id, srv.tenant_id, srv.user_id, srv.name, srv.slug, srv.description, 
-                srv.price, srv.discount, srv.status, srv.created_by, srv.created_at, srv.updated_at,
+                srv.id, srv.tenant_id, srv.name, srv.slug, srv.description, 
+                srv.price, srv.discount, srv.created_by, srv.created_at, srv.updated_at,
                 t.name AS tenant_name, t.url AS tenant_url,
-                u.name AS user_name, u.email AS user_email,
                 stf.name AS staff_name,
                 sp.id AS payment_id,
                 COALESCE(sp.paid, 0) AS paid_amount,
@@ -21,7 +20,6 @@ export async function GET() {
                 COALESCE(sp.status, 'unpaid') AS payment_status
              FROM services srv
              LEFT JOIN tenants t ON t.id = srv.tenant_id
-             LEFT JOIN users u ON u.id = srv.user_id
              LEFT JOIN staffs stf ON stf.id = srv.created_by
              LEFT JOIN service_payments sp ON sp.service_id = srv.id
              ORDER BY srv.created_at DESC`
@@ -40,7 +38,7 @@ export async function POST(req) {
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { tenant_id, user_id, name, description, price, discount, status } = body;
+        const { tenant_id, name, description, price, discount } = body;
 
         if (!name || !name.trim()) {
             return NextResponse.json({ success: false, message: "Service name is required" }, { status: 400 });
@@ -62,18 +60,16 @@ export async function POST(req) {
         const netPrice = Math.max(0, totalPrice - totalDiscount);
 
         const srvRes = await dbQuery(
-            `INSERT INTO services (tenant_id, user_id, name, slug, description, price, discount, status, created_by)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            `INSERT INTO services (tenant_id, name, slug, description, price, discount, created_by)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)
              RETURNING *`,
             [
                 tenant_id || null,
-                user_id || null,
                 nameTrimmed,
                 slug,
                 description?.trim() || null,
                 totalPrice,
                 totalDiscount,
-                status || 'pending',
                 auth.data.id
             ]
         );
@@ -112,18 +108,10 @@ export async function PATCH(req) {
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const body = await req.json();
-        const { id, status, add_payment } = body;
+        const { id, add_payment } = body;
 
         if (!id) {
             return NextResponse.json({ success: false, message: "Service ID is required" }, { status: 400 });
-        }
-
-        // Update service status if provided
-        if (status) {
-            await dbQuery(
-                `UPDATE services SET status = $1, updated_at = now() WHERE id = $2`,
-                [status, id]
-            );
         }
 
         // Record partial or full payment if provided
