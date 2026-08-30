@@ -9,7 +9,8 @@ import {
   FiShield, FiUsers, FiUserCheck, FiBriefcase, FiGlobe, FiBox,
   FiTag, FiLayout, FiCreditCard, FiFileText, FiCheckSquare,
   FiMessageSquare, FiAlertCircle, FiLifeBuoy, FiStar, FiMail,
-  FiInbox, FiHelpCircle, FiArrowRight, FiBookOpen
+  FiInbox, FiHelpCircle, FiArrowRight, FiBookOpen,
+  FiMenu
 } from 'react-icons/fi'
 import { FaHandshake } from 'react-icons/fa'
 
@@ -97,22 +98,19 @@ const Navbar = () => {
       <div className="flex items-center gap-3">
         <button
           onClick={() => setDashboardSidebar(!dashboardSidebar)}
-          className="cursor-pointer px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200/80 transition-all flex items-center gap-2 shadow-xs group"
+          className="cursor-pointer px-3 py-1.5 rounded-xl  text-slate-700 hover:text-slate-900 transition-all flex items-center gap-2 shadow-xs group"
           title={dashboardSidebar ? "Hide Sidebar Menu" : "Show Sidebar Menu"}
           aria-label="Toggle sidebar menu"
         >
-          <FiSidebar size={18} className={`transition-transform duration-200 ${dashboardSidebar ? 'rotate-180 text-primary' : 'text-slate-500'}`} />
-          <span className="hidden sm:inline text-xs font-semibold tracking-tight">
-            Menu
-          </span>
+          <FiMenu size={18} className={`transition-transform duration-200 ${dashboardSidebar ? 'rotate-180 text-primary' : 'text-slate-500'}`} />
+          
         </button>
 
         <Link href="/panel" className="text-lg font-semibold text-slate-900 tracking-tight flex items-center gap-2">
-          <span className="hidden md:inline font-bold text-slate-900">Management</span>
+          <span className="hidden md:inline font-semibold text-slate-900">Management</span>
         </Link>
       </div>
 
-      {/* Search Input Bar */}
       <div className="relative flex-1 max-w-md mx-4" ref={dropdownRef}>
         <div
           className={`flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl transition-all ${

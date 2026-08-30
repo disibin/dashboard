@@ -30,7 +30,6 @@ export default function UserBlogsPage() {
       const res = await axios.get('/api/public/blogs');
       if (res.data.success) {
         setBlogs(res.data.data);
-        // Extract unique tenants
         const tenants = Array.from(
           new Set(res.data.data.map((b) => JSON.stringify({ id: b.tenant_id, name: b.tenant_name })))
         ).map((t) => JSON.parse(t));
@@ -54,14 +53,12 @@ export default function UserBlogsPage() {
     return matchesSearch && matchesTenant;
   });
 
-  // Strip HTML tags for clean card excerpt
   const getExcerpt = (htmlString) => {
     if (!htmlString) return '';
     const cleanText = htmlString.replace(/<[^>]+>/g, '');
     return cleanText.length > 130 ? cleanText.substring(0, 130) + '...' : cleanText;
   };
 
-  // Estimate reading time
   const getReadingTime = (htmlString) => {
     if (!htmlString) return '1 min read';
     const text = htmlString.replace(/<[^>]+>/g, '');
@@ -74,24 +71,6 @@ export default function UserBlogsPage() {
     <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       <Toaster position="top-center" />
 
-      {/* Hero Header using primary theme colors */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-primary-dark to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl">
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary-light/30 text-primary-light text-xs font-semibold backdrop-blur-md">
-            <FiBookOpen size={14} />
-            <span>Official Articles & Tech Insights</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Platform Blog & Insights
-          </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Discover product updates, technical guides, tenant announcements, and industry best practices.
-          </p>
-        </div>
-      </div>
-
-      {/* Filter and Search Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="relative w-full sm:w-80">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -104,7 +83,6 @@ export default function UserBlogsPage() {
           />
         </div>
 
-        {/* Tenant Tabs / Selector */}
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
           <button
             onClick={() => setSelectedTenant('')}
@@ -114,7 +92,7 @@ export default function UserBlogsPage() {
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
-            All Tenants
+            All Blogs
           </button>
           {tenantsList.map((t) => (
             <button

@@ -109,10 +109,7 @@ const Sidebar = () => {
         </nav>
 
         <div className="px-4 py-4 border-t border-slate-100 space-y-2">
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-            <p className="text-sm font-semibold text-slate-900 truncate">{userData?.name || 'Customer Account'}</p>
-            <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5 truncate">{userData?.email || 'User'}</p>
-          </div>
+          
           <button 
             onClick={logout}
             className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold text-rose-500 hover:bg-rose-50 transition-all duration-200"

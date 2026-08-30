@@ -12,7 +12,6 @@ export default function UserProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Discussion drawer state
   const [activeProject, setActiveProject] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -61,19 +60,7 @@ export default function UserProjectsPage() {
     <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
       <Toaster position="top-center" />
 
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-            <FiFolder size={24} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-semibold text-slate-900">My Projects & Discussion Chats</h1>
-            <p className="text-slate-500 text-sm mt-0.5">
-              Track project milestones, service packages, and direct project chat communications.
-            </p>
-          </div>
-        </div>
-      </div>
+      
 
       <div className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center gap-3 max-w-md">
         <FiSearch className="text-slate-400 ml-2" size={18} />
