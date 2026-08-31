@@ -23,6 +23,7 @@ export default function NewBlogPage() {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [imageId, setImageId] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const [tenants, setTenants] = useState([]);
   const [loadingTenants, setLoadingTenants] = useState(true);
@@ -49,40 +50,16 @@ export default function NewBlogPage() {
     }
   };
 
-  const handleImageUpload = async (e) => {
+  const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('image', file);
-
-    setUploadingImage(true);
-    try {
-      const res = await axios.post('/api/image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      if (res.data.success) {
-        setImageUrl(res.data.data.url);
-        setImageId(res.data.data.public_id);
-        toast.success('Image uploaded successfully');
-      } else {
-        toast.error(res.data.message || 'Image upload failed');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Image upload failed');
-    } finally {
-      setUploadingImage(false);
-    }
+    setImageFile(file);
+    setImageUrl(URL.createObjectURL(file));
   };
 
-  const handleRemoveImage = async () => {
-    if (imageId) {
-      try {
-        await axios.delete(`/api/image?public_id=${imageId}`);
-      } catch (err) {
-        console.error('Failed to delete image from Cloudinary:', err);
-      }
-    }
+  const handleRemoveImage = () => {
+    setImageFile(null);
     setImageUrl('');
     setImageId('');
   };
@@ -99,12 +76,30 @@ export default function NewBlogPage() {
 
     setSubmitting(true);
     try {
+      let finalImageUrl = imageUrl;
+      let finalImageId = imageId;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        const uploadRes = await axios.post('/api/image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (uploadRes.data.success) {
+          finalImageUrl = uploadRes.data.data.url;
+          finalImageId = uploadRes.data.data.public_id;
+        } else {
+          throw new Error(uploadRes.data.message || 'Image upload failed');
+        }
+      }
+
       const payload = {
         title: title.trim(),
         tenant_id: Number(tenantId),
         description,
-        image: imageUrl || null,
-        image_id: imageId || null,
+        image: finalImageUrl || null,
+        image_id: finalImageId || null,
       };
 
       const res = await axios.post('/api/staff/blogs', payload);
@@ -216,8 +211,7 @@ export default function NewBlogPage() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={uploadingImage}
+                  onChange={handleFileSelect}
                   className="hidden"
                 />
                 {uploadingImage ? (

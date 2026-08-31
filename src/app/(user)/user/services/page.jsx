@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import { FiBriefcase, FiSearch, FiGlobe, FiX, FiCheckCircle } from 'react-icons/fi';
-import ServiceCard from '@/component/cards/ServiceCard';
+import ServiceCard from '@/component/user/cards/ServiceCard';
 
 export default function UserServicesPage() {
   const [services, setServices] = useState([]);

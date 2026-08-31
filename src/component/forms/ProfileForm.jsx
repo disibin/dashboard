@@ -23,6 +23,20 @@ const ProfileForm = ({ onSaved }) => {
   });
 
   useEffect(() => {
+    const loadProfile = async () => {
+      if (!userData || !userData.name) {
+        try {
+          const res = await axios.get('/api/user');
+          if (res.data.success) {
+            setUserData((prev) => ({ ...prev, ...res.data.data }));
+          }
+        } catch {}
+      }
+    };
+    loadProfile();
+  }, []);
+
+  useEffect(() => {
     if (userData) {
       setFormData({
         name:          userData.name          || '',

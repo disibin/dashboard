@@ -10,7 +10,6 @@ const BlogCard = ({ blog, index = 0, isStaff = false, onEdit, onDelete }) => {
   const targetLink = blog?.slug ? `/user/blogs/${blog.slug}` : '#';
   const formattedNumber = String(index + 1).padStart(2, '0');
 
-  // Strip HTML tags for clean text display
   const getExcerpt = (htmlString) => {
     if (!htmlString) return '';
     const cleanText = htmlString.replace(/<[^>]+>/g, '');
@@ -30,7 +29,7 @@ const BlogCard = ({ blog, index = 0, isStaff = false, onEdit, onDelete }) => {
           href={targetLink}
           className="flex flex-col no-underline grow"
         >
-          <div className="p-6 flex flex-col gap-4 grow">
+          <div className="p-3 flex flex-col gap-4 grow">
             <div className="flex items-center justify-between">
               <p className="text-[14px] font-semibold text-gray-500 m-0">
                 {formattedNumber}

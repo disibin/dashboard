@@ -13,7 +13,7 @@ import {
   FiArrowRight,
   FiClock
 } from 'react-icons/fi';
-import BlogCard from '@/component/cards/BlogCard';
+import BlogCard from '@/component/user/cards/BlogCard';
 
 export default function UserBlogsPage() {
   const [blogs, setBlogs] = useState([]);

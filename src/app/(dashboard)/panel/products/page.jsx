@@ -7,7 +7,7 @@ import {
   FiExternalLink, FiX, FiGlobe, FiUser, FiCheck, FiUpload, FiLoader
 } from 'react-icons/fi';
 import Image from 'next/image';
-import ProductCard from '@/component/cards/ProductCard';
+import ProductCard from '@/component/staff/cards/ProductCard';
 
 const ProductsManagement = () => {
   const [products, setProducts] = useState([]);

@@ -15,36 +15,24 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
 
   if (!isOpen) return null;
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    setUploading(true);
-    try {
-      for (const file of files) {
-        if (!file.type.startsWith('image/')) {
-          toast.error('Only image files are allowed');
-          continue;
-        }
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const res = await axios.post('/api/image', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-
-        if (res.data.success) {
-          setImages(prev => [...prev, { file_url: res.data.data.url, file_id: res.data.data.public_id }]);
-        } else {
-          toast.error(res.data.message || 'Upload failed');
-        }
+    const newItems = [];
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Only image files are allowed');
+        continue;
       }
-    } catch {
-      toast.error('Failed to upload image');
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      newItems.push({
+        file,
+        file_url: URL.createObjectURL(file),
+        file_id: null,
+      });
     }
+    setImages(prev => [...prev, ...newItems]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const removeImage = (index) => {
@@ -59,10 +47,28 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
 
     setSubmitting(true);
     try {
+      const uploadedImages = await Promise.all(
+        images.map(async (img) => {
+          if (img.file) {
+            const formData = new FormData();
+            formData.append('image', img.file);
+            const res = await axios.post('/api/image', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (res.data.success) {
+              return { file_url: res.data.data.url, file_id: res.data.data.public_id };
+            } else {
+              throw new Error(res.data.message || 'Image upload failed');
+            }
+          }
+          return { file_url: img.file_url, file_id: img.file_id };
+        })
+      );
+
       const res = await axios.post('/api/user/ticket', {
         subject: subject.trim(),
         message: message.trim(),
-        images: images.map(img => ({ file_url: img.file_url, file_id: img.file_id }))
+        images: uploadedImages
       });
 
       if (res.data.success) {
@@ -76,7 +82,7 @@ export default function NewTicketModal({ isOpen, onClose, onSuccess }) {
         toast.error(res.data.message || 'Failed to create ticket');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to create ticket');
+      toast.error(error.response?.data?.message || error.message || 'Failed to create ticket');
     } finally {
       setSubmitting(false);
     }

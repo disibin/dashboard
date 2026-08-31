@@ -1,14 +1,18 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'react-hot-toast';
 import { FiBox, FiSearch, FiX } from 'react-icons/fi';
-import PackageCard from '@/component/cards/PackageCard';
+import PackageCard from '@/component/user/cards/PackageCard';
 
 export default function UserPackagesPage() {
+  const router = useRouter();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [startingId, setStartingId] = useState(null);
 
   useEffect(() => {
     fetchPackages();
@@ -24,6 +28,25 @@ export default function UserPackagesPage() {
       toast.error('Failed to load packages');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStartProject = async (pkg) => {
+    setStartingId(pkg.id);
+    try {
+      const res = await axios.post('/api/user/packages/start', { package_id: pkg.id });
+      if (res.data.success) {
+        toast.success(res.data.message || `Project started for ${pkg.name}!`);
+        setTimeout(() => {
+          router.push('/user/projects');
+        }, 800);
+      } else {
+        toast.error(res.data.message || 'Failed to start project');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to start project');
+    } finally {
+      setStartingId(null);
     }
   };
 
@@ -45,7 +68,7 @@ export default function UserPackagesPage() {
           <div>
             <h1 className="text-2xl font-semibold text-slate-900">Service Packages & Plans</h1>
             <p className="text-slate-500 text-sm mt-0.5">
-              Choose from tailored service offerings, development packages, and feature plans.
+              Choose from tailored service offerings, development packages, and click Start Project to launch.
             </p>
           </div>
         </div>
@@ -57,6 +80,7 @@ export default function UserPackagesPage() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search package titles or platforms..."
           className="input-style text-sm flex-1 border-none shadow-none"
         />
         {search && (
@@ -77,8 +101,15 @@ export default function UserPackagesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} isStaff={false} />
+          {filtered.map((pkg, idx) => (
+            <PackageCard
+              key={pkg.id}
+              pkg={pkg}
+              index={idx}
+              onStartProject={handleStartProject}
+              startingId={startingId}
+              isStaff={false}
+            />
           ))}
         </div>
       )}

@@ -2,17 +2,17 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single blog by ID for staff/manager
+// GET — Fetch single blog by ID OR slug for staff/manager
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
         const resolvedParams = await params;
-        const id = resolvedParams.id;
+        const idOrSlug = resolvedParams.id;
 
-        if (!id) {
-            return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
+        if (!idOrSlug) {
+            return NextResponse.json({ success: false, message: "ID or slug is required" }, { status: 400 });
         }
 
         const res = await dbQuery(`
@@ -22,8 +22,9 @@ export async function GET(req, { params }) {
             FROM blogs b
             INNER JOIN tenants t ON b.tenant_id = t.id
             LEFT JOIN staffs s ON b.created_by = s.id
-            WHERE b.id = $1
-        `, [id]);
+            WHERE b.id::text = $1 OR b.slug = $1
+            LIMIT 1
+        `, [idOrSlug]);
 
         if (res.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Blog not found" }, { status: 404 });

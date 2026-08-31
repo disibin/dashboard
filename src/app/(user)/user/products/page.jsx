@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import { FiPackage, FiSearch, FiX } from 'react-icons/fi';
-import ProductCard from '@/component/cards/ProductCard';
+import ProductCard from '@/component/user/cards/ProductCard';
 
 export default function UserProductsPage() {
   const [products, setProducts] = useState([]);

@@ -25,7 +25,7 @@ const ProjectCard = ({ project, index = 0, onOpenDiscussion }) => {
     >
       <div className="group flex flex-col justify-between bg-white overflow-hidden box-border h-full border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 relative">
         <div className="flex flex-col grow">
-          <div className="p-6 flex flex-col gap-4 grow">
+          <div className="p-3 flex flex-col gap-4 grow">
             <div className="flex items-center justify-between">
               <p className="text-[14px] font-semibold text-gray-500 m-0">
                 {formattedNumber}

@@ -20,42 +20,20 @@ export default function NewPartnerPage() {
     image_id: '',
   });
 
-  const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const res = await axios.post('/api/image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      if (res.data.success) {
-        setForm((prev) => ({
-          ...prev,
-          image: res.data.data.url,
-          image_id: res.data.data.public_id,
-        }));
-        toast.success('Partner logo uploaded!');
-      } else {
-        toast.error(res.data.message || 'Upload failed');
-      }
-    } catch {
-      toast.error('Failed to upload logo');
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
+    setImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setForm(prev => ({ ...prev, image: previewUrl }));
   };
 
   const handleSubmit = async (e) => {
@@ -66,7 +44,30 @@ export default function NewPartnerPage() {
 
     setSaving(true);
     try {
-      const res = await axios.post('/api/public/partner', form);
+      let finalImageUrl = form.image;
+      let finalImageId = form.image_id;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        const res = await axios.post('/api/image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if (res.data.success) {
+          finalImageUrl = res.data.data.url;
+          finalImageId = res.data.data.public_id;
+        } else {
+          throw new Error(res.data.message || 'Logo upload failed');
+        }
+      }
+
+      const payload = {
+        ...form,
+        image: finalImageUrl,
+        image_id: finalImageId,
+      };
+
+      const res = await axios.post('/api/public/partner', payload);
       if (res.data.success) {
         toast.success('Partner created successfully!');
         router.push('/panel/partners');
@@ -74,7 +75,7 @@ export default function NewPartnerPage() {
         toast.error(res.data.message || 'Failed to create partner');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Something went wrong');
+      toast.error(err.response?.data?.message || err.message || 'Something went wrong');
     } finally {
       setSaving(false);
     }
@@ -129,16 +130,15 @@ export default function NewPartnerPage() {
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  onChange={handleFileSelect}
                   className="hidden"
                 />
                 <button
                   type="button"
-                  disabled={uploading}
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-primary transition-colors disabled:bg-slate-400 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-primary transition-colors cursor-pointer"
                 >
-                  <FiUpload size={14} /> {uploading ? 'Uploading...' : 'Upload Logo'}
+                  <FiUpload size={14} /> Select Logo File
                 </button>
                 <p className="text-xs text-slate-400 font-medium">
                   PNG, SVG, or JPG format (transparent background recommended)

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET single product by slug (Public)
+// GET single product by slug OR id (Public / User Panel)
 export async function GET(req, { params }) {
     try {
-        const { slug } = await params;
+        const resolvedParams = await params;
+        const slugParam = resolvedParams.slug;
+
+        if (!slugParam) {
+            return NextResponse.json({ success: false, message: "Slug or ID is required" }, { status: 400 });
+        }
 
         const res = await dbQuery(`
             SELECT
@@ -19,9 +24,9 @@ export async function GET(req, { params }) {
                 p.created_at,
                 p.updated_at
             FROM products p
-            WHERE p.slug = $1
+            WHERE p.slug = $1 OR p.id::text = $1
             LIMIT 1
-        `, [slug]);
+        `, [slugParam]);
 
         if (res.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });

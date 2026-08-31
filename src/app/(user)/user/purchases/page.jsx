@@ -32,11 +32,14 @@ export default function UserPurchasesPage() {
   };
 
   const filteredPurchases = purchases.filter((item) => {
-    const titleMatch = (item.package_title || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const query = searchQuery.toLowerCase();
+    const titleMatch =
+      (item.package_title || '').toLowerCase().includes(query) ||
+      (item.product_title || '').toLowerCase().includes(query);
     const status = (item.payment_status || item.purchase_status || '').toLowerCase();
     
-    if (filterStatus === 'paid') return titleMatch && status === 'paid';
-    if (filterStatus === 'due') return titleMatch && (status === 'due' || status === 'unpaid');
+    if (filterStatus === 'paid') return titleMatch && (status === 'paid' || status === 'complete');
+    if (filterStatus === 'due') return titleMatch && (status === 'due' || status === 'unpaid' || Number(item.due || 0) > 0);
     if (filterStatus === 'complete') return titleMatch && (status === 'complete' || item.purchase_status === 'complete');
     return titleMatch;
   });

@@ -18,7 +18,7 @@ export async function GET() {
                 pur.discount, 
                 pur.status AS purchase_status, 
                 pur.created_at,
-                pkg.title AS package_title, 
+                pkg.name AS package_title, 
                 pkg.description AS package_description,
                 pay.id AS payment_id, 
                 pay.price AS payment_price, 

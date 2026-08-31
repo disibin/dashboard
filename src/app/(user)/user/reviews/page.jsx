@@ -25,7 +25,8 @@ export default function UserReviewsPage() {
     try {
       const res = await axios.get('/api/public/review?type=me');
       if (res.data.success) {
-        setReview(Array.isArray(res.data.data) ? null : res.data.data);
+        const data = res.data.data;
+        setReview(Array.isArray(data) ? (data.length > 0 ? data[0] : null) : data);
       }
     } catch {
       toast.error('Failed to load your review status');

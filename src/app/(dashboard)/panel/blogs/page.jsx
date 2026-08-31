@@ -16,7 +16,7 @@ import {
   FiExternalLink,
   FiFilter
 } from 'react-icons/fi';
-import BlogCard from '@/component/cards/BlogCard';
+import BlogCard from '@/component/staff/cards/BlogCard';
 
 export default function BlogsManagerPage() {
   const [blogs, setBlogs] = useState([]);

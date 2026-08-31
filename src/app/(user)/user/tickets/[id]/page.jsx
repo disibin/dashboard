@@ -59,36 +59,24 @@ export default function UserTicketDetailPage() {
     }
   };
 
-  const handleImageSelect = async (e) => {
+  const handleImageSelect = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    setUploadingImage(true);
-    try {
-      for (const file of files) {
-        if (!file.type.startsWith('image/')) {
-          toast.error('Only images allowed');
-          continue;
-        }
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const res = await axios.post('/api/image', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-
-        if (res.data.success) {
-          setAttachedImages(prev => [...prev, { file_url: res.data.data.url, file_id: res.data.data.public_id }]);
-        } else {
-          toast.error(res.data.message || 'Upload failed');
-        }
+    const newItems = [];
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Only images allowed');
+        continue;
       }
-    } catch {
-      toast.error('Failed to upload image');
-    } finally {
-      setUploadingImage(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      newItems.push({
+        file,
+        file_url: URL.createObjectURL(file),
+        file_id: null,
+      });
     }
+    setAttachedImages(prev => [...prev, ...newItems]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const removeAttachedImage = (index) => {
@@ -101,9 +89,27 @@ export default function UserTicketDetailPage() {
 
     setSendingMsg(true);
     try {
+      const uploadedImages = await Promise.all(
+        attachedImages.map(async (img) => {
+          if (img.file) {
+            const formData = new FormData();
+            formData.append('image', img.file);
+            const res = await axios.post('/api/image', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (res.data.success) {
+              return { file_url: res.data.data.url, file_id: res.data.data.public_id };
+            } else {
+              throw new Error(res.data.message || 'Image upload failed');
+            }
+          }
+          return { file_url: img.file_url, file_id: img.file_id };
+        })
+      );
+
       const payload = {
         message: messageText.trim(),
-        images: attachedImages.map(img => ({ file_url: img.file_url, file_id: img.file_id }))
+        images: uploadedImages
       };
 
       const res = await axios.post(`/api/user/ticket/${ticketId}`, payload);
@@ -114,8 +120,8 @@ export default function UserTicketDetailPage() {
       } else {
         toast.error(res.data.message || 'Failed to send message');
       }
-    } catch {
-      toast.error('Failed to send message');
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message || 'Failed to send message');
     } finally {
       setSendingMsg(false);
     }

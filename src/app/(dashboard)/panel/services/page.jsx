@@ -7,7 +7,7 @@ import {
   FiDollarSign, FiX, FiUser, FiGlobe, FiCheck
 } from 'react-icons/fi';
 import TiptapEditor from '@/component/helper/TiptapEditor';
-import ServiceCard from '@/component/cards/ServiceCard';
+import ServiceCard from '@/component/staff/cards/ServiceCard';
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -131,10 +131,10 @@ export default function ServicesPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-6 w-full space-y-6 min-h-screen">
       <Toaster position="top-center" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6  shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0">
             <FiBriefcase size={24} />
@@ -262,16 +262,16 @@ export default function ServicesPage() {
         )}
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className=" overflow-hidden">
       {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">Loading services...</div>
+        <div className="bg-white p-12  text-center text-slate-400">Loading services...</div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-12  text-center text-slate-400">
           <FiBriefcase size={32} className="mx-auto mb-2 text-slate-300" />
           <p className="font-semibold text-sm">No services found</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 min-h-screen">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((srv, idx) => (
               <ServiceCard

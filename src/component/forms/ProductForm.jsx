@@ -4,7 +4,6 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { FiPlus, FiTrash2, FiCheck, FiX, FiZap, FiImage, FiSave, FiEye, FiYoutube, FiVideo } from 'react-icons/fi';
-import ImageUpload from '@/component/helper/ImageUpload';
 import TiptapEditor from '../helper/TiptapEditor';
 import Image from 'next/image';
 
@@ -195,27 +194,30 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
     setVideos(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleImageUpload = (imageData) => {
-    setImages(prev => [
-      ...prev,
-      {
-        id: null,
-        title: formData.name || '',
-        image: imageData.url,
-        public_id: imageData.public_id,
-        is_primary: prev.length === 0,
-      },
-    ]);
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const newImageObjs = files.map((file, i) => ({
+      file,
+      id: null,
+      title: formData.name || '',
+      image: URL.createObjectURL(file),
+      public_id: null,
+      is_primary: images.length === 0 && i === 0,
+    }));
+
+    setImages(prev => [...prev, ...newImageObjs]);
   };
 
   const handleSetPrimary = (index) => {
     setImages(images.map((img, i) => ({ ...img, is_primary: i === index })));
   };
 
-  const handleRemoveImage = async (index) => {
+  const handleRemoveImage = (index) => {
     const imgToRemove = images[index];
-    if (!imgToRemove.id && imgToRemove.public_id) {
-      try { await axios.delete(`/api/image?public_id=${imgToRemove.public_id}`); } catch {}
+    if (!imgToRemove.file && !imgToRemove.id && imgToRemove.public_id) {
+      try { axios.delete(`/api/image?public_id=${imgToRemove.public_id}`); } catch {}
     }
     setImages(images.filter((_, i) => i !== index));
   };
@@ -237,6 +239,36 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
       .map(f => ({ id: f.id, name: f.name, slug: f.slug, value: true }));
 
     try {
+      const processedImages = await Promise.all(
+        images.map(async (img) => {
+          if (img.file) {
+            const formDataUpload = new FormData();
+            formDataUpload.append('image', img.file);
+            const res = await axios.post('/api/image', formDataUpload, {
+              headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            if (res.data.success) {
+              return {
+                id: img.id || null,
+                title: img.title || formData.name || '',
+                image: res.data.data.url,
+                public_id: res.data.data.public_id,
+                is_primary: !!img.is_primary,
+              };
+            } else {
+              throw new Error(res.data.message || 'Failed to upload product image');
+            }
+          }
+          return {
+            id: img.id || null,
+            title: img.title || formData.name || '',
+            image: img.image,
+            public_id: img.public_id || null,
+            is_primary: !!img.is_primary,
+          };
+        })
+      );
+
       const isEditing = !!initialData?.slug;
       const url = isEditing ? `/api/staff/product/${initialData.slug}` : '/api/staff/product';
       const method = isEditing ? 'put' : 'post';
@@ -251,7 +283,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
         service_charge: Number(formData.service_charge) || 0,
         is_featured: formData.is_featured,
         is_published: publishStatus,
-        images,
+        images: processedImages,
         features: featuresPayload,
         videos: videos.map(v => v.url).filter(Boolean),
       };
@@ -473,10 +505,20 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                 <span className="text-[11px] font-semibold text-slate-400 font-poppins">{images.length} Loaded</span>
               </div>
 
-              <ImageUpload
-                onUploadComplete={handleImageUpload}
-                folder="products"
-              />
+              <div className="relative border-2 border-dashed border-slate-200 hover:border-primary rounded-2xl p-4 text-center cursor-pointer transition-all bg-slate-50/50 group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+                <div className="flex flex-col items-center justify-center space-y-1">
+                  <FiImage className="w-7 h-7 text-slate-400 group-hover:text-primary transition-colors" />
+                  <p className="text-xs font-semibold text-slate-700">Click or drag to select image files</p>
+                  <p className="text-[11px] text-slate-400">Selected images will upload when saving</p>
+                </div>
+              </div>
 
               {images.length > 0 && (
                 <div className="grid grid-cols-2 gap-3 pt-2">

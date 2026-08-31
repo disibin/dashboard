@@ -1,81 +1,120 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
-import { use } from 'react';
-import { FiArrowLeft, FiPackage } from 'react-icons/fi';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import ProductForm from '@/component/forms/ProductForm';
+import {
+  FiArrowLeft, FiExternalLink, FiLoader, FiAlertCircle, FiPackage
+} from 'react-icons/fi';
 
-const ProductEditPage = ({ params }) => {
-  const { slug } = use(params);
+export default function StaffProductDetailPage() {
+  const router = useRouter();
+  const params = useParams();
+  const slug = params?.slug;
+
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProduct();
+    if (slug) fetchProduct();
   }, [slug]);
 
   const fetchProduct = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`/api/staff/product/${slug}`);
       if (res.data.success) {
         setProduct(res.data.data);
       } else {
-        toast.error('Product not found');
+        toast.error(res.data.message || 'Product not found');
       }
-    } catch (error) {
-      toast.error('Failed to fetch product');
+    } catch {
+      toast.error('Failed to load staff product details');
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="p-12 text-center text-slate-400 space-y-3 max-w-xl mx-auto">
+        <Toaster position="top-center" />
+        <FiLoader className="animate-spin mx-auto text-primary" size={28} />
+        <p className="text-xs font-medium">Loading product details...</p>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="p-8 max-w-xl mx-auto text-center space-y-3">
+        <Toaster position="top-center" />
+        <FiAlertCircle className="mx-auto text-amber-500" size={32} />
+        <h2 className="text-base font-semibold text-slate-800">Product Not Found</h2>
+        <p className="text-xs text-slate-500">The requested product could not be found.</p>
+        <Link
+          href="/panel/products"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition-colors"
+        >
+          <FiArrowLeft size={14} /> Back to Products
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 w-full space-y-6 max-w-4xl mx-auto">
       <Toaster position="top-center" />
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/panel/products"
-            className="p-2.5 bg-white border border-slate-200 text-slate-600 hover:text-primary hover:bg-slate-50 rounded-xl transition-colors shrink-0 shadow-2xs"
-            title="Back to Products"
-          >
-            <FiArrowLeft size={16} />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-semibold text-slate-900">
-                {product?.name === 'enter title' ? 'New Product' : product?.name || 'Edit Product'}
-              </h1>
-              {product && (
-                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
-                  product.is_published ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-100 text-slate-500'
-                }`}>
-                  {product.is_published ? 'Published' : 'Draft'}
-                </span>
-              )}
-            </div>
-            <p className="text-slate-500 text-xs mt-0.5 font-mono">{slug}</p>
-          </div>
-        </div>
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <Link
+          href="/panel/products"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors"
+        >
+          <FiArrowLeft size={15} /> Back to Products
+        </Link>
+        <span className="text-xs font-mono text-slate-400">ID: #{product.id}</span>
       </div>
 
-      {product ? (
-        <ProductForm
-          initialData={product}
-          onCancel={() => window.history.back()}
-        />
-      ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
-          <FiPackage size={36} className="mx-auto mb-2 opacity-40" />
-          <p className="text-sm font-semibold text-slate-700">Product details loading or not found...</p>
-          <Link href="/panel/products" className="text-primary hover:underline text-xs font-semibold mt-2 inline-block">
-            Return to Products List
-          </Link>
+      {/* Product Content Card */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="p-2 bg-purple-50 text-purple-600 rounded-xl">
+              <FiPackage size={22} />
+            </span>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">{product.title || product.name}</h1>
+              <p className="text-xs text-slate-400">Created by {product.created_by_name || 'Staff Administrator'}</p>
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Product Image */}
+        {product.image && (
+          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          </div>
+        )}
+
+        {/* Action / External Link */}
+        {product.link && (
+          <div className="pt-2">
+            <a
+              href={product.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white font-semibold text-xs rounded-xl shadow-sm transition-all"
+            >
+              <span>Visit Live Product Demo</span>
+              <FiExternalLink size={14} />
+            </a>
+          </div>
+        )}
+      </div>
     </div>
   );
-};
-
-export default ProductEditPage;
+}

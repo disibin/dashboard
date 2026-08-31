@@ -216,7 +216,7 @@ CREATE INDEX idx_package_chats_messages_user_id ON package_chats_messages(user_i
 CREATE INDEX idx_package_chats_messages_staff_id ON package_chats_messages(staff_id);
 CREATE INDEX idx_package_chats_messages_created_at ON package_chats_messages(chat_id, created_at);
 
-CREATE TABLE IF NOT EXISTS package_chats_files (
+CREATE TABLE IF NOT EXISTS package_chats_images (
   id SERIAL PRIMARY KEY,
   chat_id INT REFERENCES package_chats(id) ON DELETE CASCADE,
   user_id INT REFERENCES users(id) ON DELETE SET NULL,
@@ -231,9 +231,9 @@ CREATE TABLE IF NOT EXISTS package_chats_files (
   created_at TIMESTAMP DEFAULT now()
 );
 
-CREATE INDEX idx_package_chats_files_chat_id ON package_chats_files(chat_id);
-CREATE INDEX idx_package_chats_files_user_id ON package_chats_files(user_id);
-CREATE INDEX idx_package_chats_files_staff_id ON package_chats_files(staff_id);
+CREATE INDEX idx_package_chats_images_chat_id ON package_chats_images(chat_id);
+CREATE INDEX idx_package_chats_images_user_id ON package_chats_images(user_id);
+CREATE INDEX idx_package_chats_images_staff_id ON package_chats_images(staff_id);
 
 -- =====================================================
 -- 3. INTERNAL MESSAGING SYSTEM

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single blog by slug for public / user panel
+// GET — Fetch single blog by slug OR id for public / user panel
 export async function GET(req, { params }) {
     try {
         const resolvedParams = await params;
-        const slug = resolvedParams.slug;
+        const slugParam = resolvedParams.slug;
 
-        if (!slug) {
-            return NextResponse.json({ success: false, message: "Slug is required" }, { status: 400 });
+        if (!slugParam) {
+            return NextResponse.json({ success: false, message: "Slug or ID is required" }, { status: 400 });
         }
 
         const res = await dbQuery(`
@@ -18,8 +18,9 @@ export async function GET(req, { params }) {
             FROM blogs b
             INNER JOIN tenants t ON b.tenant_id = t.id
             LEFT JOIN staffs s ON b.created_by = s.id
-            WHERE b.slug = $1
-        `, [slug]);
+            WHERE b.slug = $1 OR b.id::text = $1
+            LIMIT 1
+        `, [slugParam]);
 
         if (res.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Blog post not found" }, { status: 404 });

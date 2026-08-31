@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fi';
 import Image from 'next/image';
 import TiptapEditor from '@/component/helper/TiptapEditor';
-import PackageCard from '@/component/cards/PackageCard';
+import PackageCard from '@/component/staff/cards/PackageCard';
 
 export default function PackagesPage() {
   const [packages, setPackages] = useState([]);
@@ -436,10 +436,11 @@ export default function PackagesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((pkg) => (
+          {filtered.map((pkg, idx) => (
             <PackageCard
               key={pkg.id}
               pkg={pkg}
+              index={idx}
               onEdit={handleOpenForm}
               onDelete={handleDelete}
               isStaff={true}

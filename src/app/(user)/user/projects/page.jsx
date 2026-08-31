@@ -1,155 +1,142 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 import {
-  FiFolder, FiSearch, FiMessageSquare, FiX, FiCheckCircle, FiClock,
-  FiBriefcase, FiBox, FiSend
+  FiFolder, FiPlus, FiMessageSquare,
+  FiLoader, FiSearch, FiX, FiRefreshCw
 } from 'react-icons/fi';
-import ProjectCard from '@/component/cards/ProjectCard';
 
 export default function UserProjectsPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-
-  const [activeProject, setActiveProject] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
   const fetchProjects = async () => {
+    setLoading(true);
     try {
       const res = await axios.get('/api/user/projects');
       if (res.data.success) {
         setProjects(res.data.data);
       }
     } catch {
-      toast.error('Failed to load my projects');
+      toast.error('Failed to load package projects');
     } finally {
       setLoading(false);
     }
   };
 
-  const openDiscussion = (project) => {
-    setActiveProject(project);
-    setChatMessages([
-      { id: 1, sender: 'Staff Support', text: `Welcome to project discussion for "${project.project_title}". Let us know your feedback or requirements!`, time: new Date().toLocaleTimeString() }
-    ]);
-  };
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    setChatMessages((prev) => [
-      ...prev,
-      { id: Date.now(), sender: 'You', text: newMessage.trim(), time: new Date().toLocaleTimeString() }
-    ]);
-    setNewMessage('');
-  };
-
-  const filtered = projects.filter(
-    (p) =>
-      (p.project_title || '').toLowerCase().includes(search.toLowerCase()) ||
-      (p.tenant_name || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProjects = projects.filter((p) => {
+    if (!search.trim()) return true;
+    const term = search.toLowerCase();
+    return (
+      (p.project_title || '').toLowerCase().includes(term) ||
+      (p.last_message || '').toLowerCase().includes(term)
+    );
+  });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 max-w-5xl mx-auto space-y-4">
       <Toaster position="top-center" />
 
-      
+      {/* Clean Header matching /user/tickets */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-900">Package Projects</h1>
+          <p className="text-xs text-slate-500">Track and manage your package project discussions</p>
+        </div>
 
-      <div className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center gap-3 max-w-md">
-        <FiSearch className="text-slate-400 ml-2" size={18} />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={fetchProjects}
+            disabled={loading}
+            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors"
+            title="Refresh Projects"
+          >
+            <FiRefreshCw className={loading ? 'animate-spin' : ''} size={15} />
+          </button>
+          <button
+            onClick={() => router.push('/user/packages')}
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm"
+          >
+            <FiPlus size={15} />
+            Start New Project
+          </button>
+        </div>
+      </div>
+
+      {/* Search Bar matching /user/tickets */}
+      <div className="relative max-w-sm">
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
         <input
           type="text"
+          placeholder="Search projects..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="input-style text-sm flex-1 border-none shadow-none"
+          className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
         />
         {search && (
-          <button onClick={() => setSearch('')} className="p-1 text-slate-400 hover:text-slate-600">
-            <FiX size={16} />
+          <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+            <FiX size={13} />
           </button>
         )}
       </div>
 
-      {/* Projects Grid */}
-      {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
-          Loading your active projects...
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
-          <FiFolder size={32} className="mx-auto mb-2 text-slate-300" />
-          <p className="font-semibold text-sm">No active projects found</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((proj, idx) => (
-            <ProjectCard
-              key={`${proj.project_type}-${proj.id}`}
-              project={proj}
-              index={idx}
-              onOpenDiscussion={openDiscussion}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Project Chat Panel (NO POPUP) */}
-      {activeProject && (
-        <div className="bg-white rounded-3xl p-6 border border-indigo-100 shadow-lg space-y-4 animate-in fade-in duration-200">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <FiMessageSquare className="text-indigo-600" size={18} />
-                Project Discussion: {activeProject.project_title}
-              </h3>
-              <p className="text-xs text-slate-500">Direct line with staff project coordinator</p>
-            </div>
-            <button onClick={() => setActiveProject(null)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
-              <FiX size={18} />
-            </button>
+      {/* Projects List matching /user/tickets */}
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        {loading ? (
+          <div className="py-12 text-center text-slate-400 space-y-2">
+            <FiLoader className="animate-spin mx-auto text-primary" size={24} />
+            <p className="text-xs">Loading package projects...</p>
           </div>
-
-          <div className="space-y-3 max-h-64 overflow-y-auto p-3 bg-slate-50 border border-slate-100 rounded-2xl">
-            {chatMessages.map((msg) => (
+        ) : filteredProjects.length === 0 ? (
+          <div className="py-12 text-center space-y-2 px-4">
+            <FiMessageSquare className="mx-auto text-slate-300" size={28} />
+            <p className="font-semibold text-slate-700 text-sm">No package projects found</p>
+            <p className="text-xs text-slate-500">
+              {search ? 'No projects match your search.' : 'You have not started any package projects yet.'}
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {filteredProjects.map((p) => (
               <div
-                key={msg.id}
-                className={`p-3 rounded-2xl text-xs space-y-1 max-w-md ${
-                  msg.sender === 'You' ? 'bg-indigo-600 text-white ml-auto' : 'bg-white text-slate-800 border border-slate-200'
-                }`}
+                key={p.package_chat_id || p.id}
+                onClick={() => router.push(`/user/projects/${p.package_chat_id || p.id}`)}
+                className="p-4 hover:bg-slate-50 cursor-pointer transition-colors flex items-center justify-between gap-4"
               >
-                <div className="flex items-center justify-between gap-2 font-semibold opacity-80 text-[10px]">
-                  <span>{msg.sender}</span>
-                  <span>{msg.time}</span>
+                <div className="min-w-0 space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-semibold text-slate-400">#{p.package_chat_id || p.id}</span>
+                    <h3 className="text-sm font-semibold text-slate-800 hover:text-primary truncate">
+                      {p.project_title}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-slate-500 truncate">
+                    {p.last_message || 'No messages yet'}
+                  </p>
                 </div>
-                <p className="leading-relaxed">{msg.text}</p>
+
+                <div className="text-right shrink-0">
+                  <span className="text-[11px] text-slate-400 block">
+                    {new Date(p.created_at).toLocaleDateString()}
+                  </span>
+                  <span className="text-xs font-semibold text-primary hover:underline inline-block mt-0.5">
+                    View Discussion →
+                  </span>
+                </div>
               </div>
             ))}
           </div>
-
-          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              className="input-style text-xs flex-1"
-            />
-            <button
-              type="submit"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all cursor-pointer shadow-sm"
-            >
-              <FiSend size={14} /> Send
-            </button>
-          </form>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

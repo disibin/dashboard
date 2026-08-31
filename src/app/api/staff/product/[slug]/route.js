@@ -25,7 +25,7 @@ export async function GET(req, { params }) {
                 s.name AS created_by_name
             FROM products p
             LEFT JOIN staffs s ON p.created_by = s.id
-            WHERE p.slug = $1
+            WHERE p.slug = $1 OR p.id::text = $1
             LIMIT 1
         `, [slug]);
 

@@ -2,13 +2,12 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isStaffLogin } from "@/lib/auth/staff";
 
-// GET — Fetch thread for a specific ticket (Staff view)
+// GET — Fetch thread for a specific staff ticket
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
-        const staffId = auth.data.id;
         const resolvedParams = await params;
         const ticketId = resolvedParams.id;
 
@@ -22,25 +21,17 @@ export async function GET(req, { params }) {
         }
         const ticket = ticketRes.rows[0];
 
-        // Ensure staff member is added to participants
-        await dbQuery(
-            `INSERT INTO ticket_participants (ticket_id, staff_id, last_read_at) 
-             VALUES ($1, $2, now()) 
-             ON CONFLICT (ticket_id, user_id, staff_id) DO UPDATE SET last_read_at = now()`,
-            [ticketId, staffId]
-        );
-
-        // Fetch user participant info
-        const userPartRes = await dbQuery(
-            `SELECT u.id, u.name, u.email 
+        // Fetch client user details
+        const userRes = await dbQuery(
+            `SELECT u.id, u.name, u.email
              FROM ticket_participants tp
              JOIN users u ON tp.user_id = u.id
-             WHERE tp.ticket_id = $1 LIMIT 1`,
+             WHERE tp.ticket_id = $1 AND tp.user_id IS NOT NULL`,
             [ticketId]
         );
-        const userInfo = userPartRes.rows[0] || null;
+        const userInfo = userRes.rows.length > 0 ? userRes.rows[0] : null;
 
-        // Fetch messages with sender details
+        // Fetch messages with sender names
         const messagesRes = await dbQuery(
             `SELECT 
                 tm.id, 
@@ -62,7 +53,7 @@ export async function GET(req, { params }) {
 
         // Fetch attachments
         const attachmentsRes = await dbQuery(
-            `SELECT id, ticket_id, user_id, staff_id, message_id, file_url, file_id, created_at
+            `SELECT id, ticket_id, user_id, staff_id, file_url, file_id, created_at
              FROM ticket_attachments
              WHERE ticket_id = $1
              ORDER BY created_at ASC`,
@@ -103,7 +94,7 @@ export async function POST(req, { params }) {
             return NextResponse.json({ success: false, message: "Cannot send empty reply" }, { status: 400 });
         }
 
-        // Always create a message row (empty string if image-only) to anchor attachments
+        // Always create a message row
         const msgRes = await dbQuery(
             `INSERT INTO ticket_messages (ticket_id, staff_id, message) 
              VALUES ($1, $2, $3) 
@@ -111,17 +102,16 @@ export async function POST(req, { params }) {
             [ticketId, staffId, msgText]
         );
         const newMessage = { ...msgRes.rows[0], staff_name: auth.data.name || "Support Staff", staff_role: auth.data.role || "staff" };
-        const parentMessageId = msgRes.rows[0].id;
 
         const newAttachments = [];
         if (hasImages) {
             for (const img of images) {
                 if (img.file_url) {
                     const attRes = await dbQuery(
-                        `INSERT INTO ticket_attachments (ticket_id, staff_id, message_id, file_url, file_id) 
-                         VALUES ($1, $2, $3, $4, $5) 
-                         RETURNING id, ticket_id, staff_id, message_id, file_url, file_id, created_at`,
-                        [ticketId, staffId, parentMessageId, img.file_url, img.file_id || null]
+                        `INSERT INTO ticket_attachments (ticket_id, staff_id, file_url, file_id) 
+                         VALUES ($1, $2, $3, $4) 
+                         RETURNING id, ticket_id, staff_id, file_url, file_id, created_at`,
+                        [ticketId, staffId, img.file_url, img.file_id || null]
                     );
                     newAttachments.push(attRes.rows[0]);
                 }
@@ -133,25 +123,21 @@ export async function POST(req, { params }) {
 
         // Send in-app notification to ticket user participant
         const userPart = await dbQuery(
-            `SELECT tp.user_id, t.title 
-             FROM tickets t
-             JOIN ticket_participants tp ON t.id = tp.ticket_id
-             WHERE t.id = $1 AND tp.user_id IS NOT NULL LIMIT 1`,
+            `SELECT user_id FROM ticket_participants WHERE ticket_id = $1 AND user_id IS NOT NULL`,
             [ticketId]
-        ).catch(() => ({ rows: [] }));
-
-        if (userPart.rows.length > 0 && userPart.rows[0].user_id) {
-            const { user_id, title } = userPart.rows[0];
-            await dbQuery(`
-                INSERT INTO notifications (user_id, title, message, type, link)
-                VALUES ($1, $2, $3, $4, $5)
-            `, [
-                user_id,
-                "Ticket Replied 💬",
-                `Support staff replied to "${title || 'Support Ticket'}": "${msgText.substring(0, 80)}${msgText.length > 80 ? '...' : ''}"`,
-                "ticket",
-                `/user/tickets/${ticketId}`
-            ]).catch((err) => console.error("Ticket notification insertion failed:", err));
+        );
+        if (userPart.rows.length > 0) {
+            const ticketUser = userPart.rows[0];
+            await dbQuery(
+                `INSERT INTO notifications (user_id, title, message, type, link)
+                 VALUES ($1, $2, $3, 'ticket', $4)`,
+                [
+                    ticketUser.user_id,
+                    `New Reply on Ticket #${ticketId}`,
+                    `Staff ${auth.data.name || 'Support'} replied: "${msgText.substring(0, 80)}${msgText.length > 80 ? '...' : ''}"`,
+                    `/user/tickets/${ticketId}`
+                ]
+            ).catch(() => {});
         }
 
         return NextResponse.json({

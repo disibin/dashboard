@@ -24,7 +24,7 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
           rel="noopener noreferrer"
           className="flex flex-col no-underline grow"
         >
-          <div className="p-6 flex flex-col gap-4 grow">
+          <div className="p-3 flex flex-col gap-4 grow">
             <div className="flex items-center justify-between">
               <p className="text-[14px] font-semibold text-gray-500 m-0">
                 {formattedNumber}
