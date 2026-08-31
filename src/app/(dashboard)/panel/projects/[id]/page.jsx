@@ -10,11 +10,11 @@ import {
   FiLoader, FiX, FiAlertCircle, FiMoreVertical,
   FiCheck, FiEdit2, FiBox, FiCreditCard,
   FiDollarSign, FiActivity, FiClock, FiPlayCircle,
-  FiCheckCircle, FiSlash
+  FiCheckCircle, FiSlash, FiUser
 } from 'react-icons/fi';
 import { formatCurrency } from '@/lib/database/secret';
 
-export default function UserProjectChatPage() {
+export default function StaffProjectChatPage() {
   const router = useRouter();
   const params = useParams();
   const chatId = params?.id;
@@ -27,15 +27,13 @@ export default function UserProjectChatPage() {
   const [sendingMsg, setSendingMsg] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Top Bar Dropdown & Menu Option state
+  // Options Menu state
   const [showMenu, setShowMenu] = useState(false);
-  const [activeTab, setActiveTab] = useState('status'); // 'rename' | 'package' | 'purchase' | 'status'
+  const [activeTab, setActiveTab] = useState('status'); // 'status' | 'rename' | 'package' | 'purchase'
   const [editingTitle, setEditingTitle] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('waiting');
   const [updatingTitle, setUpdatingTitle] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
-  const [creatingPayment, setCreatingPayment] = useState(false);
-  const [processingPayment, setProcessingPayment] = useState(false);
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -63,7 +61,7 @@ export default function UserProjectChatPage() {
     }
   }, [thread?.chat?.title, thread?.chat?.status]);
 
-  // Click outside listener for absolute menu box
+  // Click outside listener for options menu box
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -87,7 +85,7 @@ export default function UserProjectChatPage() {
   const fetchChat = async (isSilent = false) => {
     if (!isSilent) setLoading(true);
     try {
-      const res = await axios.get(`/api/user/projects/chat?chat_id=${chatId}`);
+      const res = await axios.get(`/api/staff/projects/chat?chat_id=${chatId}`);
       if (res.data.success) {
         setThread(res.data.data);
       } else if (!isSilent) {
@@ -159,7 +157,7 @@ export default function UserProjectChatPage() {
         images: uploadedImages
       };
 
-      const res = await axios.post('/api/user/projects/chat', payload);
+      const res = await axios.post('/api/staff/projects/chat', payload);
       if (res.data.success) {
         setMessageText('');
         setAttachedImages([]);
@@ -175,14 +173,13 @@ export default function UserProjectChatPage() {
     }
   };
 
-  // Option 1: Rename Title Handler
   const handleRenameTitle = async (e) => {
     e.preventDefault();
     if (!editingTitle.trim()) return toast.error('Please enter a title');
 
     setUpdatingTitle(true);
     try {
-      const res = await axios.patch('/api/user/projects/chat', {
+      const res = await axios.patch('/api/staff/projects/chat', {
         chat_id: chatId,
         title: editingTitle.trim()
       });
@@ -202,61 +199,18 @@ export default function UserProjectChatPage() {
     }
   };
 
-  // Option 3: Create Payment Handler
-  const handleCreatePayment = async () => {
-    if (!thread?.chat?.purchase_id) return toast.error('Purchase record not found');
-    setCreatingPayment(true);
-    try {
-      const res = await axios.post('/api/user/projects/payment', {
-        purchase_id: thread.chat.purchase_id
-      });
-      if (res.data.success) {
-        toast.success('Package payment created! Payment status: Unpaid');
-        fetchChat(true);
-      } else {
-        toast.error(res.data.message || 'Failed to create payment');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create payment');
-    } finally {
-      setCreatingPayment(false);
-    }
-  };
-
-  // Option 3: Pay Now Handler
-  const handlePayNow = async () => {
-    if (!thread?.chat?.purchase_id) return toast.error('Purchase record not found');
-    setProcessingPayment(true);
-    try {
-      const res = await axios.patch('/api/user/projects/payment', {
-        purchase_id: thread.chat.purchase_id
-      });
-      if (res.data.success) {
-        toast.success('Payment completed successfully!');
-        fetchChat(true);
-      } else {
-        toast.error(res.data.message || 'Payment processing failed');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Payment processing failed');
-    } finally {
-      setProcessingPayment(false);
-    }
-  };
-
-  // Option 4: Status Update Handler
   const handleUpdateStatus = async (e) => {
     if (e) e.preventDefault();
     if (!selectedStatus) return;
 
     setUpdatingStatus(true);
     try {
-      const res = await axios.patch('/api/user/projects/chat', {
+      const res = await axios.patch('/api/staff/projects/chat', {
         chat_id: chatId,
         status: selectedStatus
       });
       if (res.data.success) {
-        toast.success(`Project status updated to "${res.data.data.status}"`);
+        toast.success('Project status updated!');
         setThread((prev) => ({
           ...prev,
           chat: { ...prev.chat, status: res.data.data.status }
@@ -271,54 +225,27 @@ export default function UserProjectChatPage() {
     }
   };
 
-  const getStatusBadge = (statusKey) => {
-    const s = (statusKey || 'waiting').toLowerCase();
-    switch (s) {
-      case 'waiting':
-        return (
-          <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
-            <FiClock size={12} /> Waiting
-          </span>
-        );
-      case 'progress':
-        return (
-          <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
-            <FiPlayCircle size={12} /> In Progress
-          </span>
-        );
-      case 'working':
-        return (
-          <span className="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
-            <FiActivity size={12} /> Working
-          </span>
-        );
+  const getStatusBadge = (status) => {
+    switch (status) {
       case 'completed':
-        return (
-          <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
-            <FiCheckCircle size={12} /> Completed
-          </span>
-        );
+        return <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiCheckCircle size={12} /> Completed</span>;
+      case 'working':
+        return <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiActivity size={12} /> Working</span>;
+      case 'progress':
+        return <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiPlayCircle size={12} /> In Progress</span>;
       case 'spam':
-        return (
-          <span className="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
-            <FiSlash size={12} /> Spam
-          </span>
-        );
+        return <span className="px-2.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiSlash size={12} /> Spam</span>;
       default:
-        return (
-          <span className="px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold rounded-lg capitalize">
-            {s}
-          </span>
-        );
+        return <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiClock size={12} /> Waiting</span>;
     }
   };
 
   if (loading && !thread) {
     return (
-      <div className="p-12 text-center text-slate-400 space-y-3 max-w-xl mx-auto">
+      <div className="p-12 text-center text-slate-400 space-y-2">
         <Toaster position="top-center" />
         <FiLoader className="animate-spin mx-auto text-primary" size={28} />
-        <p className="text-xs font-medium">Loading project discussion...</p>
+        <p className="text-xs font-medium">Loading project conversation...</p>
       </div>
     );
   }
@@ -329,31 +256,30 @@ export default function UserProjectChatPage() {
         <Toaster position="top-center" />
         <FiAlertCircle className="mx-auto text-amber-500" size={32} />
         <h2 className="text-base font-semibold text-slate-800">Project Chat Not Found</h2>
-        <p className="text-xs text-slate-500">The requested package project conversation could not be loaded.</p>
         <Link
-          href="/user/projects"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition-colors"
+          href="/panel/projects"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900"
         >
-          <FiArrowLeft size={14} /> Back to My Projects
+          <FiArrowLeft size={14} /> Back to Project Chats
         </Link>
       </div>
     );
   }
 
-  const { chat, messages, images } = thread;
-  const netPrice = Math.max(0, (chat.purchase_price || chat.package_price || 0) - (chat.purchase_discount || 0));
+  const { chat, messages = [], images = [] } = thread;
+  const netPrice = Number(chat.purchase_price || chat.package_price || 0);
 
   return (
-    <div className="p-4 w-full space-y-4">
+    <div className="w-full space-y-4 p-4">
       <Toaster position="top-center" />
 
-      {/* Header Bar matching /user/tickets/[id] */}
+      {/* Header Bar */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <Link
-            href="/user/projects"
+            href="/panel/projects"
             className="p-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
-            title="Back to Projects"
+            title="Back to Project Chats"
           >
             <FiArrowLeft size={16} />
           </Link>
@@ -363,14 +289,14 @@ export default function UserProjectChatPage() {
               <span className="text-xs font-mono font-normal text-slate-400">#{chat.id}</span>
               {getStatusBadge(chat.status)}
             </h1>
-            <p className="text-xs text-slate-400 flex items-center gap-2">
-              <span>Started {new Date(chat.created_at).toLocaleString()}</span>
+            <p className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+              <span>Customer: <strong className="text-slate-800">{chat.user_name || 'Client'}</strong> ({chat.user_email || 'N/A'}) · Created {new Date(chat.created_at).toLocaleDateString()}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="Live Auto Sync" />
             </p>
           </div>
         </div>
 
-        {/* Top Bar Menu Wrapper (Relative for Absolute Box) */}
+        {/* Top Bar Options Menu */}
         <div className="relative" ref={menuRef}>
           <button
             type="button"
@@ -387,7 +313,7 @@ export default function UserProjectChatPage() {
           {showMenu && (
             <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-80 sm:w-96 space-y-4 animate-in fade-in zoom-in duration-150">
               
-              {/* 4 Menu Option Buttons */}
+              {/* Menu Option Tabs */}
               <div className="grid grid-cols-2 gap-1.5 border-b border-slate-100 pb-3">
                 <button
                   type="button"
@@ -438,7 +364,7 @@ export default function UserProjectChatPage() {
                 </button>
               </div>
 
-              {/* Option 1: Status Content (Replaces Delete) */}
+              {/* Option 1: Status Content */}
               {activeTab === 'status' && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -553,6 +479,14 @@ export default function UserProjectChatPage() {
               {activeTab === 'purchase' && (
                 <div className="space-y-3">
                   <div>
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Client Information</span>
+                    <p className="text-xs font-medium text-slate-800 mt-1 flex items-center gap-1">
+                      <FiUser size={13} className="text-slate-400" />
+                      {chat.user_name || 'Client'} ({chat.user_email || 'No email'})
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100">
                     <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Payment Status</span>
                     <div className="mt-1">
                       {chat.payment_status === 'paid' ? (
@@ -570,33 +504,6 @@ export default function UserProjectChatPage() {
                       )}
                     </div>
                   </div>
-
-                  {/* Payment Actions */}
-                  <div className="pt-2 border-t border-slate-100">
-                    {(!chat.payment_id || chat.payment_status === 'none') && (
-                      <button
-                        type="button"
-                        onClick={handleCreatePayment}
-                        disabled={creatingPayment}
-                        className="w-full py-2 bg-slate-900 hover:bg-primary text-white text-xs font-semibold rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                      >
-                        {creatingPayment ? <FiLoader className="animate-spin" size={14} /> : <FiCreditCard size={14} />}
-                        Create Package Payment ({formatCurrency(netPrice)})
-                      </button>
-                    )}
-
-                    {chat.payment_status === 'unpaid' && (
-                      <button
-                        type="button"
-                        onClick={handlePayNow}
-                        disabled={processingPayment}
-                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                      >
-                        {processingPayment ? <FiLoader className="animate-spin" size={14} /> : <FiDollarSign size={15} />}
-                        Pay Now ({formatCurrency(chat.due || netPrice)})
-                      </button>
-                    )}
-                  </div>
                 </div>
               )}
             </div>
@@ -604,7 +511,7 @@ export default function UserProjectChatPage() {
         </div>
       </div>
 
-      {/* Chat Thread Container matching /user/tickets/[id] */}
+      {/* Chat Thread Container */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[400px] shadow-sm">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {(() => {
@@ -613,7 +520,7 @@ export default function UserProjectChatPage() {
                 type: 'message',
                 id: `msg-${m.id}`,
                 sender_type: m.sender_type || (m.user_id ? 'user' : 'staff'),
-                sender_name: m.sender_type === 'user' ? 'You' : (m.sender_name || 'Disibin Support'),
+                sender_name: m.sender_type === 'user' ? (chat.user_name || m.sender_name || 'Customer') : (m.sender_name || 'Disibin Support'),
                 content: m.message,
                 created_at: m.created_at,
               })),
@@ -621,7 +528,7 @@ export default function UserProjectChatPage() {
                 type: 'image',
                 id: `img-${img.id}`,
                 sender_type: img.user_id ? 'user' : 'staff',
-                sender_name: img.user_id ? 'You' : (img.staff_name || 'Disibin Support'),
+                sender_name: img.user_id ? (img.user_name || chat.user_name || 'Customer') : (img.staff_name || 'Disibin Support'),
                 file_url: img.file_url,
                 created_at: img.created_at,
               })),
@@ -630,7 +537,7 @@ export default function UserProjectChatPage() {
             if (combinedTimeline.length === 0) {
               return (
                 <div className="py-12 text-center text-slate-400 text-xs">
-                  No messages yet. Send a message or image below to start the discussion.
+                  No messages yet in this discussion. Send a response or image below.
                 </div>
               );
             }
@@ -638,22 +545,22 @@ export default function UserProjectChatPage() {
             return (
               <>
                 {combinedTimeline.map((item) => {
-                  const isUserItem = item.sender_type === 'user';
+                  const isStaffItem = item.sender_type === 'staff';
 
                   return (
                     <div
                       key={item.id}
-                      className={`flex flex-col ${isUserItem ? 'items-end ml-auto' : 'items-start mr-auto'} max-w-[85%] sm:max-w-[75%]`}
+                      className={`flex flex-col ${isStaffItem ? 'items-end ml-auto' : 'items-start mr-auto'} max-w-[85%] sm:max-w-[75%]`}
                     >
                       <div className="text-[11px] font-semibold text-slate-500 mb-0.5 px-1">
-                        {isUserItem ? 'You' : (item.sender_name || 'Disibin Support')}
+                        {isStaffItem ? `${item.sender_name} (Support)` : `${item.sender_name} (Customer)`}
                       </div>
 
                       {item.type === 'message' ? (
                         <div
                           className={`p-3 rounded-xl text-xs leading-relaxed ${
-                            isUserItem
-                              ? 'bg-primary text-white shadow-xs'
+                            isStaffItem
+                              ? 'bg-slate-900 text-white shadow-xs'
                               : 'bg-slate-100 text-slate-800 border border-slate-200 shadow-2xs'
                           }`}
                         >
@@ -687,7 +594,7 @@ export default function UserProjectChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar matching /user/tickets/[id] */}
+        {/* Staff Reply Input Bar */}
         <div className="border-t border-slate-200 p-3 bg-slate-50 space-y-2">
           {attachedImages.length > 0 && (
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -730,7 +637,7 @@ export default function UserProjectChatPage() {
               type="text"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
-              placeholder="Type your project message or feedback..."
+              placeholder="Write response to customer..."
               className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
             />
 
@@ -740,13 +647,13 @@ export default function UserProjectChatPage() {
               className="px-4 py-1.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 flex items-center gap-1 cursor-pointer shadow-sm"
             >
               {sendingMsg ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
-              Send
+              Send Reply
             </button>
           </form>
         </div>
       </div>
 
-      {/* Lightbox Image Preview Modal */}
+      {/* Lightbox Preview Modal */}
       {previewImage && (
         <div
           onClick={() => setPreviewImage(null)}

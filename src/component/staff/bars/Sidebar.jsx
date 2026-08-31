@@ -58,7 +58,6 @@ const roleLinks = {
         { name: 'Tenants',       href: '/panel/tenants',               icon: <FiGlobe /> },
         { name: 'Products',      href: '/panel/products',              icon: <FiBox /> },
         { name: 'Packages',      href: '/panel/packages',              icon: <FiBox /> },
-        { name: 'Services',      href: '/panel/services',              icon: <FiBriefcase /> },
         { name: 'Features',      href: '/panel/products/features',     icon: <FiTag /> },
         { name: 'Board',         href: '/panel/board',                 icon: <FiLayout /> },
         { name: 'Partners',      href: '/panel/partners',              icon: <FaHandshake /> },
@@ -77,6 +76,7 @@ const roleLinks = {
       links: [
         { name: 'Support Inbox', href: '/panel/support',               icon: <FiAlertCircle /> },
         { name: 'Tickets',       href: '/panel/tickets',               icon: <FiLifeBuoy /> },
+        { name: 'Project Chats', href: '/panel/projects',              icon: <FiBox /> },
         { name: 'Reviews',       href: '/panel/reviews',               icon: <FiStar /> },
         { name: 'Newsletter',    href: '/panel/news-letter',           icon: <FiMail /> },
         { name: 'Staff Notes',    href: '/panel/notes',                 icon: <FiFileText /> },
@@ -105,7 +105,7 @@ const roleLinks = {
       links: [
         { name: 'Support Inbox', href: '/panel/support',               icon: <FiAlertCircle /> },
         { name: 'Tickets',       href: '/panel/tickets',               icon: <FiLifeBuoy /> },
-        { name: 'Services',      href: '/panel/services',              icon: <FiBriefcase /> },
+        { name: 'Project Chats', href: '/panel/projects',              icon: <FiBox /> },
         { name: 'Projects Board',href: '/panel/board',                 icon: <FiLayout /> },
         { name: 'Staff Notes',    href: '/panel/notes',                 icon: <FiFileText /> },
         { name: 'Staff To-Dos',   href: '/panel/todos',                 icon: <FiCheckSquare /> },

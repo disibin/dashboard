@@ -172,7 +172,7 @@ export default function UserSecurityPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 block';
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Header Card */}

@@ -15,7 +15,6 @@ const USER_PANEL_ROUTES = [
   { name: 'Purchases', href: '/user/purchases', category: 'Workspace', icon: FiCreditCard },
   { name: 'Software Products', href: '/user/products', category: 'Services & Projects', icon: FiPackage },
   { name: 'Service Packages', href: '/user/packages', category: 'Services & Projects', icon: FiBox },
-  { name: 'My Services', href: '/user/services', category: 'Services & Projects', icon: FiBriefcase },
   { name: 'My Projects', href: '/user/projects', category: 'Services & Projects', icon: FiFolder },
   { name: 'Blogs & News', href: '/user/blogs', category: 'Services & Projects', icon: FiBookOpen },
   { name: 'Support Tickets', href: '/user/tickets', category: 'Support & Comms', icon: FiLifeBuoy },

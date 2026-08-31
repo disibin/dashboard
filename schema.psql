@@ -170,6 +170,7 @@ CREATE TABLE IF NOT EXISTS package_chats (
   id SERIAL PRIMARY KEY,
   package_id INT REFERENCES packages(id) ON DELETE CASCADE,
   title TEXT,
+  status TEXT DEFAULT 'waiting' CHECK (status IN ('waiting', 'progress', 'working', 'completed', 'spam')),
   is_group BOOLEAN DEFAULT FALSE,
   created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now()

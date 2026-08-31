@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isUserLogin } from "@/lib/auth/user";
+import { isStaffLogin, isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
 let imagesTableChecked = false;
@@ -23,15 +23,14 @@ async function ensurePackageChatsImagesTable() {
     } catch (err) {}
 }
 
-// GET — Fetch chat messages, images & detailed project metadata
+// GET — Fetch chat messages, images & detailed project metadata for staff
 export async function GET(req) {
     try {
-        const auth = await isUserLogin();
+        const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
         await ensurePackageChatsImagesTable();
 
-        const userId = auth.data.id;
         const { searchParams } = new URL(req.url);
         const chatId = searchParams.get('chat_id');
 
@@ -39,7 +38,7 @@ export async function GET(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Verify user participation & fetch project metadata
+        // Fetch project metadata & client details
         const chatRes = await dbQuery(
             `SELECT 
                 pc.id, 
@@ -61,19 +60,23 @@ export async function GET(req) {
                     WHEN pay.id IS NULL THEN 'none'
                     ELSE pay.status 
                 END AS payment_status,
-                t.name AS tenant_name
+                t.name AS tenant_name,
+                u.id AS user_id,
+                u.name AS user_name,
+                u.email AS user_email
              FROM package_chats pc
-             JOIN package_chats_participants pcp ON pc.id = pcp.chat_id
+             LEFT JOIN package_chats_participants pcp ON pc.id = pcp.chat_id
+             LEFT JOIN users u ON pcp.user_id = u.id
              LEFT JOIN packages pkg ON pc.package_id = pkg.id
              LEFT JOIN tenants t ON t.id = pkg.tenant_id
              LEFT JOIN purchases pur ON pur.package_id = pc.package_id AND pur.user_id = pcp.user_id
              LEFT JOIN payments pay ON pur.id = pay.purchase_id
-             WHERE pc.id = $1 AND pcp.user_id = $2`,
-            [chatId, userId]
+             WHERE pc.id = $1`,
+            [chatId]
         );
 
         if (chatRes.rows.length === 0) {
-            return NextResponse.json({ success: false, message: "Project chat not found or access denied" }, { status: 404 });
+            return NextResponse.json({ success: false, message: "Project chat not found" }, { status: 404 });
         }
 
         const chat = chatRes.rows[0];
@@ -101,7 +104,7 @@ export async function GET(req) {
                 pcm.content AS message, 
                 pcm.created_at,
                 CASE 
-                    WHEN pcm.user_id IS NOT NULL THEN COALESCE(u.name, 'You')
+                    WHEN pcm.user_id IS NOT NULL THEN COALESCE(u.name, 'Customer')
                     WHEN pcm.staff_id IS NOT NULL THEN COALESCE(stf.name, 'Disibin Support')
                     ELSE 'Disibin Staff Support' 
                 END AS sender_name,
@@ -143,15 +146,15 @@ export async function GET(req) {
     }
 }
 
-// POST — Send a new message / images in package project chat
+// POST — Send a new message / images in package project chat by staff
 export async function POST(req) {
     try {
-        const auth = await isUserLogin();
+        const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
         await ensurePackageChatsImagesTable();
 
-        const userId = auth.data.id;
+        const staffId = auth.data.id;
         const body = await req.json();
         const { chat_id, message, images } = body;
 
@@ -162,23 +165,19 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "chat_id and message/images are required" }, { status: 400 });
         }
 
-        // Verify user participation in chat
-        const participantRes = await dbQuery(
-            `SELECT chat_id FROM package_chats_participants WHERE chat_id = $1 AND user_id = $2`,
-            [chat_id, userId]
-        );
-
-        if (participantRes.rows.length === 0) {
-            return NextResponse.json({ success: false, message: "Project chat not found or access denied" }, { status: 400 });
+        // Verify project chat exists
+        const chatCheck = await dbQuery(`SELECT id FROM package_chats WHERE id = $1`, [chat_id]);
+        if (chatCheck.rows.length === 0) {
+            return NextResponse.json({ success: false, message: "Project chat not found" }, { status: 404 });
         }
 
         let newMsg = null;
         if (msgText || !hasImages) {
             const msgRes = await dbQuery(
-                `INSERT INTO package_chats_messages (chat_id, user_id, content)
+                `INSERT INTO package_chats_messages (chat_id, staff_id, content)
                  VALUES ($1, $2, $3)
-                 RETURNING id, chat_id, user_id, content AS message, created_at`,
-                [chat_id, userId, msgText || "Sent image attachment"]
+                 RETURNING id, chat_id, staff_id, content AS message, created_at`,
+                [chat_id, staffId, msgText || "Sent image attachment"]
             );
             newMsg = msgRes.rows[0];
         }
@@ -188,14 +187,33 @@ export async function POST(req) {
             for (const img of images) {
                 if (img.file_url) {
                     const imgRes = await dbQuery(
-                        `INSERT INTO package_chats_images (chat_id, user_id, file_url, file_id)
+                        `INSERT INTO package_chats_images (chat_id, staff_id, file_url, file_id)
                          VALUES ($1, $2, $3, $4)
-                         RETURNING id, chat_id, user_id, file_url, file_id, created_at`,
-                        [chat_id, userId, img.file_url, img.file_id || null]
+                         RETURNING id, chat_id, staff_id, file_url, file_id, created_at`,
+                        [chat_id, staffId, img.file_url, img.file_id || null]
                     );
                     newImages.push(imgRes.rows[0]);
                 }
             }
+        }
+
+        // Send in-app notification to the client user participant
+        const userPart = await dbQuery(
+            `SELECT user_id FROM package_chats_participants WHERE chat_id = $1 AND user_id IS NOT NULL`,
+            [chat_id]
+        );
+        if (userPart.rows.length > 0) {
+            const clientUser = userPart.rows[0];
+            await dbQuery(
+                `INSERT INTO notifications (user_id, title, message, type, link)
+                 VALUES ($1, $2, $3, 'project', $4)`,
+                [
+                    clientUser.user_id,
+                    `New Update on Project Chat #${chat_id}`,
+                    `Staff ${auth.data.name || 'Support'} replied: "${msgText.substring(0, 80)}${msgText.length > 80 ? '...' : ''}"`,
+                    `/user/projects/${chat_id}`
+                ]
+            ).catch(() => {});
         }
 
         return NextResponse.json({
@@ -204,8 +222,8 @@ export async function POST(req) {
             data: {
                 message: newMsg ? {
                     ...newMsg,
-                    sender_type: 'user',
-                    sender_name: auth.data.name || 'You'
+                    sender_type: 'staff',
+                    sender_name: auth.data.name || 'Disibin Support'
                 } : null,
                 images: newImages
             }
@@ -216,30 +234,19 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Rename package project chat title or update status
+// PATCH — Staff updates package project chat title or status
 export async function PATCH(req) {
     try {
-        const auth = await isUserLogin();
+        const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
         await ensurePackageChatsImagesTable();
 
-        const userId = auth.data.id;
         const body = await req.json();
         const { chat_id, title, status } = body;
 
         if (!chat_id) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
-        }
-
-        // Verify user participation in chat
-        const participantRes = await dbQuery(
-            `SELECT chat_id FROM package_chats_participants WHERE chat_id = $1 AND user_id = $2`,
-            [chat_id, userId]
-        );
-
-        if (participantRes.rows.length === 0) {
-            return NextResponse.json({ success: false, message: "Project chat not found or access denied" }, { status: 403 });
         }
 
         const updates = [];
@@ -268,6 +275,10 @@ export async function PATCH(req) {
         const query = `UPDATE package_chats SET ${updates.join(', ')} WHERE id = $${paramIdx} RETURNING id, title, status`;
         const updateRes = await dbQuery(query, params);
 
+        if (updateRes.rows.length === 0) {
+            return NextResponse.json({ success: false, message: "Project chat not found" }, { status: 404 });
+        }
+
         return NextResponse.json({
             success: true,
             message: "Project chat updated successfully",
@@ -279,13 +290,12 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete package project chat
+// DELETE — Delete package project chat (Manager Role only)
 export async function DELETE(req) {
     try {
-        const auth = await isUserLogin();
-        if (!auth.success) return NextResponse.json(auth, { status: 401 });
+        const auth = await isManager();
+        if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
-        const userId = auth.data.id;
         const { searchParams } = new URL(req.url);
         const chatId = searchParams.get('chat_id');
 
@@ -293,18 +303,10 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Verify user participation in chat
-        const participantRes = await dbQuery(
-            `SELECT chat_id FROM package_chats_participants WHERE chat_id = $1 AND user_id = $2`,
-            [chatId, userId]
-        );
-
-        if (participantRes.rows.length === 0) {
-            return NextResponse.json({ success: false, message: "Project chat not found or access denied" }, { status: 403 });
+        const delRes = await dbQuery(`DELETE FROM package_chats WHERE id = $1 RETURNING id`, [chatId]);
+        if (delRes.rows.length === 0) {
+            return NextResponse.json({ success: false, message: "Project chat not found" }, { status: 404 });
         }
-
-        // Delete package chat (Cascades to messages, participants, images)
-        await dbQuery(`DELETE FROM package_chats WHERE id = $1`, [chatId]);
 
         return NextResponse.json({
             success: true,

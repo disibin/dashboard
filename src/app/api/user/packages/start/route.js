@@ -55,12 +55,6 @@ export async function POST(req) {
         );
         const purchase = purchaseRes.rows[0];
 
-        // Create initial payment row for purchase
-        await dbQuery(
-            `INSERT INTO payments (purchase_id, price, paid, due, status)
-             VALUES ($1, $2, 0, $3, 'unpaid')`,
-            [purchase.id, netPrice, netPrice]
-        ).catch((err) => console.error("Initial purchase payment insert warning:", err));
 
         // 4. Create package_chats record
         const chatTitle = `${pkg.name} Project`;

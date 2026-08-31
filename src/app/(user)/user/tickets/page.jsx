@@ -45,7 +45,7 @@ export default function UserTicketsListPage() {
   });
 
   return (
-    <div className="p-4 max-w-5xl mx-auto space-y-4">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
       {/* Clean Header */}

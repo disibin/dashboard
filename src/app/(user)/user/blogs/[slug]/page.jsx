@@ -93,7 +93,7 @@ export default function UserSingleBlogPage({ params }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       <Toaster position="top-center" />
 
       {/* Top Header & Navigation */}

@@ -39,7 +39,6 @@ const Sidebar = () => {
       links: [
         { name: 'Software Products', href: '/user/products', icon: <FiPackage /> },
         { name: 'Packages',  href: '/user/packages', icon: <FiBox /> },
-        { name: 'Services',       href: '/user/services', icon: <FiBriefcase /> },
         { name: 'Blogs',             href: '/user/blogs',    icon: <FiBookOpen /> },
       ],
     },

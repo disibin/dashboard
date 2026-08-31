@@ -50,7 +50,7 @@ export default function UserPurchasesPage() {
   const completedCount = purchases.filter((item) => item.purchase_status === 'complete' || item.payment_status === 'paid').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

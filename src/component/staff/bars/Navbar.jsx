@@ -26,10 +26,9 @@ const ALL_PANEL_ROUTES = [
   { name: 'Tenants', href: '/panel/tenants', category: 'Operations', icon: FiGlobe },
   { name: 'Products', href: '/panel/products', category: 'Operations', icon: FiBox },
   { name: 'Packages', href: '/panel/packages', category: 'Operations', icon: FiBox },
-  { name: 'Services', href: '/panel/services', category: 'Operations', icon: FiBriefcase },
   { name: 'Blogs', href: '/panel/blogs', category: 'Operations', icon: FiBookOpen },
   { name: 'Features', href: '/panel/products/features', category: 'Operations', icon: FiTag },
-  { name: 'Projects Board', href: '/panel/board', category: 'Operations', icon: FiLayout },
+  { name: 'Board', href: '/panel/board', category: 'Operations', icon: FiLayout },
   { name: 'Partners', href: '/panel/partners', category: 'Operations', icon: FaHandshake },
   { name: 'Payments', href: '/panel/payments', category: 'Finance', icon: FiCreditCard },
   { name: 'Payroll & Salary', href: '/panel/payroll', category: 'Finance', icon: FiCreditCard },
@@ -39,6 +38,7 @@ const ALL_PANEL_ROUTES = [
   { name: 'Staff Chat', href: '/panel/chat', category: 'Staff Tools', icon: FiMessageSquare },
   { name: 'Support Inbox', href: '/panel/support', category: 'Support', icon: FiAlertCircle },
   { name: 'Support Tickets', href: '/panel/tickets', category: 'Support', icon: FiLifeBuoy },
+  { name: 'Projects', href: '/panel/projects', category: 'Support', icon: FiBox },
   { name: 'Reviews', href: '/panel/reviews', category: 'Support', icon: FiStar },
   { name: 'Newsletter', href: '/panel/news-letter', category: 'Comms', icon: FiMail },
   { name: 'Staff Login Logs', href: '/panel/staff-login-logs', category: 'Audit', icon: FiInbox },
@@ -56,8 +56,8 @@ const Navbar = () => {
   const dropdownRef = useRef(null)
   const router = useRouter()
 
-  const role = staffData?.role || 'manager'
-  const accessibleRoutes = ALL_PANEL_ROUTES.filter(route => hasPanelAccess(route.href, role))
+  const role = staffData?.role
+  const accessibleRoutes = role ? ALL_PANEL_ROUTES.filter(route => hasPanelAccess(route.href, role)) : []
 
   const filteredRoutes = accessibleRoutes.filter(route =>
     route.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -143,7 +143,7 @@ const Navbar = () => {
           <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden max-h-80 overflow-y-auto z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-150">
             <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
               <span>Accessible Folders ({filteredRoutes.length})</span>
-              <span className="capitalize text-primary font-semibold">Role: {role}</span>
+              <span className="capitalize text-primary font-semibold">Role: {role || 'Loading...'}</span>
             </div>
 
             {filteredRoutes.length === 0 ? (

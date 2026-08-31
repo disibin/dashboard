@@ -2,11 +2,34 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isStaffLogin } from "@/lib/auth/staff";
 
+let ticketImagesTableChecked = false;
+
+async function ensureTicketImagesTable() {
+    if (ticketImagesTableChecked) return;
+    try {
+        await dbQuery(`
+            CREATE TABLE IF NOT EXISTS ticket_images (
+                id SERIAL PRIMARY KEY,
+                ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
+                user_id INT REFERENCES users(id) ON DELETE SET NULL,
+                staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
+                file_url TEXT NOT NULL,
+                file_id TEXT,
+                created_at TIMESTAMP DEFAULT now()
+            );
+            CREATE INDEX IF NOT EXISTS idx_ticket_images_ticket_id ON ticket_images(ticket_id);
+        `).catch(() => {});
+        ticketImagesTableChecked = true;
+    } catch (err) {}
+}
+
 // GET — Fetch thread for a specific staff ticket
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
+
+        await ensureTicketImagesTable();
 
         const resolvedParams = await params;
         const ticketId = resolvedParams.id;
@@ -51,6 +74,15 @@ export async function GET(req, { params }) {
             [ticketId]
         );
 
+        // Fetch shared images from ticket_images
+        const imagesRes = await dbQuery(
+            `SELECT ti.id, ti.ticket_id, ti.user_id, ti.staff_id, ti.file_url, ti.file_id, ti.created_at
+             FROM ticket_images ti
+             WHERE ti.ticket_id = $1
+             ORDER BY ti.created_at ASC`,
+            [ticketId]
+        ).catch(() => ({ rows: [] }));
+
         // Fetch attachments
         const attachmentsRes = await dbQuery(
             `SELECT id, ticket_id, user_id, staff_id, file_url, file_id, created_at
@@ -58,7 +90,9 @@ export async function GET(req, { params }) {
              WHERE ticket_id = $1
              ORDER BY created_at ASC`,
             [ticketId]
-        );
+        ).catch(() => ({ rows: [] }));
+
+        const combinedImages = imagesRes.rows.length > 0 ? imagesRes.rows : attachmentsRes.rows;
 
         return NextResponse.json({
             success: true,
@@ -66,6 +100,7 @@ export async function GET(req, { params }) {
                 ticket,
                 user: userInfo,
                 messages: messagesRes.rows,
+                images: combinedImages,
                 attachments: attachmentsRes.rows
             }
         });
@@ -80,6 +115,8 @@ export async function POST(req, { params }) {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
+
+        await ensureTicketImagesTable();
 
         const staffId = auth.data.id;
         const resolvedParams = await params;
@@ -99,21 +136,27 @@ export async function POST(req, { params }) {
             `INSERT INTO ticket_messages (ticket_id, staff_id, message) 
              VALUES ($1, $2, $3) 
              RETURNING id, ticket_id, staff_id, message, created_at`,
-            [ticketId, staffId, msgText]
+            [ticketId, staffId, msgText || "Sent image attachment"]
         );
         const newMessage = { ...msgRes.rows[0], staff_name: auth.data.name || "Support Staff", staff_role: auth.data.role || "staff" };
 
-        const newAttachments = [];
+        const newImages = [];
         if (hasImages) {
             for (const img of images) {
                 if (img.file_url) {
-                    const attRes = await dbQuery(
-                        `INSERT INTO ticket_attachments (ticket_id, staff_id, file_url, file_id) 
+                    const imgRes = await dbQuery(
+                        `INSERT INTO ticket_images (ticket_id, staff_id, file_url, file_id) 
                          VALUES ($1, $2, $3, $4) 
                          RETURNING id, ticket_id, staff_id, file_url, file_id, created_at`,
                         [ticketId, staffId, img.file_url, img.file_id || null]
                     );
-                    newAttachments.push(attRes.rows[0]);
+                    newImages.push(imgRes.rows[0]);
+
+                    await dbQuery(
+                        `INSERT INTO ticket_attachments (ticket_id, staff_id, file_url, file_id) 
+                         VALUES ($1, $2, $3, $4)`,
+                        [ticketId, staffId, img.file_url, img.file_id || null]
+                    ).catch(() => {});
                 }
             }
         }
@@ -145,7 +188,8 @@ export async function POST(req, { params }) {
             message: "Reply sent successfully",
             data: {
                 newMessage,
-                newAttachments
+                images: newImages,
+                newAttachments: newImages
             }
         });
 
@@ -153,3 +197,40 @@ export async function POST(req, { params }) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }
+
+// PATCH — Staff updates ticket title
+export async function PATCH(req, { params }) {
+    try {
+        const auth = await isStaffLogin();
+        if (!auth.success) return NextResponse.json(auth, { status: 401 });
+
+        const resolvedParams = await params;
+        const ticketId = resolvedParams.id;
+        const body = await req.json();
+        const { title } = body;
+
+        if (!title || !title.trim()) {
+            return NextResponse.json({ success: false, message: "Ticket title is required" }, { status: 400 });
+        }
+
+        const newTitle = title.trim();
+        const updateRes = await dbQuery(
+            `UPDATE tickets SET title = $1, updated_at = now() WHERE id = $2 RETURNING id, title, updated_at`,
+            [newTitle, ticketId]
+        );
+
+        if (updateRes.rows.length === 0) {
+            return NextResponse.json({ success: false, message: "Ticket not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: "Ticket title updated successfully",
+            data: updateRes.rows[0]
+        });
+
+    } catch (error) {
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
+}
+

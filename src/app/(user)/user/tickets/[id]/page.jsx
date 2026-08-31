@@ -7,7 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   FiArrowLeft, FiPaperclip, FiSend,
-  FiLoader, FiX, FiAlertCircle
+  FiLoader, FiX, FiAlertCircle, FiEdit2, FiCheck
 } from 'react-icons/fi';
 
 export default function UserTicketDetailPage() {
@@ -21,6 +21,40 @@ export default function UserTicketDetailPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [sendingMsg, setSendingMsg] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editingTitle, setEditingTitle] = useState('');
+  const [updatingTitle, setUpdatingTitle] = useState(false);
+
+  useEffect(() => {
+    if (thread?.ticket?.title) {
+      setEditingTitle(thread.ticket.title);
+    }
+  }, [thread?.ticket?.title]);
+
+  const handleUpdateTitle = async (e) => {
+    if (e) e.preventDefault();
+    if (!editingTitle.trim()) return toast.error('Please enter a ticket title');
+
+    setUpdatingTitle(true);
+    try {
+      const res = await axios.patch(`/api/user/ticket/${ticketId}`, { title: editingTitle.trim() });
+      if (res.data.success) {
+        toast.success('Ticket title updated!');
+        setThread((prev) => ({
+          ...prev,
+          ticket: { ...prev.ticket, title: res.data.data.title }
+        }));
+        setIsEditingTitle(false);
+      } else {
+        toast.error(res.data.message || 'Failed to update title');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update title');
+    } finally {
+      setUpdatingTitle(false);
+    }
+  };
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -39,12 +73,12 @@ export default function UserTicketDetailPage() {
   }, [ticketId]);
 
   useEffect(() => {
-    const currentCount = thread?.messages?.length || 0;
+    const currentCount = (thread?.messages?.length || 0) + (thread?.images?.length || 0);
     if (currentCount > prevMsgCountRef.current) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
     prevMsgCountRef.current = currentCount;
-  }, [thread?.messages]);
+  }, [thread?.messages, thread?.images]);
 
   const fetchThread = async (isSilent = false) => {
     try {
@@ -89,23 +123,28 @@ export default function UserTicketDetailPage() {
 
     setSendingMsg(true);
     try {
-      const uploadedImages = await Promise.all(
-        attachedImages.map(async (img) => {
-          if (img.file) {
-            const formData = new FormData();
-            formData.append('image', img.file);
-            const res = await axios.post('/api/image', formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            if (res.data.success) {
-              return { file_url: res.data.data.url, file_id: res.data.data.public_id };
-            } else {
-              throw new Error(res.data.message || 'Image upload failed');
+      let uploadedImages = [];
+      if (attachedImages.length > 0) {
+        setUploadingImage(true);
+        uploadedImages = await Promise.all(
+          attachedImages.map(async (img) => {
+            if (img.file) {
+              const formData = new FormData();
+              formData.append('image', img.file);
+              const res = await axios.post('/api/image', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+              });
+              if (res.data.success) {
+                return { file_url: res.data.data.url, file_id: res.data.data.public_id };
+              } else {
+                throw new Error(res.data.message || 'Image upload failed');
+              }
             }
-          }
-          return { file_url: img.file_url, file_id: img.file_id };
-        })
-      );
+            return { file_url: img.file_url, file_id: img.file_id };
+          })
+        );
+        setUploadingImage(false);
+      }
 
       const payload = {
         message: messageText.trim(),
@@ -124,6 +163,7 @@ export default function UserTicketDetailPage() {
       toast.error(error.response?.data?.message || error.message || 'Failed to send message');
     } finally {
       setSendingMsg(false);
+      setUploadingImage(false);
     }
   };
 
@@ -143,10 +183,11 @@ export default function UserTicketDetailPage() {
     );
   }
 
-  const { ticket, messages, attachments } = thread;
+  const { ticket, messages = [], images = [], attachments = [] } = thread;
+  const sharedImagesList = images && images.length > 0 ? images : attachments;
 
   return (
-    <div className="p-4 w-full space-y-4">
+    <div className="w-full space-y-4 p-4">
       <Toaster position="top-center" />
 
       <div className="flex items-center justify-between pb-3 border-b border-slate-200">
@@ -159,11 +200,51 @@ export default function UserTicketDetailPage() {
             <FiArrowLeft size={16} />
           </Link>
           <div>
-            <h1 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-              <span>{ticket.title}</span>
-              <span className="text-xs font-mono font-normal text-slate-400">#{ticket.id}</span>
-            </h1>
-            <p className="text-xs text-slate-400 flex items-center gap-2">
+            {isEditingTitle ? (
+              <form onSubmit={handleUpdateTitle} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={editingTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                  className="px-2.5 py-1 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-primary font-semibold text-slate-900"
+                  autoFocus
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={updatingTitle || !editingTitle.trim()}
+                  className="p-1.5 bg-slate-900 hover:bg-primary text-white rounded-lg text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  title="Save Title"
+                >
+                  {updatingTitle ? <FiLoader className="animate-spin" size={13} /> : <FiCheck size={13} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditingTitle(false);
+                    setEditingTitle(ticket.title);
+                  }}
+                  className="p-1.5 border border-slate-200 text-slate-500 hover:bg-slate-100 rounded-lg text-xs transition-colors cursor-pointer"
+                  title="Cancel"
+                >
+                  <FiX size={13} />
+                </button>
+              </form>
+            ) : (
+              <h1 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                <span>{ticket.title}</span>
+                <span className="text-xs font-mono font-normal text-slate-400">#{ticket.id}</span>
+                <button
+                  type="button"
+                  onClick={() => setIsEditingTitle(true)}
+                  className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-all cursor-pointer"
+                  title="Edit Ticket Title"
+                >
+                  <FiEdit2 size={13} />
+                </button>
+              </h1>
+            )}
+            <p className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
               <span>Created {new Date(ticket.created_at).toLocaleString()}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="Live Auto Sync" />
             </p>
@@ -173,55 +254,56 @@ export default function UserTicketDetailPage() {
 
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[400px]">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.length === 0 ? (
+          {messages.length === 0 && sharedImagesList.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs">
               No messages yet. Send a message below.
             </div>
           ) : (
-            messages.map((msg) => {
-              const isUserMsg = Boolean(msg.user_id);
-              // Match attachments to this specific message by message_id
-              const msgAttachments = attachments?.filter(att => att.message_id === msg.id) || [];
+            <>
+              {messages.map((msg) => {
+                const isUserMsg = Boolean(msg.user_id);
+                const msgAttachments = attachments?.filter(att => att.message_id === msg.id) || [];
 
-              return (
-                <div
-                  key={msg.id}
-                  className={`flex flex-col ${isUserMsg ? 'items-end ml-auto' : 'items-start mr-auto'} max-w-[85%] sm:max-w-[75%]`}
-                >
-                  <div className="text-[11px] font-semibold text-slate-500 mb-0.5 px-1">
-                    {isUserMsg ? 'You' : (msg.staff_name || 'Support Staff')}
-                  </div>
-
+                return (
                   <div
-                    className={`p-3 rounded-xl text-xs leading-relaxed space-y-2 ${
-                      isUserMsg
-                        ? 'bg-primary text-white'
-                        : 'bg-slate-100 text-slate-800 border border-slate-200'
-                    }`}
+                    key={msg.id}
+                    className={`flex flex-col ${isUserMsg ? 'items-end ml-auto' : 'items-start mr-auto'} max-w-[85%] sm:max-w-[75%]`}
                   >
-                    <p className="whitespace-pre-wrap">{msg.message}</p>
+                    <div className="text-[11px] font-semibold text-slate-500 mb-0.5 px-1">
+                      {isUserMsg ? 'You' : (msg.staff_name || 'Support Staff')}
+                    </div>
 
-                    {msgAttachments.length > 0 && (
-                      <div className="grid grid-cols-2 gap-1.5 pt-1">
-                        {msgAttachments.map((att) => (
-                          <img
-                            key={att.id}
-                            src={att.file_url}
-                            alt="Attachment"
-                            onClick={() => setPreviewImage(att.file_url)}
-                            className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity border border-black/10"
-                          />
-                        ))}
-                      </div>
-                    )}
+                    <div
+                      className={`p-3 rounded-xl text-xs leading-relaxed space-y-2 ${
+                        isUserMsg
+                          ? 'bg-primary text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-800 border border-slate-200'
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap">{msg.message}</p>
+
+                      {msgAttachments.length > 0 && (
+                        <div className="grid grid-cols-2 gap-1.5 pt-1">
+                          {msgAttachments.map((att) => (
+                            <img
+                              key={att.id}
+                              src={att.file_url}
+                              alt="Attachment"
+                              onClick={() => setPreviewImage(att.file_url)}
+                              className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity border border-black/10"
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <span className="text-[10px] text-slate-400 mt-0.5 px-1">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   </div>
-
-                  <span className="text-[10px] text-slate-400 mt-0.5 px-1">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-              );
-            })
+                );
+              })}
+            </>
           )}
           <div ref={messagesEndRef} />
         </div>

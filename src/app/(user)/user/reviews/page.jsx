@@ -76,7 +76,7 @@ export default function UserReviewsPage() {
   };
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-6 w-full space-y-6">
       <Toaster position="top-center" />
 
       <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-1">

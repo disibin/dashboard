@@ -68,7 +68,7 @@ export default function StaffPackageDetailPage() {
   const netPrice = Math.max(0, (pkg.price || 0) - (pkg.discount || 0));
 
   return (
-    <div className="p-4 w-full space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Navigation Header */}

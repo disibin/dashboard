@@ -65,7 +65,7 @@ export default function StaffProductDetailPage() {
   }
 
   return (
-    <div className="p-4 w-full space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 w-full space-y-6">
       <Toaster position="top-center" />
 
       {/* Navigation Header */}
