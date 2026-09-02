@@ -236,6 +236,25 @@ CREATE INDEX idx_package_chats_images_chat_id ON package_chats_images(chat_id);
 CREATE INDEX idx_package_chats_images_user_id ON package_chats_images(user_id);
 CREATE INDEX idx_package_chats_images_staff_id ON package_chats_images(staff_id);
 
+CREATE TABLE IF NOT EXISTS package_chats_files (
+  id SERIAL PRIMARY KEY,
+  chat_id INT REFERENCES package_chats(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
+  CHECK (
+    (user_id IS NOT NULL AND staff_id IS NULL)
+    OR
+    (user_id IS NULL AND staff_id IS NOT NULL)
+  ),
+  file_url TEXT NOT NULL,
+  file_id TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_package_chats_files_chat_id ON package_chats_files(chat_id);
+CREATE INDEX idx_package_chats_files_user_id ON package_chats_files(user_id);
+CREATE INDEX idx_package_chats_files_staff_id ON package_chats_files(staff_id);
+
 -- =====================================================
 -- 3. INTERNAL MESSAGING SYSTEM
 -- =====================================================
@@ -286,7 +305,7 @@ CREATE INDEX idx_chat_attachments_chat_id ON chat_attachments(chat_id);
 CREATE INDEX idx_chat_attachments_sender_id ON chat_attachments(sender_id);
 
 -- =====================================================
--- 3. SUPPORT & TICKET SYSTEMS
+-- 4. SUPPORT & TICKET SYSTEMS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS supports (
   id SERIAL PRIMARY KEY,
@@ -401,8 +420,27 @@ CREATE INDEX idx_ticket_attachments_ticket_id ON ticket_attachments(ticket_id);
 CREATE INDEX idx_ticket_attachments_user_id ON ticket_attachments(user_id);
 CREATE INDEX idx_ticket_attachments_staff_id ON ticket_attachments(staff_id);
 
+CREATE TABLE IF NOT EXISTS ticket_images (
+  id SERIAL PRIMARY KEY,
+  ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
+  staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
+  CHECK (
+    (user_id IS NOT NULL AND staff_id IS NULL)
+    OR
+    (user_id IS NULL AND staff_id IS NOT NULL)
+  ),
+  file_url TEXT NOT NULL,
+  file_id TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_ticket_images_ticket_id ON ticket_images(ticket_id);
+CREATE INDEX idx_ticket_images_user_id ON ticket_images(user_id);
+CREATE INDEX idx_ticket_images_staff_id ON ticket_images(staff_id);
+
 -- =====================================================
--- 4. COMPANY, CAREERS & BOARDS
+-- 5. COMPANY, CAREERS & BOARDS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS boards (
   id SERIAL PRIMARY KEY,
@@ -450,7 +488,7 @@ CREATE INDEX idx_career_applications_job_id ON career_applications(job_id);
 CREATE INDEX idx_career_applications_status ON career_applications(status);
 
 -- =====================================================
--- 5. REVIEWS, NOTIFICATIONS & LOGS
+-- 6. REVIEWS, NOTIFICATIONS & LOGS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS reviews (
   id SERIAL PRIMARY KEY,
@@ -472,6 +510,7 @@ CREATE TABLE IF NOT EXISTS notifications (
   title TEXT NOT NULL,
   message TEXT NOT NULL,
   link TEXT,
+  type TEXT DEFAULT 'info',
   is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT now()
 );
@@ -519,7 +558,7 @@ CREATE TABLE IF NOT EXISTS user_login_logs (
 CREATE INDEX idx_user_login_logs_user_id ON user_login_logs(user_id);
 
 -- =====================================================
--- 6. PARTNERS & LEADS
+-- 7. PARTNERS & LEADS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS partners (
   id SERIAL PRIMARY KEY,
@@ -559,7 +598,7 @@ CREATE TABLE IF NOT EXISTS client_leads (
 CREATE INDEX idx_client_leads_email ON client_leads(email);
 
 -- =====================================================
--- 7. PURCHASES, PAYMENTS & PAYROLL
+-- 8. PURCHASES, PAYMENTS & PAYROLL
 -- =====================================================
 CREATE TABLE IF NOT EXISTS purchases (
   id SERIAL PRIMARY KEY,
@@ -692,7 +731,7 @@ CREATE INDEX idx_service_payments_service_id ON service_payments(service_id);
 CREATE INDEX idx_service_payments_status ON service_payments(status);
 
 -- =====================================================
--- 7. NEWSLETTERS
+-- 9. NEWSLETTERS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS news_letters (
   id SERIAL PRIMARY KEY,
@@ -712,49 +751,64 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 CREATE INDEX idx_news_letters_created_by ON news_letters(created_by);
 
 -- =====================================================
--- 8. PRIVACY POLICIES
+-- 10. PRIVACY POLICIES
 -- =====================================================
 CREATE TABLE IF NOT EXISTS privacy_policies (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
+  order_num INT DEFAULT 0,
   created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TRIGGER update_privacy_policies_modtime 
+BEFORE UPDATE ON privacy_policies 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
 -- =====================================================
--- 9. TERMS AND CONDITIONS
+-- 11. TERMS AND CONDITIONS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS terms_and_conditions (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
+  order_num INT DEFAULT 0,
   created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TRIGGER update_terms_and_conditions_modtime 
+BEFORE UPDATE ON terms_and_conditions 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
 -- =====================================================
--- 10. REFUND CONDITIONS
+-- 12. REFUND CONDITIONS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS refund_conditions (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   is_published BOOLEAN DEFAULT true,
+  order_num INT DEFAULT 0,
   created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   updated_by INT REFERENCES staffs(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TRIGGER update_refund_conditions_modtime 
+BEFORE UPDATE ON refund_conditions 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
 -- =====================================================
--- 11. FAQS
+-- 13. FAQS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS faqs (
   id SERIAL PRIMARY KEY,
@@ -768,8 +822,12 @@ CREATE TABLE IF NOT EXISTS faqs (
   updated_at TIMESTAMP DEFAULT now()
 );
 
+CREATE TRIGGER update_faqs_modtime 
+BEFORE UPDATE ON faqs 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
 -- =====================================================
--- 12. STAFF NOTES & TODOS
+-- 14. STAFF NOTES & TODOS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS staff_notes (
   id SERIAL PRIMARY KEY,
@@ -806,7 +864,7 @@ CREATE INDEX idx_staff_todos_staff_id ON staff_todos(staff_id);
 CREATE INDEX idx_staff_todos_is_completed ON staff_todos(staff_id, is_completed);
 
 -- =====================================================
--- 13. BLOGS
+-- 15. BLOGS
 -- =====================================================
 CREATE TABLE IF NOT EXISTS blogs (
   id SERIAL PRIMARY KEY,
