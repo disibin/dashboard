@@ -6,7 +6,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import {
   FiLifeBuoy, FiPlus, FiMessageSquare,
-  FiLoader, FiSearch, FiX, FiRefreshCw
+  FiLoader, FiSearch, FiX, FiRefreshCw, FiTrash2
 } from 'react-icons/fi';
 import NewTicketModal from '@/component/forms/NewTicketModal';
 
@@ -32,6 +32,23 @@ export default function UserTicketsListPage() {
       toast.error('Failed to load support tickets');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteTicket = async (ticketId, ticketTitle, e) => {
+    e.stopPropagation();
+    if (!confirm(`Are you sure you want to delete support ticket #${ticketId} ("${ticketTitle}")?`)) return;
+
+    try {
+      const res = await axios.delete(`/api/user/ticket?id=${ticketId}`);
+      if (res.data.success) {
+        toast.success('Support ticket deleted');
+        setTickets(prev => prev.filter(t => t.id !== ticketId));
+      } else {
+        toast.error(res.data.message || 'Failed to delete ticket');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete ticket');
     }
   };
 
@@ -126,13 +143,23 @@ export default function UserTicketsListPage() {
                   </p>
                 </div>
 
-                <div className="text-right shrink-0">
-                  <span className="text-[11px] text-slate-400 block">
-                    {new Date(t.created_at).toLocaleDateString()}
-                  </span>
-                  <span className="text-xs font-semibold text-primary hover:underline inline-block mt-0.5">
-                    View Thread →
-                  </span>
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="text-right">
+                    <span className="text-[11px] text-slate-400 block">
+                      {new Date(t.created_at).toLocaleDateString()}
+                    </span>
+                    <span className="text-xs font-semibold text-primary hover:underline inline-block mt-0.5">
+                      View Thread →
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={(e) => handleDeleteTicket(t.id, t.title, e)}
+                    className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    title="Delete Support Ticket"
+                  >
+                    <FiTrash2 size={14} />
+                  </button>
                 </div>
               </div>
             ))}

@@ -10,7 +10,7 @@ import {
   FiLoader, FiX, FiAlertCircle, FiMoreVertical,
   FiCheck, FiEdit2, FiBox, FiCreditCard,
   FiDollarSign, FiActivity, FiClock, FiPlayCircle,
-  FiCheckCircle, FiSlash
+  FiCheckCircle, FiSlash, FiTrash2
 } from 'react-icons/fi';
 import { formatCurrency } from '@/lib/database/secret';
 
@@ -29,7 +29,7 @@ export default function UserProjectChatPage() {
 
   // Top Bar Dropdown & Menu Option state
   const [showMenu, setShowMenu] = useState(false);
-  const [activeTab, setActiveTab] = useState('status'); // 'rename' | 'package' | 'purchase' | 'status'
+  const [activeTab, setActiveTab] = useState('status'); // 'status' | 'rename' | 'details' | 'purchase'
   const [editingTitle, setEditingTitle] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('waiting');
   const [updatingTitle, setUpdatingTitle] = useState(false);
@@ -271,6 +271,22 @@ export default function UserProjectChatPage() {
     }
   };
 
+  const handleDeleteProject = async () => {
+    if (!confirm(`Are you sure you want to delete this project (#${chatId})? All messages and discussions will be permanently deleted.`)) return;
+
+    try {
+      const res = await axios.delete(`/api/user/projects?id=${chatId}`);
+      if (res.data.success) {
+        toast.success('Project deleted successfully');
+        router.push('/user/projects');
+      } else {
+        toast.error(res.data.message || 'Failed to delete project');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete project');
+    }
+  };
+
   const getStatusBadge = (statusKey) => {
     const s = (statusKey || 'waiting').toLowerCase();
     switch (s) {
@@ -370,18 +386,29 @@ export default function UserProjectChatPage() {
           </div>
         </div>
 
-        {/* Top Bar Menu Wrapper (Relative for Absolute Box) */}
-        <div className="relative" ref={menuRef}>
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setShowMenu(!showMenu)}
-            className={`px-3 py-1.5 border rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs ${
-              showMenu ? 'bg-slate-900 text-white border-slate-900' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
-            }`}
+            onClick={handleDeleteProject}
+            className="px-3 py-1.5 border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-500 hover:text-rose-600 rounded-xl text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+            title="Delete Project"
           >
-            <FiMoreVertical size={16} />
-            <span>Options Menu</span>
+            <FiTrash2 size={15} />
+            <span className="hidden sm:inline">Delete</span>
           </button>
+
+          {/* Top Bar Menu Wrapper (Relative for Absolute Box) */}
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setShowMenu(!showMenu)}
+              className={`px-3 py-1.5 border rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs ${
+                showMenu ? 'bg-slate-900 text-white border-slate-900' : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+              }`}
+            >
+              <FiMoreVertical size={16} />
+              <span>Options Menu</span>
+            </button>
 
           {/* Absolute Popup Dropdown Box */}
           {showMenu && (
@@ -415,14 +442,14 @@ export default function UserProjectChatPage() {
 
                 <button
                   type="button"
-                  onClick={() => setActiveTab('package')}
+                  onClick={() => setActiveTab('details')}
                   className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === 'package'
+                    activeTab === 'details'
                       ? 'bg-primary text-white shadow-xs'
                       : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  <FiBox size={13} /> 3. Package
+                  <FiBox size={13} /> 3. Details
                 </button>
 
                 <button
@@ -512,40 +539,30 @@ export default function UserProjectChatPage() {
                 </form>
               )}
 
-              {/* Option 3: Package Details Content */}
-              {activeTab === 'package' && (
-                <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+              {/* Option 3: Project Details Content */}
+              {activeTab === 'details' && (
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                     <div>
-                      <h3 className="text-xs font-bold text-slate-900">{chat.package_name || 'Package'}</h3>
-                      <p className="text-[10px] text-slate-400">Platform: {chat.tenant_name || 'Disibin Platform'}</p>
+                      <h3 className="text-xs font-bold text-slate-900">{chat.title}</h3>
+                      <p className="text-[10px] text-slate-400">Project #{chat.id}</p>
                     </div>
-                    <span className="text-sm font-bold text-slate-900">{formatCurrency(netPrice)}</span>
+                    {getStatusBadge(chat.status)}
                   </div>
 
-                  {chat.package_description && (
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Description</span>
-                      <div
-                        className="text-[11px] text-slate-700 leading-relaxed prose prose-slate max-w-none"
-                        dangerouslySetInnerHTML={{ __html: chat.package_description }}
-                      />
-                    </div>
-                  )}
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Description / Scope</span>
+                    <p className="text-xs text-slate-700 whitespace-pre-line leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      {chat.description || 'No project description provided yet.'}
+                    </p>
+                  </div>
 
-                  {chat.features && chat.features.length > 0 && (
-                    <div className="space-y-1 pt-2 border-t border-slate-100">
-                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Features</span>
-                      <div className="space-y-1">
-                        {chat.features.map((f) => (
-                          <div key={f.id} className="flex items-center gap-1.5 text-[11px] text-slate-700 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
-                            <FiCheck className="text-emerald-500 shrink-0" size={12} />
-                            <span>{f.feature_name} {f.value ? `: ${f.value}` : ''}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <div className="pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                    <span>Created: </span>
+                    <strong className="text-slate-700 font-medium">
+                      {new Date(chat.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </strong>
+                  </div>
                 </div>
               )}
 
@@ -603,6 +620,7 @@ export default function UserProjectChatPage() {
           )}
         </div>
       </div>
+    </div>
 
       {/* Chat Thread Container matching /user/tickets/[id] */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[400px] shadow-sm">

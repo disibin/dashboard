@@ -3,16 +3,30 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { FiCreditCard, FiCheckCircle, FiClock, FiAlertCircle, FiSearch, FiFileText, FiShoppingBag } from 'react-icons/fi';
-import toast from 'react-hot-toast';
-import { formatCurrency } from '@/lib/database/secret';
+import {
+  FiCreditCard, FiCheckCircle, FiClock, FiAlertCircle, FiSearch,
+  FiFileText, FiShoppingBag, FiSlash, FiUploadCloud, FiX, FiCheck, FiLoader
+} from 'react-icons/fi';
+import toast, { Toaster } from 'react-hot-toast';
+import { formatCurrency, CURRENCY } from '@/lib/database/secret';
 
 export default function UserPurchasesPage() {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+
+  // Receipt Modal State
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+
+  // Pay / Submit Proof Modal State
+  const [payModalItem, setPayModalItem] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('bkash');
+  const [transactionId, setTransactionId] = useState('');
+  const [senderNumber, setSenderNumber] = useState('');
+  const [proofUrl, setProofUrl] = useState('');
+  const [note, setNote] = useState('');
+  const [submittingPay, setSubmittingPay] = useState(false);
 
   useEffect(() => {
     fetchPurchases();
@@ -31,42 +45,143 @@ export default function UserPurchasesPage() {
     }
   };
 
+  const handleSubmitProof = async (e) => {
+    e.preventDefault();
+    if (!payModalItem) return;
+    if (!transactionId.trim()) {
+      toast.error('Transaction ID is required');
+      return;
+    }
+
+    setSubmittingPay(true);
+    try {
+      const res = await axios.post('/api/user/purchases/pay', {
+        purchase_id: payModalItem.purchase_id,
+        order_id: payModalItem.order_id || undefined,
+        payment_method: paymentMethod,
+        transaction_id: transactionId.trim(),
+        sender_number: senderNumber.trim() || undefined,
+        proof_url: proofUrl.trim() || undefined,
+        note: note.trim() || undefined
+      });
+
+      if (res.data.success) {
+        toast.success(res.data.message || 'Payment submitted for verification!');
+        setPayModalItem(null);
+        setTransactionId('');
+        setSenderNumber('');
+        setProofUrl('');
+        setNote('');
+        fetchPurchases();
+      } else {
+        toast.error(res.data.message || 'Failed to submit payment proof');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Error submitting payment proof');
+    } finally {
+      setSubmittingPay(false);
+    }
+  };
+
+  const handleDeletePurchase = async (item) => {
+    const isCompleted = (item.payment_status || '').toLowerCase() === 'paid' || (item.purchase_status || '').toLowerCase() === 'complete';
+    if (isCompleted) {
+      toast.error('Completed purchases and confirmed payments cannot be deleted.');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete this purchase order (${item.package_title || item.order_id || 'Item'})?`)) return;
+
+    try {
+      const res = await axios.delete(`/api/user/purchases?purchase_id=${item.purchase_id}`);
+      if (res.data.success) {
+        toast.success('Purchase order deleted');
+        setPurchases(prev => prev.filter(p => p.purchase_id !== item.purchase_id));
+      } else {
+        toast.error(res.data.message || 'Failed to delete');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete purchase');
+    }
+  };
+
+  const StatusBadge = ({ status }) => {
+    const s = (status || '').toLowerCase();
+    switch (s) {
+      case 'paid':
+      case 'complete':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <FiCheckCircle size={11} /> Paid
+          </span>
+        );
+      case 'pending':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <FiClock size={11} /> Pending Verification
+          </span>
+        );
+      case 'due':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <FiAlertCircle size={11} /> Balance Due
+          </span>
+        );
+      case 'rejected':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+            <FiSlash size={11} /> Rejected
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+            <FiAlertCircle size={11} /> Unpaid
+          </span>
+        );
+    }
+  };
+
   const filteredPurchases = purchases.filter((item) => {
     const query = searchQuery.toLowerCase();
     const titleMatch =
       (item.package_title || '').toLowerCase().includes(query) ||
-      (item.product_title || '').toLowerCase().includes(query);
-    const status = (item.payment_status || item.purchase_status || '').toLowerCase();
-    
-    if (filterStatus === 'paid') return titleMatch && (status === 'paid' || status === 'complete');
-    if (filterStatus === 'due') return titleMatch && (status === 'due' || status === 'unpaid' || Number(item.due || 0) > 0);
-    if (filterStatus === 'complete') return titleMatch && (status === 'complete' || item.purchase_status === 'complete');
+      (item.order_id || '').toLowerCase().includes(query) ||
+      (item.transaction_id || '').toLowerCase().includes(query);
+
+    const s = (item.payment_status || item.purchase_status || '').toLowerCase();
+    if (filterStatus === 'paid') return titleMatch && (s === 'paid' || s === 'complete');
+    if (filterStatus === 'pending') return titleMatch && s === 'pending';
+    if (filterStatus === 'due') return titleMatch && (s === 'due' || s === 'unpaid');
+    if (filterStatus === 'rejected') return titleMatch && s === 'rejected';
     return titleMatch;
   });
 
   // Calculate Metrics
-  const totalSpent = purchases.reduce((sum, item) => sum + Number(item.paid || item.price || 0), 0);
+  const totalSpent = purchases.reduce((sum, item) => sum + Number(item.paid || 0), 0);
   const totalDue = purchases.reduce((sum, item) => sum + Number(item.due || 0), 0);
-  const completedCount = purchases.filter((item) => item.purchase_status === 'complete' || item.payment_status === 'paid').length;
+  const completedCount = purchases.filter((item) => item.payment_status === 'paid' || item.purchase_status === 'complete').length;
 
   return (
     <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
-      
+      <Toaster position="top-center" />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
             <FiShoppingBag className="text-primary" /> My Purchases & Billing
           </h1>
           <p className="text-slate-500 text-sm mt-1 font-medium">
-            View your software licenses, service purchases, and payment receipts
+            Track your package purchases, payment verification statuses, and invoices
           </p>
         </div>
         <Link
-          href="/products"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
+          href="/user/packages"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-all shadow-sm"
         >
-          Browse Products
+          <FiShoppingBag size={14} />
+          Explore Packages
         </Link>
       </div>
 
@@ -77,8 +192,8 @@ export default function UserPurchasesPage() {
             <FiCreditCard size={22} />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Invested</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalSpent)}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Paid</p>
+            <h3 className="text-xl font-bold text-slate-900 mt-0.5">{formatCurrency(totalSpent)}</h3>
           </div>
         </div>
 
@@ -88,7 +203,7 @@ export default function UserPurchasesPage() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Completed Orders</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{completedCount} Item{completedCount === 1 ? '' : 's'}</h3>
+            <h3 className="text-xl font-bold text-slate-900 mt-0.5">{completedCount} Item{completedCount === 1 ? '' : 's'}</h3>
           </div>
         </div>
 
@@ -97,213 +212,361 @@ export default function UserPurchasesPage() {
             <FiAlertCircle size={22} />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Balance</p>
-            <h3 className="text-xl font-semibold text-slate-900 mt-0.5">{formatCurrency(totalDue)}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending / Due</p>
+            <h3 className="text-xl font-bold text-slate-900 mt-0.5">{formatCurrency(totalDue)}</h3>
           </div>
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="relative w-full md:w-80">
+      {/* Search & Filter */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative max-w-sm w-full">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
           <input
             type="text"
-            placeholder="Search purchases..."
+            placeholder="Search by package name, order ID, trx..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-primary transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-primary"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-          {['all', 'paid', 'due', 'complete'].map((tab) => (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          {[
+            { id: 'all', label: 'All Orders' },
+            { id: 'paid', label: 'Paid' },
+            { id: 'pending', label: 'Pending Review' },
+            { id: 'due', label: 'Due / Unpaid' },
+            { id: 'rejected', label: 'Rejected' }
+          ].map((tab) => (
             <button
-              key={tab}
-              onClick={() => setFilterStatus(tab)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all whitespace-nowrap cursor-pointer ${
-                filterStatus === tab
-                  ? 'bg-slate-900 text-white shadow-md'
-                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+              key={tab.id}
+              onClick={() => setFilterStatus(tab.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                filterStatus === tab.id
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Content Area */}
+      {/* Orders List */}
       {loading ? (
-        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-3"></div>
-          <p className="text-slate-500 text-sm font-medium">Loading your purchases...</p>
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
+          <FiLoader className="animate-spin text-primary" size={26} />
+          <p className="text-xs font-medium">Loading purchases...</p>
         </div>
       ) : filteredPurchases.length === 0 ? (
-        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center">
-            <FiShoppingBag size={28} />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-slate-900">No Purchases Found</h3>
-            <p className="text-slate-500 text-sm max-w-md mx-auto mt-1">
-              You have not placed any orders or acquired custom solutions yet.
-            </p>
-          </div>
+        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center space-y-3">
+          <FiShoppingBag size={32} className="mx-auto text-slate-300" />
+          <h3 className="text-sm font-semibold text-slate-700">No purchases found</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            {searchQuery ? 'No orders match your search filters.' : 'You have not made any package purchases yet.'}
+          </p>
           <Link
-            href="/products"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-all shadow-md"
+            href="/user/packages"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary-dark transition-colors"
           >
-            Explore Solutions
+            Explore Packages
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filteredPurchases.map((item) => (
-            <div
-              key={item.purchase_id}
-              className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow space-y-4"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-[10px] font-semibold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono">
-                    #REC-{item.purchase_id}
-                  </span>
-                  <StatusBadge status={item.payment_status || item.purchase_status} />
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPurchases.map((item) => {
+            const netPrice = Math.max(0, (item.price || 0) - (item.discount || 0));
+            const isPayable = item.payment_status === 'unpaid' || item.payment_status === 'due' || item.payment_status === 'rejected';
 
-                <h3 className="font-semibold text-slate-900 text-base line-clamp-1">
-                  {item.package_title || 'Software Package Purchase'}
-                </h3>
-
-                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs text-slate-400 block font-medium">Price</span>
-                    <span className="text-lg font-semibold text-slate-900">
-                      {formatCurrency(item.price)}
+            return (
+              <div
+                key={item.purchase_id}
+                className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                      #{item.order_id || `PUR-${item.purchase_id}`}
                     </span>
+                    <StatusBadge status={item.payment_status} />
                   </div>
 
-                  {item.due > 0 && (
-                    <div className="text-right">
-                      <span className="text-xs text-amber-500 block font-semibold">Due Amount</span>
-                      <span className="text-sm font-semibold text-amber-600">
-                        {formatCurrency(item.due)}
-                      </span>
+                  <h3 className="font-bold text-slate-900 text-base line-clamp-1">
+                    {item.package_title || 'Custom Package'}
+                  </h3>
+
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100/80 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Package Price:</span>
+                      <span className="font-bold text-slate-800">{formatCurrency(netPrice)}</span>
                     </div>
-                  )}
+                    {item.paid > 0 && (
+                      <div className="flex items-center justify-between text-emerald-600">
+                        <span>Paid Amount:</span>
+                        <span className="font-bold">{formatCurrency(item.paid)}</span>
+                      </div>
+                    )}
+                    {item.due > 0 && (
+                      <div className="flex items-center justify-between text-amber-600">
+                        <span className="font-semibold">Remaining Due:</span>
+                        <span className="font-bold">{formatCurrency(item.due)}</span>
+                      </div>
+                    )}
+                    {item.transaction_id && (
+                      <div className="pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-500">
+                        <span>Trx ID:</span>
+                        <span className="font-mono font-bold text-slate-700">{item.transaction_id}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <span className="text-[11px] text-slate-400 flex items-center gap-1 font-medium">
+                    <FiClock size={12} /> {new Date(item.created_at).toLocaleDateString()}
+                  </span>
+
+                  <div className="flex items-center gap-1.5">
+                    {isPayable && (
+                      <button
+                        onClick={() => {
+                          setPayModalItem(item);
+                          setPaymentMethod(item.payment_method || 'bkash');
+                          setTransactionId(item.transaction_id || '');
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-colors cursor-pointer"
+                      >
+                        <FiUploadCloud size={13} /> Pay / Submit
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => setSelectedReceipt(item)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      <FiFileText size={13} /> Receipt
+                    </button>
+
+                    {!((item.payment_status || '').toLowerCase() === 'paid' || (item.purchase_status || '').toLowerCase() === 'complete') && (
+                      <button
+                        onClick={() => handleDeletePurchase(item)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                        title="Delete Purchase"
+                      >
+                        <FiTrash2 size={13} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Pay / Submit Transaction ID Modal */}
+      {payModalItem && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <FiUploadCloud size={16} />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Submit Payment Proof</h3>
+                  <p className="text-xs text-slate-500">Order #{payModalItem.order_id || payModalItem.purchase_id}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => !submittingPay && setPayModalItem(null)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitProof} className="space-y-3.5">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">Payment Method</label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {['bkash', 'nagad', 'bank_transfer', 'rocket', 'card', 'manual'].map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setPaymentMethod(m)}
+                      className={`p-2 rounded-lg border text-xs font-bold capitalize transition-all cursor-pointer ${
+                        paymentMethod === m ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      {m.replace('_', ' ')}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-                  <FiClock size={12} /> {new Date(item.created_at).toLocaleDateString()}
-                </span>
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">Transaction ID / Reference <span className="text-rose-500">*</span></label>
+                <input
+                  type="text"
+                  placeholder="e.g. TRX91823719"
+                  value={transactionId}
+                  onChange={(e) => setTransactionId(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                  required
+                />
+              </div>
 
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">Sender Phone / Account (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 017XXXXXXXX"
+                  value={senderNumber}
+                  onChange={(e) => setSenderNumber(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">Receipt / Screenshot URL (Optional)</label>
+                <input
+                  type="url"
+                  placeholder="https://..."
+                  value={proofUrl}
+                  onChange={(e) => setProofUrl(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">Note (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="Any extra info..."
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
                 <button
-                  onClick={() => setSelectedReceipt(item)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-semibold transition-colors cursor-pointer"
+                  type="button"
+                  onClick={() => setPayModalItem(null)}
+                  disabled={submittingPay}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
                 >
-                  <FiFileText size={13} /> Receipt
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingPay || !transactionId.trim()}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white shadow-sm disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                >
+                  {submittingPay ? <FiLoader className="animate-spin" size={14} /> : <FiCheck size={14} />}
+                  Submit For Verification
                 </button>
               </div>
-            </div>
-          ))}
+            </form>
+          </div>
         </div>
       )}
 
       {/* Receipt Modal */}
       {selectedReceipt && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
-                <FiFileText className="text-primary" /> Order Receipt
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <FiFileText className="text-primary" /> Order Receipt & Invoice
               </h2>
               <button
                 onClick={() => setSelectedReceipt(null)}
-                className="text-slate-400 hover:text-slate-600 font-semibold text-xl cursor-pointer"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
               >
-                ✕
+                <FiX size={18} />
               </button>
             </div>
 
-            <div className="bg-slate-50 rounded-2xl p-4 space-y-3">
-              <div className="flex justify-between text-xs text-slate-500">
-                <span>Receipt No:</span>
-                <span className="font-mono font-semibold text-slate-800">#REC-{selectedReceipt.purchase_id}</span>
+            <div className="bg-slate-50 rounded-2xl p-4 space-y-2.5 border border-slate-100 text-xs">
+              <div className="flex justify-between text-slate-500">
+                <span>Order Ref:</span>
+                <span className="font-mono font-bold text-slate-900">
+                  #{selectedReceipt.order_id || `PUR-${selectedReceipt.purchase_id}`}
+                </span>
               </div>
-              <div className="flex justify-between text-xs text-slate-500">
+              <div className="flex justify-between text-slate-500">
                 <span>Date:</span>
                 <span className="font-semibold text-slate-800">{new Date(selectedReceipt.created_at).toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-xs text-slate-500">
+              <div className="flex justify-between text-slate-500 items-center">
                 <span>Status:</span>
-                <StatusBadge status={selectedReceipt.payment_status || selectedReceipt.purchase_status} />
+                <StatusBadge status={selectedReceipt.payment_status} />
               </div>
+              {selectedReceipt.transaction_id && (
+                <div className="flex justify-between text-slate-500">
+                  <span>Trx ID:</span>
+                  <span className="font-mono font-bold text-slate-800">{selectedReceipt.transaction_id}</span>
+                </div>
+              )}
+              {selectedReceipt.payment_method && (
+                <div className="flex justify-between text-slate-500 capitalize">
+                  <span>Payment Method:</span>
+                  <span className="font-semibold text-slate-800">{selectedReceipt.payment_method.replace('_', ' ')}</span>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500 font-medium">Item / Service:</span>
-                <span className="font-semibold text-slate-900">{selectedReceipt.product_title || 'Custom System Solution'}</span>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Package Item:</span>
+                <span className="font-bold text-slate-900">{selectedReceipt.package_title}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500 font-medium">Total Price:</span>
-                <span className="font-semibold text-slate-900">{formatCurrency(selectedReceipt.price)}</span>
+              <div className="flex justify-between">
+                <span className="text-slate-500">List Price:</span>
+                <span className="font-semibold text-slate-800">{formatCurrency(selectedReceipt.price)}</span>
               </div>
               {selectedReceipt.discount > 0 && (
-                <div className="flex justify-between text-sm text-emerald-600">
-                  <span className="font-medium">Discount Applied:</span>
-                  <span className="font-semibold">-{formatCurrency(selectedReceipt.discount)}</span>
+                <div className="flex justify-between text-emerald-600">
+                  <span>Discount Applied:</span>
+                  <span className="font-bold">-{formatCurrency(selectedReceipt.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500 font-medium">Paid Amount:</span>
-                <span className="font-semibold text-emerald-600">{formatCurrency(selectedReceipt.paid || selectedReceipt.price)}</span>
+              <div className="pt-2 border-t border-slate-100 flex justify-between text-sm font-bold">
+                <span className="text-slate-800">Net Payable:</span>
+                <span className="text-slate-900">{formatCurrency(Math.max(0, (selectedReceipt.price || 0) - (selectedReceipt.discount || 0)))}</span>
+              </div>
+              <div className="flex justify-between text-xs text-slate-500">
+                <span>Amount Paid:</span>
+                <span className="font-semibold text-emerald-600">{formatCurrency(selectedReceipt.paid || 0)}</span>
               </div>
               {selectedReceipt.due > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-500 font-medium">Remaining Due:</span>
-                  <span className="font-semibold text-amber-600">{formatCurrency(selectedReceipt.due)}</span>
+                <div className="flex justify-between text-xs text-amber-600">
+                  <span className="font-semibold">Remaining Due:</span>
+                  <span className="font-bold">{formatCurrency(selectedReceipt.due)}</span>
                 </div>
               )}
             </div>
+
+            {selectedReceipt.note && (
+              <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-100 text-xs text-amber-900">
+                <span className="font-bold block mb-0.5">Note:</span>
+                <p className="text-[11px] leading-relaxed">{selectedReceipt.note}</p>
+              </div>
+            )}
 
             <button
               onClick={() => setSelectedReceipt(null)}
-              className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-primary transition-colors cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors cursor-pointer"
             >
               Close Receipt
             </button>
           </div>
         </div>
       )}
-
     </div>
-  );
-}
-
-function StatusBadge({ status }) {
-  const normalized = (status || 'complete').toLowerCase();
-
-  if (normalized === 'paid' || normalized === 'complete') {
-    return (
-      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-semibold uppercase tracking-wider">
-        Paid
-      </span>
-    );
-  }
-  if (normalized === 'due') {
-    return (
-      <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 text-[10px] font-semibold uppercase tracking-wider">
-        Partial Due
-      </span>
-    );
-  }
-  return (
-    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-semibold uppercase tracking-wider">
-      {normalized}
-    </span>
   );
 }

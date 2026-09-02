@@ -7,7 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   FiArrowLeft, FiPaperclip, FiSend,
-  FiLoader, FiX, FiAlertCircle, FiEdit2, FiCheck
+  FiLoader, FiX, FiAlertCircle, FiEdit2, FiCheck, FiTrash2
 } from 'react-icons/fi';
 
 export default function UserTicketDetailPage() {
@@ -53,6 +53,22 @@ export default function UserTicketDetailPage() {
       toast.error(err.response?.data?.message || 'Failed to update title');
     } finally {
       setUpdatingTitle(false);
+    }
+  };
+
+  const handleDeleteTicket = async () => {
+    if (!confirm(`Are you sure you want to delete this ticket (#${ticketId})? All messages and attachments will be permanently removed.`)) return;
+
+    try {
+      const res = await axios.delete(`/api/user/ticket/${ticketId}`);
+      if (res.data.success) {
+        toast.success('Ticket deleted successfully');
+        router.push('/user/tickets');
+      } else {
+        toast.error(res.data.message || 'Failed to delete ticket');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete ticket');
     }
   };
 
@@ -250,6 +266,16 @@ export default function UserTicketDetailPage() {
             </p>
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={handleDeleteTicket}
+          className="p-2 border border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+          title="Delete Ticket"
+        >
+          <FiTrash2 size={14} />
+          <span className="hidden sm:inline">Delete Ticket</span>
+        </button>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[400px]">

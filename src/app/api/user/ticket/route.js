@@ -2,34 +2,11 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isUserLogin } from "@/lib/auth/user";
 
-let ticketImagesTableChecked = false;
-
-async function ensureTicketImagesTable() {
-    if (ticketImagesTableChecked) return;
-    try {
-        await dbQuery(`
-            CREATE TABLE IF NOT EXISTS ticket_images (
-                id SERIAL PRIMARY KEY,
-                ticket_id INT REFERENCES tickets(id) ON DELETE CASCADE,
-                user_id INT REFERENCES users(id) ON DELETE SET NULL,
-                staff_id INT REFERENCES staffs(id) ON DELETE SET NULL,
-                file_url TEXT NOT NULL,
-                file_id TEXT,
-                created_at TIMESTAMP DEFAULT now()
-            );
-            CREATE INDEX IF NOT EXISTS idx_ticket_images_ticket_id ON ticket_images(ticket_id);
-        `).catch(() => {});
-        ticketImagesTableChecked = true;
-    } catch (err) {}
-}
-
 // GET — List user's tickets
 export async function GET() {
     try {
         const auth = await isUserLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
-
-        await ensureTicketImagesTable();
 
         const userId = auth.data.id;
 
@@ -73,8 +50,6 @@ export async function POST(req) {
     try {
         const auth = await isUserLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
-
-        await ensureTicketImagesTable();
 
         const userId = auth.data.id;
         const body = await req.json();
@@ -143,3 +118,38 @@ export async function POST(req) {
     }
 }
 
+// DELETE — User delete a ticket
+export async function DELETE(req) {
+    try {
+        const auth = await isUserLogin();
+        if (!auth.success) return NextResponse.json(auth, { status: 401 });
+
+        const userId = auth.data.id;
+        const { searchParams } = new URL(req.url);
+        const ticketId = searchParams.get('id');
+
+        if (!ticketId) {
+            return NextResponse.json({ success: false, message: "Ticket ID is required" }, { status: 400 });
+        }
+
+        // Verify that user is participant
+        const check = await dbQuery(
+            `SELECT id FROM ticket_participants WHERE ticket_id = $1 AND user_id = $2`,
+            [ticketId, userId]
+        );
+        if (check.rows.length === 0) {
+            return NextResponse.json({ success: false, message: "Ticket not found or access denied" }, { status: 404 });
+        }
+
+        // Delete ticket (cascades to participants, messages, attachments, images)
+        await dbQuery(`DELETE FROM tickets WHERE id = $1`, [ticketId]);
+
+        return NextResponse.json({
+            success: true,
+            message: "Ticket deleted successfully"
+        });
+
+    } catch (error) {
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
+}

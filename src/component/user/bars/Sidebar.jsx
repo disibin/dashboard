@@ -17,7 +17,8 @@ import {
   FiBriefcase,
   FiFolder,
   FiBookOpen,
-  FiShoppingBag
+  FiShoppingBag,
+  FiShoppingCart
 } from 'react-icons/fi'
 import { FaGlobeAsia } from 'react-icons/fa'
 
@@ -35,10 +36,11 @@ const Sidebar = () => {
       ],
     },
     {
-      label: 'Services & Projects',
+      label: 'Products & Packages',
       links: [
         { name: 'Software Products', href: '/user/products', icon: <FiPackage /> },
         { name: 'Packages',  href: '/user/packages', icon: <FiBox /> },
+        { name: 'My Cart',   href: '/user/cart',     icon: <FiShoppingCart /> },
         { name: 'Blogs',             href: '/user/blogs',    icon: <FiBookOpen /> },
       ],
     },

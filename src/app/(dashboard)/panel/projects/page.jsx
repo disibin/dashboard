@@ -7,9 +7,8 @@ import { useRouter } from 'next/navigation';
 import {
   FiFolder, FiMessageSquare, FiLoader, FiSearch, FiX,
   FiRefreshCw, FiUser, FiClock, FiActivity, FiCheckCircle,
-  FiSlash, FiPlayCircle, FiDollarSign, FiCreditCard
+  FiSlash, FiPlayCircle, FiPlus
 } from 'react-icons/fi';
-import { formatCurrency } from '@/lib/database/secret';
 
 export default function StaffProjectsPage() {
   const router = useRouter();
@@ -17,6 +16,13 @@ export default function StaffProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  // New Project Modal State for Staff
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newDesc, setNewDesc] = useState('');
+  const [targetUserId, setTargetUserId] = useState('');
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -29,12 +35,46 @@ export default function StaffProjectsPage() {
       if (res.data.success) {
         setProjects(res.data.data);
       } else {
-        toast.error(res.data.message || 'Failed to load project chats');
+        toast.error(res.data.message || 'Failed to load projects');
       }
     } catch {
-      toast.error('Failed to load package project chats');
+      toast.error('Failed to load project discussions');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateProject = async (e) => {
+    e.preventDefault();
+    if (!newTitle.trim()) {
+      toast.error('Project title is required');
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const payload = {
+        title: newTitle.trim(),
+        description: newDesc.trim() || undefined,
+        user_id: targetUserId ? Number(targetUserId) : undefined
+      };
+
+      const res = await axios.post('/api/staff/projects', payload);
+      if (res.data.success) {
+        toast.success('Project created successfully!');
+        setIsModalOpen(false);
+        setNewTitle('');
+        setNewDesc('');
+        setTargetUserId('');
+        fetchProjects();
+        router.push(`/panel/projects/${res.data.data.id}`);
+      } else {
+        toast.error(res.data.message || 'Failed to create project');
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to create project');
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -58,6 +98,7 @@ export default function StaffProjectsPage() {
       (p.project_title || '').toLowerCase().includes(search.toLowerCase()) ||
       (p.user_name || '').toLowerCase().includes(search.toLowerCase()) ||
       (p.user_email || '').toLowerCase().includes(search.toLowerCase()) ||
+      (p.description || '').toLowerCase().includes(search.toLowerCase()) ||
       (p.last_message || '').toLowerCase().includes(search.toLowerCase())
     );
 
@@ -75,9 +116,9 @@ export default function StaffProjectsPage() {
         <div>
           <h1 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
             <FiFolder className="text-primary" />
-            Client Project Chats
+            Client Projects
           </h1>
-          <p className="text-xs text-slate-500">Manage and respond to client package project discussions</p>
+          <p className="text-xs text-slate-500">Manage, review, and collaborate on client project discussions</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -88,6 +129,13 @@ export default function StaffProjectsPage() {
             title="Refresh List"
           >
             <FiRefreshCw className={loading ? 'animate-spin' : ''} size={15} />
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+          >
+            <FiPlus size={15} />
+            New Project
           </button>
         </div>
       </div>
@@ -140,14 +188,14 @@ export default function StaffProjectsPage() {
         {loading ? (
           <div className="py-12 text-center text-slate-400 space-y-2">
             <FiLoader className="animate-spin mx-auto text-primary" size={24} />
-            <p className="text-xs">Loading project chats...</p>
+            <p className="text-xs">Loading projects...</p>
           </div>
         ) : filteredProjects.length === 0 ? (
           <div className="py-12 text-center space-y-2 px-4">
             <FiMessageSquare className="mx-auto text-slate-300" size={28} />
-            <p className="font-semibold text-slate-700 text-sm">No project chats found</p>
+            <p className="font-semibold text-slate-700 text-sm">No project discussions found</p>
             <p className="text-xs text-slate-500">
-              {search || statusFilter !== 'all' ? 'No projects match your current filters.' : 'There are no active client project chats yet.'}
+              {search || statusFilter !== 'all' ? 'No projects match your current filters.' : 'There are no active client projects yet.'}
             </p>
           </div>
         ) : (
@@ -165,16 +213,13 @@ export default function StaffProjectsPage() {
                       {p.project_title}
                     </h3>
                     {getStatusBadge(p.project_status)}
-                    {p.payment_status === 'paid' ? (
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-md">Paid</span>
-                    ) : (
-                      <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] font-bold rounded-md">Unpaid</span>
-                    )}
                   </div>
 
                   <p className="text-xs text-slate-600 truncate max-w-2xl">
                     {p.last_message ? (
                       <span><strong className="text-slate-800 font-semibold">Latest: </strong>{p.last_message}</span>
+                    ) : p.description ? (
+                      <span>{p.description}</span>
                     ) : (
                       <span className="italic text-slate-400">No messages sent yet</span>
                     )}
@@ -184,21 +229,15 @@ export default function StaffProjectsPage() {
                     <span className="flex items-center gap-1 font-medium text-slate-700">
                       <FiUser size={12} className="text-slate-400" /> {p.user_name || 'Client User'} ({p.user_email || 'No email'})
                     </span>
-                    {p.package_name && (
-                      <span>Package: <strong className="text-slate-700 font-medium">{p.package_name}</strong></span>
-                    )}
                   </div>
                 </div>
 
                 <div className="text-left sm:text-right shrink-0 space-y-1">
-                  <span className="text-xs font-bold text-slate-900 block">
-                    {formatCurrency(p.net_price)}
-                  </span>
                   <span className="text-[10px] text-slate-400 block">
                     {new Date(p.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                   <span className="text-xs font-semibold text-primary hover:underline inline-block">
-                    Open Project Chat →
+                    Open Project Workspace →
                   </span>
                 </div>
               </div>
@@ -206,6 +245,93 @@ export default function StaffProjectsPage() {
           </div>
         )}
       </div>
+
+      {/* Staff Create Project Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <FiFolder size={16} />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Create Client Project</h3>
+                  <p className="text-xs text-slate-500">Open a project discussion for client collaboration</p>
+                </div>
+              </div>
+              <button
+                onClick={() => !creating && setIsModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateProject} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 block">
+                  Project Title <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Enterprise Portal Architecture, Mobile App Sprint"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
+                  required
+                  autoFocus
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 block">
+                  Client User ID <span className="text-slate-400 font-normal">(Optional numeric ID from Users panel)</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 1"
+                  value={targetUserId}
+                  onChange={(e) => setTargetUserId(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 block">
+                  Project Scope & Description <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Initial requirements, milestone notes, or instructions..."
+                  value={newDesc}
+                  onChange={(e) => setNewDesc(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  disabled={creating}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating || !newTitle.trim()}
+                  className="px-5 py-2 rounded-xl text-xs font-semibold bg-primary hover:bg-primary-dark text-white transition-all shadow-sm disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                >
+                  {creating ? <FiLoader className="animate-spin" size={14} /> : <FiPlus size={14} />}
+                  Create Project
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

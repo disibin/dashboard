@@ -6,9 +6,10 @@ import { toast, Toaster } from 'react-hot-toast';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  FiArrowLeft, FiCheck, FiLoader, FiAlertCircle, FiBox, FiPlay, FiTag
+  FiArrowLeft, FiCheck, FiLoader, FiAlertCircle, FiBox,
+  FiShoppingBag, FiTag, FiX, FiCreditCard, FiShoppingCart
 } from 'react-icons/fi';
-import { formatCurrency } from '@/lib/database/secret';
+import { formatCurrency, CURRENCY } from '@/lib/database/secret';
 
 export default function UserPackageDetailPage() {
   const router = useRouter();
@@ -17,7 +18,15 @@ export default function UserPackageDetailPage() {
 
   const [pkg, setPkg] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [starting, setStarting] = useState(false);
+
+  // Checkout Modal State
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('bkash');
+  const [transactionId, setTransactionId] = useState('');
+  const [senderNumber, setSenderNumber] = useState('');
+  const [orderNote, setOrderNote] = useState('');
+  const [proofUrl, setProofUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (slug) fetchPackage();
@@ -39,26 +48,62 @@ export default function UserPackageDetailPage() {
     }
   };
 
-  const handleStartProject = async () => {
+  const handleAddToCart = async () => {
     if (!pkg?.id) return;
-    setStarting(true);
     try {
-      const res = await axios.post('/api/user/packages/start', { package_id: pkg.id });
+      const res = await axios.post('/api/user/cart', { package_id: pkg.id });
       if (res.data.success) {
-        toast.success('Project started! Redirecting to project chat...');
-        const chat = res.data.data.chat;
-        if (chat?.id) {
-          router.push(`/user/projects/${chat.id}`);
-        } else {
-          router.push('/user/projects');
-        }
+        toast.success(`"${pkg.name}" added to cart!`);
+      }
+    } catch {
+      toast.error('Failed to add to cart');
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!pkg?.id) return;
+    try {
+      await axios.post('/api/user/cart', { package_id: pkg.id });
+      router.push('/user/cart');
+    } catch {
+      router.push('/user/cart');
+    }
+  };
+
+  const handleCheckoutSubmit = async (e) => {
+    e.preventDefault();
+    if (!pkg?.id) return;
+
+    if (!transactionId.trim()) {
+      toast.error('Please enter the Transaction ID / Reference');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = {
+        package_ids: [pkg.id],
+        payment_method: paymentMethod,
+        transaction_id: transactionId.trim(),
+        sender_number: senderNumber.trim() || undefined,
+        note: orderNote.trim() || undefined,
+        proof_url: proofUrl.trim() || undefined
+      };
+
+      const res = await axios.post('/api/user/packages/checkout', payload);
+      if (res.data.success) {
+        toast.success(res.data.message || 'Order placed successfully!');
+        setCheckoutModalOpen(false);
+        setTimeout(() => {
+          router.push('/user/purchases');
+        }, 800);
       } else {
-        toast.error(res.data.message || 'Failed to start project');
+        toast.error(res.data.message || 'Failed to place order');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to start project');
+      toast.error(err?.response?.data?.message || 'Failed to complete purchase');
     } finally {
-      setStarting(false);
+      setSubmitting(false);
     }
   };
 
@@ -172,18 +217,156 @@ export default function UserPackageDetailPage() {
           </div>
         )}
 
-        {/* Action Button */}
-        <div className="pt-4 border-t border-slate-100">
+        {/* Action Buttons */}
+        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
           <button
-            onClick={handleStartProject}
-            disabled={starting}
-            className="w-full py-3 bg-primary hover:bg-primary-dark text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            type="button"
+            onClick={handleAddToCart}
+            className="w-full sm:flex-1 py-3 border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            {starting ? <FiLoader className="animate-spin" size={16} /> : <FiPlay size={16} />}
-            <span>Start Project Now</span>
+            <FiShoppingCart size={16} />
+            <span>Add to Cart</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            className="w-full sm:flex-1 py-3 bg-primary hover:bg-primary-dark text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <FiShoppingBag size={16} />
+            <span>Buy Now • {formatCurrency(netPrice)}</span>
           </button>
         </div>
       </div>
+
+      {/* Checkout Modal for this package */}
+      {checkoutModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 my-8 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <FiCreditCard size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Purchase {pkg.name}</h3>
+                  <p className="text-xs text-slate-500">Total Payable: {formatCurrency(netPrice)}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => !submitting && setCheckoutModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Select Payment Method <span className="text-rose-500">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'bkash', label: 'bKash' },
+                    { id: 'nagad', label: 'Nagad' },
+                    { id: 'bank_transfer', label: 'Bank' },
+                    { id: 'rocket', label: 'Rocket' },
+                    { id: 'card', label: 'Card' },
+                    { id: 'manual', label: 'Other' }
+                  ].map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(m.id)}
+                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer text-center ${
+                        paymentMethod === m.id
+                          ? 'bg-primary text-white border-primary shadow-xs'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Transaction ID / Bank Reference <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. TRX192847190"
+                  value={transactionId}
+                  onChange={(e) => setTransactionId(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Sender Phone / Account Number <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 01XXXXXXXXX"
+                  value={senderNumber}
+                  onChange={(e) => setSenderNumber(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Payment Slip / Proof Link <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://... image url"
+                  value={proofUrl}
+                  onChange={(e) => setProofUrl(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Special Instructions / Note <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Notes for the team..."
+                  value={orderNote}
+                  onChange={(e) => setOrderNote(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCheckoutModalOpen(false)}
+                  disabled={submitting}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={submitting || !transactionId.trim()}
+                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white transition-all shadow-md disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                >
+                  {submitting ? <FiLoader className="animate-spin" size={14} /> : <FiCheck size={14} />}
+                  Confirm Payment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,16 +7,17 @@ import {
   FiSidebar, FiSearch, FiX, FiUser, FiCreditCard, FiPackage,
   FiBox, FiBriefcase, FiFolder, FiBookOpen, FiLifeBuoy, FiStar,
   FiBell, FiSettings, FiShield, FiArrowRight,
-  FiMenu
+  FiMenu, FiShoppingCart
 } from 'react-icons/fi'
 
 const USER_PANEL_ROUTES = [
   { name: 'Profile', href: '/user/profile', category: 'Workspace', icon: FiUser },
   { name: 'Purchases', href: '/user/purchases', category: 'Workspace', icon: FiCreditCard },
-  { name: 'Software Products', href: '/user/products', category: 'Services & Projects', icon: FiPackage },
-  { name: 'Service Packages', href: '/user/packages', category: 'Services & Projects', icon: FiBox },
-  { name: 'My Projects', href: '/user/projects', category: 'Services & Projects', icon: FiFolder },
-  { name: 'Blogs & News', href: '/user/blogs', category: 'Services & Projects', icon: FiBookOpen },
+  { name: 'Software Products', href: '/user/products', category: 'Products & Packages', icon: FiPackage },
+  { name: 'Packages', href: '/user/packages', category: 'Products & Packages', icon: FiBox },
+  { name: 'My Cart', href: '/user/cart', category: 'Products & Packages', icon: FiShoppingCart },
+  { name: 'My Projects', href: '/user/projects', category: 'Products & Packages', icon: FiFolder },
+  { name: 'Blogs & News', href: '/user/blogs', category: 'Products & Packages', icon: FiBookOpen },
   { name: 'Support Tickets', href: '/user/tickets', category: 'Support & Comms', icon: FiLifeBuoy },
   { name: 'My Review', href: '/user/reviews', category: 'Support & Comms', icon: FiStar },
   { name: 'Notifications', href: '/user/notifications', category: 'Support & Comms', icon: FiBell },
@@ -148,7 +149,14 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <Link
+          href="/user/cart"
+          className="p-2 rounded-xl text-slate-600 hover:text-primary hover:bg-slate-100 transition-colors"
+          title="My Package Cart"
+        >
+          <FiShoppingCart size={18} />
+        </Link>
         {userData?.name && (
           <span className="hidden sm:block text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
             {userData.name}

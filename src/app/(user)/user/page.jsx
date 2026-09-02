@@ -79,7 +79,7 @@ export default function UserDashboardHome() {
             Welcome back, {user?.name || 'Valued Client'}! 👋
           </h1>
           <p className="text-slate-500 text-sm max-w-xl leading-relaxed">
-            Manage active service projects, review purchase invoices, track support tickets, and update your profile credentials.
+            Manage active projects, review purchase invoices, track support tickets, and update your profile credentials.
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function UserDashboardHome() {
               {loading ? '—' : activeProjectsCount}
             </h3>
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
-              Active Projects & Services
+              Active Projects
             </p>
           </div>
         </Link>
@@ -206,7 +206,7 @@ export default function UserDashboardHome() {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FiBriefcase className="text-indigo-600" size={18} />
-              Active Projects & Services
+              Active Projects
             </h2>
             <Link href="/user/projects" className="text-xs font-semibold text-indigo-600 hover:underline">
               View All ({projects.length})
@@ -232,7 +232,7 @@ export default function UserDashboardHome() {
                       {p.project_title || p.name}
                     </h4>
                     <p className="text-xs text-slate-500 flex items-center gap-2">
-                      <span>{p.tenant_name || 'Service Package'}</span>
+                      <span>{p.tenant_name || 'Package'}</span>
                       <span>•</span>
                       <span className="capitalize text-emerald-600 font-semibold">{p.payment_status || 'Active'}</span>
                     </p>
@@ -299,7 +299,7 @@ export default function UserDashboardHome() {
 
       {/* Quick Action Cards */}
       <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-        <h2 className="text-base font-semibold text-slate-900">Explore & Manage Services</h2>
+        <h2 className="text-base font-semibold text-slate-900">Explore Products & Packages</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           <Link
@@ -323,7 +323,7 @@ export default function UserDashboardHome() {
               <FiBriefcase size={18} />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-slate-900 group-hover:text-amber-600 transition-colors">Service Packages</h4>
+              <h4 className="text-sm font-semibold text-slate-900 group-hover:text-amber-600 transition-colors">Packages</h4>
               <p className="text-xs text-slate-500">View scope deliverables</p>
             </div>
           </Link>
