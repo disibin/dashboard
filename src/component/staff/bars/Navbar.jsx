@@ -10,6 +10,7 @@ import {
   FiTag, FiLayout, FiCreditCard, FiFileText, FiCheckSquare,
   FiMessageSquare, FiAlertCircle, FiLifeBuoy, FiStar, FiMail,
   FiInbox, FiHelpCircle, FiArrowRight, FiBookOpen,
+  FiSliders, FiDollarSign,
   FiMenu, FiSearch, FiX
 } from 'react-icons/fi'
 import { FaHandshake } from 'react-icons/fa'
@@ -31,7 +32,10 @@ const ALL_PANEL_ROUTES = [
   { name: 'Board', href: '/panel/board', category: 'Operations', icon: FiLayout },
   { name: 'Partners', href: '/panel/partners', category: 'Operations', icon: FaHandshake },
   { name: 'Payments', href: '/panel/payments', category: 'Finance', icon: FiCreditCard },
-  { name: 'Payroll & Salary', href: '/panel/payroll', category: 'Finance', icon: FiCreditCard },
+  { name: 'Payscale Grades', href: '/panel/payscale', category: 'Finance', icon: FiSliders },
+  { name: 'Staff Salaries', href: '/panel/staff-salary', category: 'Finance', icon: FiUserCheck },
+  { name: 'Salary Payments', href: '/panel/salary-payments', category: 'Finance', icon: FiDollarSign },
+  { name: 'My Payslips', href: '/panel/my-salary', category: 'Finance', icon: FiDollarSign },
   { name: 'Reports', href: '/panel/reports', category: 'Analytics', icon: FiFileText },
   { name: 'Staff Notes', href: '/panel/notes', category: 'Staff Tools', icon: FiFileText },
   { name: 'Staff To-Dos', href: '/panel/todos', category: 'Staff Tools', icon: FiCheckSquare },

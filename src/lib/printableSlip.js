@@ -363,3 +363,161 @@ export function printReceipt(order, userObj) {
 export function printPaymentSlip(order, userObj) {
   return printReceipt(order, userObj);
 }
+
+export function printSalarySlip(sal, staffObj) {
+  const item = sal;
+  if (!item) return;
+
+  const printWindow = window.open('', '_blank', 'width=850,height=1000');
+  if (!printWindow) {
+    toast.error('Pop-up blocked! Please allow pop-ups to print salary slips.');
+    return;
+  }
+
+  const storeName = STORE_NAME;
+  const storePhone = STORE_PHONE;
+  const storeEmail = STORE_EMAIL;
+  const storeWebsite = STORE_WEBSITE;
+  const storeAddress = STORE_ADDRESS;
+
+  const salId = item.id ? `SAL-${item.id}` : 'N/A';
+  const staffName = item.staff_name || staffObj?.name || 'Staff Member';
+  const staffEmail = item.staff_email || staffObj?.email || '';
+  const staffRole = (item.staff_role || staffObj?.role || 'Employee').toUpperCase();
+
+  const monthYear = item.month && item.year ? `${item.month}/${item.year}` : (item.payroll_title || 'Monthly Salary');
+  const createdAt = item.created_at ? new Date(item.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const totalAmount = parseFloat(item.amount || 0);
+  const paidAmount = parseFloat(item.paid_amount || 0);
+  const dueAmount = Math.max(0, totalAmount - paidAmount);
+  const rawStatus = (item.status || 'unpaid').toUpperCase();
+
+  const logoUrl = typeof window !== 'undefined' ? `${window.location.origin}/icon.png` : '/icon.png';
+  const formatMoney = (amount) => '৳' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Salary Payslip ${salId}</title>
+        <style>
+          @page { size: A4 portrait; margin: 15mm; }
+          @media print { body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
+          * { box-sizing: border-box; font-weight: 400 !important; }
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #1e293b; margin: 0; padding: 32px; background-color: #ffffff; font-size: 13px; line-height: 1.5; font-weight: 400; }
+          .receipt-container { max-width: 800px; margin: 0 auto; }
+          .header-box { margin-bottom: 32px; }
+          .brand-logo-img { height: 48px; width: auto; object-fit: contain; margin-bottom: 8px; }
+          .brand-title-normal { font-size: 24px; font-weight: 400; color: #0f172a; letter-spacing: 0.02em; line-height: 1.2; }
+          .brand-contacts { font-size: 12px; color: #475569; margin-top: 4px; font-weight: 400; }
+          .meta-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+          .meta-column { min-width: 220px; }
+          .meta-label { font-size: 11px; font-weight: 400; color: #0f172a; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+          .meta-heading { font-size: 18px; font-weight: 400; color: #0f172a; line-height: 1.2; }
+          .meta-details { font-size: 13px; color: #475569; margin-top: 4px; line-height: 1.4; font-weight: 400; }
+          .item-table { width: 100%; border-collapse: collapse; margin-bottom: 36px; }
+          .item-table th { background-color: #f1f5f9; color: #0f172a; font-size: 11px; font-weight: 400; letter-spacing: 0.05em; padding: 10px 12px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+          .item-table td { padding: 14px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; color: #1e293b; font-weight: 400; }
+          .bottom-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+          .thanks-text { font-size: 13px; color: #64748b; font-weight: 400; line-height: 1.6; }
+          .totals-box { width: 320px; }
+          .totals-title { font-size: 16px; font-weight: 400; color: #1e293b; margin-bottom: 12px; }
+          .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #475569; font-weight: 400; }
+          .totals-row.grand-total { font-size: 14px; font-weight: 400; color: #0f172a; border-bottom: none; padding-top: 10px; }
+          .footer-website { margin-top: 40px; text-align: center; font-size: 13px; font-weight: 400; color: #64748b; border-top: 1px dashed #cbd5e1; padding-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="receipt-container">
+          <div class="header-box">
+            <img src="${logoUrl}" alt="${storeName}" class="brand-logo-img" />
+            <div class="brand-title-normal">${storeName}</div>
+            <div class="brand-contacts">
+              ${storeAddress}<br>
+              ${storePhone} | ${storeEmail}
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <div class="meta-column">
+              <div class="meta-label">EMPLOYEE / RECIPIENT:</div>
+              <div class="meta-heading">${staffName}</div>
+              <div class="meta-details">
+                <div>Role: ${staffRole}</div>
+                ${staffEmail ? `<div>${staffEmail}</div>` : ''}
+              </div>
+            </div>
+
+            <div class="meta-column" style="text-align: right;">
+              <div class="meta-label">PAYSLIP DETAILS:</div>
+              <div class="meta-heading">${salId}</div>
+              <div class="meta-details">
+                <div>Cycle: ${monthYear}</div>
+                <div>Issue Date: ${createdAt}</div>
+                <div>Status: ${rawStatus}</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="item-table">
+            <thead>
+              <tr>
+                <th style="text-align: left; width: 50%;">EARNING DESCRIPTION</th>
+                <th style="text-align: center; width: 20%;">PERIOD</th>
+                <th style="text-align: right; width: 30%;">AMOUNT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Base Salary Payout (${staffRole})</td>
+                <td style="text-align: center;">${monthYear}</td>
+                <td style="text-align: right; font-family: monospace;">${formatMoney(totalAmount)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="bottom-flex">
+            <div class="thanks-text">
+              Official Staff Salary Payslip Voucher<br>
+              Generated by ${storeName} Finance & Management.
+            </div>
+
+            <div class="totals-box">
+              <div class="totals-title">Salary Summary</div>
+              
+              <div class="totals-row">
+                <span>Total Assigned Salary</span>
+                <span style="font-family: monospace;">${formatMoney(totalAmount)}</span>
+              </div>
+
+              <div class="totals-row">
+                <span>Amount Disbursed (Paid)</span>
+                <span style="font-family: monospace;">${formatMoney(paidAmount)}</span>
+              </div>
+
+              <div class="totals-row grand-total">
+                <span>Remaining Salary Due</span>
+                <span style="font-family: monospace;">${formatMoney(dueAmount)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-website">
+            ${storeWebsite}
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.focus();
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+}

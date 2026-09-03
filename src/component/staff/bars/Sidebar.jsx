@@ -30,6 +30,7 @@ import {
   FiGlobe,
   FiCheckSquare,
   FiDollarSign,
+  FiSliders,
   FiLayers,
   FiShoppingBag,
 } from 'react-icons/fi'
@@ -70,7 +71,9 @@ const roleLinks = {
       links: [
         { name: 'Package Purchases', href: '/panel/purchases',           icon: <FiShoppingBag /> },
         { name: 'Payments',       href: '/panel/payments',             icon: <FiCreditCard /> },
-        { name: 'Payroll & Salary', href: '/panel/payroll',           icon: <FiDollarSign /> },
+        { name: 'Payscale Grades', href: '/panel/payscale',           icon: <FiSliders /> },
+        { name: 'Staff Salaries',  href: '/panel/staff-salary',        icon: <FiUserCheck /> },
+        { name: 'Salary Payments', href: '/panel/salary-payments',     icon: <FiDollarSign /> },
         { name: 'Partners',       href: '/panel/partners',             icon: <FaHandshake /> },
       ],
     },
@@ -236,6 +239,18 @@ const Sidebar = () => {
               >
                 <FiUser className="text-sm shrink-0" />
                 <span>My Profile</span>
+              </Link>
+              <Link
+                href="/panel/my-salary"
+                onClick={closeMenu}
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+                  isActive('/panel/my-salary')
+                    ? 'bg-primary/10 text-primary font-semibold shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <FiDollarSign className="text-sm shrink-0" />
+                <span>My Payslips & Salary</span>
               </Link>
               <Link
                 href="/panel/settings"

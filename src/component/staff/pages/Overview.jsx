@@ -7,7 +7,7 @@ import {
   FiBriefcase, FiBox, FiStar, FiLifeBuoy,
   FiInbox, FiMessageSquare, FiClipboard, FiLayout,
   FiUserCheck, FiFileText, FiArrowRight, FiCreditCard,
-  FiDollarSign, FiLayers, FiGlobe, FiCheckSquare
+  FiDollarSign, FiSliders, FiLayers, FiGlobe, FiCheckSquare
 } from 'react-icons/fi';
 import { FaHandshake } from 'react-icons/fa';
 
@@ -25,7 +25,9 @@ const Overview = ({ staffData }) => {
       { name: 'Partners', href: '/panel/partners', icon: <FaHandshake className="w-5 h-5 text-primary" />, desc: 'Manage official business partners' },
       { name: 'Kanban Board', href: '/panel/board', icon: <FiLayout className="w-5 h-5 text-primary" />, desc: 'Organize staff tasks and workflows' },
       { name: 'Payment Proofs', href: '/panel/payments', icon: <FiCreditCard className="w-5 h-5 text-emerald-600" />, desc: 'Verify and manage client payment transactions' },
-      { name: 'Payroll & Salaries', href: '/panel/payroll', icon: <FiDollarSign className="w-5 h-5 text-emerald-600" />, desc: 'Manage staff compensation and payroll' },
+      { name: 'Payscale Grades', href: '/panel/payscale', icon: <FiSliders className="w-5 h-5 text-sky-600" />, desc: 'Define master salary grade structures' },
+      { name: 'Staff Salaries', href: '/panel/staff-salary', icon: <FiUserCheck className="w-5 h-5 text-indigo-600" />, desc: 'Assign payscales and custom allowances' },
+      { name: 'Salary Payments', href: '/panel/salary-payments', icon: <FiDollarSign className="w-5 h-5 text-emerald-600" />, desc: 'Disburse staff salaries and print slips' },
       { name: 'Issue Reports', href: '/panel/reports', icon: <FiFileText className="w-5 h-5 text-rose-500" />, desc: 'Review submitted technical bug reports' },
       { name: 'Support Inbox', href: '/panel/support', icon: <FiLifeBuoy className="w-5 h-5 text-primary" />, desc: 'Manage customer inquiries and support' },
       { name: 'User Management', href: '/panel/users', icon: <FiUser className="w-5 h-5 text-primary" />, desc: 'Manage registered user accounts' },

@@ -548,52 +548,92 @@ CREATE INDEX idx_payments_order_id ON payments(order_id);
 CREATE INDEX idx_payments_user_id ON payments(user_id);
 CREATE INDEX idx_payments_transaction_id ON payments(transaction_id);
 CREATE INDEX idx_payments_status ON payments(status);
-CREATE TABLE IF NOT EXISTS payroll (
+-- Payscale Grade Master Table (Standalone - no staff linked)
+CREATE TABLE IF NOT EXISTS payscale (
   id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  month INT CHECK (month BETWEEN 1 AND 12),
-  year INT NOT NULL,
-  total_amount INT DEFAULT 0,
-  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'processed')),
-  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  grade_name TEXT NOT NULL,
+  grade_level INT DEFAULT 1,
+  basic_salary INT DEFAULT 0,
+  house_rent INT DEFAULT 0,
+  medical_allowance INT DEFAULT 0,
+  other_allowance INT DEFAULT 0,
+  total_salary INT NOT NULL,
+  description TEXT,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
-CREATE TRIGGER update_payroll_modtime 
-BEFORE UPDATE ON payroll 
+CREATE TRIGGER update_payscale_modtime 
+BEFORE UPDATE ON payscale 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-CREATE INDEX idx_payroll_year_month ON payroll(year, month);
-CREATE TABLE IF NOT EXISTS salary (
+CREATE INDEX idx_payscale_grade_name ON payscale(grade_name);
+
+-- Staff Salary Assignment (Connects Staff & Payscale)
+CREATE TABLE IF NOT EXISTS staff_salary (
+  id SERIAL PRIMARY KEY,
+  staff_id INT UNIQUE REFERENCES staffs(id) ON DELETE CASCADE,
+  payscale_id INT REFERENCES payscale(id) ON DELETE SET NULL,
+  custom_bonus INT DEFAULT 0,
+  custom_deduction INT DEFAULT 0,
+  net_salary INT NOT NULL,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'suspended')),
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+CREATE TRIGGER update_staff_salary_modtime 
+BEFORE UPDATE ON staff_salary 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+CREATE INDEX idx_staff_salary_staff_id ON staff_salary(staff_id);
+CREATE INDEX idx_staff_salary_payscale_id ON staff_salary(payscale_id);
+
+-- Salary Payments Ledger (Disbursements & Monthly Dues)
+CREATE TABLE IF NOT EXISTS salary_payments (
   id SERIAL PRIMARY KEY,
   staff_id INT REFERENCES staffs(id) ON DELETE CASCADE,
-  payroll_id INT REFERENCES payroll(id) ON DELETE CASCADE,
+  staff_salary_id INT REFERENCES staff_salary(id) ON DELETE SET NULL,
+  month INT CHECK (month BETWEEN 1 AND 12),
+  year INT NOT NULL,
   amount INT NOT NULL,
   paid_amount INT DEFAULT 0,
   due_amount INT DEFAULT 0,
-  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'partially_paid', 'paid')),
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-CREATE TRIGGER update_salary_modtime 
-BEFORE UPDATE ON salary 
-FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-CREATE INDEX idx_salary_staff_id ON salary(staff_id);
-CREATE INDEX idx_salary_payroll_id ON salary(payroll_id);
-CREATE INDEX idx_salary_status ON salary(status);
-CREATE TABLE IF NOT EXISTS salary_payments (
-  id SERIAL PRIMARY KEY,
-  salary_id INT REFERENCES salary(id) ON DELETE CASCADE,
-  amount INT NOT NULL,
   payment_method TEXT,
+  transaction_id TEXT,
   note TEXT,
-  created_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  status TEXT DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'partially_paid', 'paid', 'cancelled')),
+  paid_by INT REFERENCES staffs(id) ON DELETE SET NULL,
+  paid_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
+  updated_at TIMESTAMP DEFAULT now(),
+  UNIQUE(staff_id, month, year)
 );
 CREATE TRIGGER update_salary_payments_modtime 
 BEFORE UPDATE ON salary_payments 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-CREATE INDEX idx_salary_payments_salary_id ON salary_payments(salary_id);
+CREATE INDEX idx_salary_payments_staff_id ON salary_payments(staff_id);
+CREATE INDEX idx_salary_payments_month_year ON salary_payments(year, month);
+CREATE INDEX idx_salary_payments_status ON salary_payments(status);
+
+-- Automated Function to generate monthly due salary payments for active staff
+CREATE OR REPLACE FUNCTION auto_generate_monthly_salary_payments(target_month INT, target_year INT)
+RETURNS INT AS $$
+DECLARE
+    gen_count INT := 0;
+    ss RECORD;
+BEGIN
+    FOR ss IN 
+        SELECT ss.id AS staff_salary_id, ss.staff_id, ss.net_salary 
+        FROM staff_salary ss
+        JOIN staffs st ON st.id = ss.staff_id
+        WHERE st.is_active = TRUE AND ss.status = 'active'
+    LOOP
+        IF NOT EXISTS (SELECT 1 FROM salary_payments WHERE staff_id = ss.staff_id AND month = target_month AND year = target_year) THEN
+            INSERT INTO salary_payments (staff_id, staff_salary_id, month, year, amount, paid_amount, due_amount, status)
+            VALUES (ss.staff_id, ss.staff_salary_id, target_month, target_year, ss.net_salary, 0, ss.net_salary, 'unpaid');
+            gen_count := gen_count + 1;
+        END IF;
+    END LOOP;
+    RETURN gen_count;
+END;
+$$ LANGUAGE plpgsql;
 CREATE TABLE IF NOT EXISTS news_letters (
   id SERIAL PRIMARY KEY,
   subject TEXT NOT NULL,

@@ -7,6 +7,7 @@ export function hasPanelAccess(pathname, role) {
     const developerRoutes = [
         '/panel',
         '/panel/profile',
+        '/panel/my-salary',
         '/panel/notes',
         '/panel/todos',
         '/panel/chat',
@@ -18,6 +19,7 @@ export function hasPanelAccess(pathname, role) {
     const supportRoutes = [
         '/panel',
         '/panel/profile',
+        '/panel/my-salary',
         '/panel/notes',
         '/panel/todos',
         '/panel/chat',
