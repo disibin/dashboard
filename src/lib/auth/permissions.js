@@ -1,7 +1,6 @@
-// Pure client & server safe role permission checker
 export function hasPanelAccess(pathname, role) {
     if (!role) return false;
-    if (role === 'manager') return true; // Manager can access all pages
+    if (role === 'manager') return true;
 
     const base = pathname.replace(/\/$/, '') || '/panel';
 
@@ -25,6 +24,8 @@ export function hasPanelAccess(pathname, role) {
         '/panel/tickets',
         '/panel/projects',
         '/panel/support',
+        '/panel/purchases',
+        '/panel/payments',
         '/panel/board',
         '/panel/security',
         '/panel/settings',

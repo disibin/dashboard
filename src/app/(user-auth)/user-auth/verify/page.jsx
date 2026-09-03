@@ -44,7 +44,7 @@ function VerifyContent() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-tertiary-light w-full">
-      <div className="w-full max-w-md bg-white flex flex-col items-center justify-center gap-6 p-8 rounded-2xl shadow-xl border border-slate-100">
+      <div className="w-full max-w-md bg-white flex flex-col items-center justify-center gap-4 p-5 rounded-2xl shadow-xl border border-slate-100">
         {loading ? (
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>

@@ -12,5 +12,5 @@ export async function GET() {
             success:false, message:error.message
         },{status:500})
     }
-    
+
 }

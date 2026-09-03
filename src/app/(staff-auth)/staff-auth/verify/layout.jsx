@@ -10,7 +10,7 @@ export const metadata = {
 const layout = async({ children }) => {
   const auth=await isStaffLogin()
     if(auth.success) return redirect('/panel')
-  
+
   return (
     <>{children}</>
   )

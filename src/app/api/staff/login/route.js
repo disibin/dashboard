@@ -7,7 +7,7 @@ import { isStaffLogin } from "@/lib/auth/staff";
 
 export async function POST(req) {
     try {
-        // Redirect if already logged in
+
         const auth = await isStaffLogin();
         if (auth.success) {
             return NextResponse.json({ success: false, message: "Already logged in" }, { status: 403 });
@@ -19,7 +19,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Email and password are required" }, { status: 400 });
         }
 
-        // Query the STAFFS table (not users)
+
         const res = await dbQuery("SELECT * FROM staffs WHERE email = $1", [email]);
         const staff = res.rows[0];
 
@@ -36,11 +36,11 @@ export async function POST(req) {
 
         const isMatch = await bcrypt.compare(password, staff.password);
         if (!isMatch) {
-            // Log failed attempt
+
             await dbQuery(
                 `INSERT INTO staff_login_logs (staff_id, action, description, status) VALUES ($1, $2, $3, $4)`,
                 [staff.id, 'login', 'Failed login attempt', 'fail']
-            ).catch(() => {}); // non-blocking
+            ).catch(() => {}); 
             return NextResponse.json({ success: false, message: "Invalid email or password" }, { status: 401 });
         }
 
@@ -51,14 +51,14 @@ export async function POST(req) {
             );
         }
 
-        // Update last login & log success
+
         await dbQuery("UPDATE staffs SET last_login = now() WHERE id = $1", [staff.id]);
         await dbQuery(
             `INSERT INTO staff_login_logs (staff_id, action, description, status) VALUES ($1, $2, $3, $4)`,
             [staff.id, 'login', 'Successful login', 'success']
-        ).catch(() => {}); // non-blocking
+        ).catch(() => {}); 
 
-        // Sign JWT — uses staff-specific fields
+
         const token = jwt.sign(
             { id: staff.id, email: staff.email, name: staff.name, role: staff.role },
             JWT_SECRET,

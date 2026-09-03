@@ -2,13 +2,11 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Fonts */
   --font-lora: var(--font-lora);
   --font-jersey: var(--font-jersey);
   --font-silkscreen: var(--font-silkscreen);
   --font-poppins: var(--font-poppins);
 
-  /* Colors (using --color-* for Tailwind v4 utility generation) */
   --color-primary: #008080;
   --color-primary-light: #66b2b2;
   --color-primary-dark: #006666;
@@ -22,7 +20,6 @@
   --color-tertiary-dark: #000000;
 }
 
-/* ── Keyframe Animations ───────────────────────────── */
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -81,7 +78,6 @@
   }
 }
 
-/* ── Animation Utility Classes ──────────────────────── */
 .animate-fade-up {
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -106,7 +102,6 @@
   animation: count-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Delays */
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
@@ -115,7 +110,6 @@
 .delay-600 { animation-delay: 0.6s; }
 .delay-700 { animation-delay: 0.7s; }
 
-/* ── Custom Utilities ───────────────────────────────── */
 .glass {
   background: var(--color-tertiary);
   backdrop-filter: blur(16px);
@@ -123,12 +117,11 @@
   border: 1px solid rgba(255, 255, 255, 0.75);
 }
 
-/* ── Form Controls & Inputs ────────────────────────── */
 .input-style {
   width: 100%;
   min-width: 100px;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: #f8fafc;
   color: #0f172a;
   font-size: 0.875rem;

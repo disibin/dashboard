@@ -17,7 +17,6 @@ export default function StaffProjectsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  // New Project Modal State for Staff
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -81,37 +80,38 @@ export default function StaffProjectsPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'completed':
-        return <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiCheckCircle size={10} /> Completed</span>;
+        return <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiCheckCircle size={10} /> Completed</span>;
       case 'working':
-        return <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiActivity size={10} /> Working</span>;
+        return <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiActivity size={10} /> Working</span>;
       case 'progress':
-        return <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiPlayCircle size={10} /> In Progress</span>;
+        return <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiPlayCircle size={10} /> In Progress</span>;
       case 'spam':
-        return <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiSlash size={10} /> Spam</span>;
+        return <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiSlash size={10} /> Spam</span>;
       default:
-        return <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiClock size={10} /> Waiting</span>;
+        return <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiClock size={10} /> Waiting</span>;
     }
   };
 
-  const filteredProjects = projects.filter((p) => {
-    const matchesSearch = !search.trim() || (
-      (p.project_title || '').toLowerCase().includes(search.toLowerCase()) ||
-      (p.user_name || '').toLowerCase().includes(search.toLowerCase()) ||
-      (p.user_email || '').toLowerCase().includes(search.toLowerCase()) ||
-      (p.description || '').toLowerCase().includes(search.toLowerCase()) ||
-      (p.last_message || '').toLowerCase().includes(search.toLowerCase())
-    );
+  const filteredProjects = projects
+    .filter((p) => {
+      const matchesSearch = !search.trim() || (
+        (p.project_title || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.user_name || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.user_email || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.description || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.last_message || '').toLowerCase().includes(search.toLowerCase())
+      );
 
-    const matchesStatus = statusFilter === 'all' || p.project_status === statusFilter;
+      const matchesStatus = statusFilter === 'all' || p.project_status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => new Date(b.last_message_at || b.created_at || 0) - new Date(a.last_message_at || a.created_at || 0) || Number(b.id || 0) - Number(a.id || 0));
 
   return (
-    <div className="p-4 w-full space-y-4">
+    <div className="p-4 sm:p-4  w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
@@ -125,14 +125,14 @@ export default function StaffProjectsPage() {
           <button
             onClick={fetchProjects}
             disabled={loading}
-            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-medium transition-colors cursor-pointer"
             title="Refresh List"
           >
             <FiRefreshCw className={loading ? 'animate-spin' : ''} size={15} />
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs transition-colors shadow-xs cursor-pointer"
           >
             <FiPlus size={15} />
             New Project
@@ -140,16 +140,15 @@ export default function StaffProjectsPage() {
         </div>
       </div>
 
-      {/* Search & Filter Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative max-w-sm w-full">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
           <input
             type="text"
             placeholder="Search by title, client name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
+            className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
           />
           {search && (
             <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -158,7 +157,6 @@ export default function StaffProjectsPage() {
           )}
         </div>
 
-        {/* Status Filter Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
           {[
             { key: 'all', label: 'All' },
@@ -171,7 +169,7 @@ export default function StaffProjectsPage() {
             <button
               key={tab.key}
               onClick={() => setStatusFilter(tab.key)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 statusFilter === tab.key
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200'
@@ -183,15 +181,14 @@ export default function StaffProjectsPage() {
         </div>
       </div>
 
-      {/* Projects List Container */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
         {loading ? (
-          <div className="py-12 text-center text-slate-400 space-y-2">
+          <div className="py-5 text-center text-slate-400 space-y-2">
             <FiLoader className="animate-spin mx-auto text-primary" size={24} />
             <p className="text-xs">Loading projects...</p>
           </div>
         ) : filteredProjects.length === 0 ? (
-          <div className="py-12 text-center space-y-2 px-4">
+          <div className="py-5 text-center space-y-2 px-4">
             <FiMessageSquare className="mx-auto text-slate-300" size={28} />
             <p className="font-semibold text-slate-700 text-sm">No project discussions found</p>
             <p className="text-xs text-slate-500">
@@ -204,7 +201,7 @@ export default function StaffProjectsPage() {
               <div
                 key={p.package_chat_id || p.id}
                 onClick={() => router.push(`/panel/projects/${p.package_chat_id || p.id}`)}
-                className="p-4 hover:bg-slate-50 cursor-pointer transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                className="p-3.5 hover:bg-slate-50 cursor-pointer transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div className="min-w-0 space-y-1">
                   <div className="flex items-center flex-wrap gap-2">
@@ -246,30 +243,29 @@ export default function StaffProjectsPage() {
         )}
       </div>
 
-      {/* Staff Create Project Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div className="bg-white rounded-xl max-w-md w-full p-5 shadow-xl border border-slate-100 space-y-3 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                  <FiFolder size={16} />
+                <div className="w-7 h-7 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <FiFolder size={15} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">Create Client Project</h3>
+                  <h3 className="text-sm font-bold text-slate-900">Create Client Project</h3>
                   <p className="text-xs text-slate-500">Open a project discussion for client collaboration</p>
                 </div>
               </div>
               <button
                 onClick={() => !creating && setIsModalOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
               >
-                <FiX size={18} />
+                <FiX size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateProject} className="space-y-4">
-              <div className="space-y-1.5">
+            <form onSubmit={handleCreateProject} className="space-y-3">
+              <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700 block">
                   Project Title <span className="text-rose-500">*</span>
                 </label>
@@ -278,13 +274,13 @@ export default function StaffProjectsPage() {
                   placeholder="e.g., Enterprise Portal Architecture, Mobile App Sprint"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
                   required
                   autoFocus
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700 block">
                   Client User ID <span className="text-slate-400 font-normal">(Optional numeric ID from Users panel)</span>
                 </label>
@@ -293,11 +289,11 @@ export default function StaffProjectsPage() {
                   placeholder="e.g. 1"
                   value={targetUserId}
                   onChange={(e) => setTargetUserId(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all"
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-700 block">
                   Project Scope & Description <span className="text-slate-400 font-normal">(Optional)</span>
                 </label>
@@ -306,25 +302,25 @@ export default function StaffProjectsPage() {
                   placeholder="Initial requirements, milestone notes, or instructions..."
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all resize-none"
+                  className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-primary focus:bg-white transition-all resize-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   disabled={creating}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating || !newTitle.trim()}
-                  className="px-5 py-2 rounded-xl text-xs font-semibold bg-primary hover:bg-primary-dark text-white transition-all shadow-sm disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-1.5 rounded-xl text-xs font-semibold bg-primary hover:bg-primary-dark text-white transition-all shadow-xs disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                 >
-                  {creating ? <FiLoader className="animate-spin" size={14} /> : <FiPlus size={14} />}
+                  {creating ? <FiLoader className="animate-spin" size={13} /> : <FiPlus size={13} />}
                   Create Project
                 </button>
               </div>

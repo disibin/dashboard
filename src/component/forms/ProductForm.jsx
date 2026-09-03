@@ -7,7 +7,7 @@ import { FiPlus, FiTrash2, FiCheck, FiX, FiZap, FiImage, FiSave, FiEye, FiYoutub
 import TiptapEditor from '../helper/TiptapEditor';
 import Image from 'next/image';
 
-/* ── Create Feature Modal ─────────────────────────────── */
+
 function CreateFeatureModal({ onClose, onCreate }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -42,10 +42,10 @@ function CreateFeatureModal({ onClose, onCreate }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-4 space-y-4 border border-slate-100">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-4 space-y-4 border border-slate-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-semibold">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-semibold">
               <FiZap size={16} />
             </div>
             <h2 className="text-base font-semibold text-slate-900">Add New Feature</h2>
@@ -53,7 +53,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors"
+            className="w-7 h-7 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors"
           >
             <FiX size={14} />
           </button>
@@ -68,7 +68,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCreate(); } if (e.key === 'Escape') onClose(); }}
-              className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="e.g. 24/7 Priority Support"
             />
           </div>
@@ -78,7 +78,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={2}
-              className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Brief summary of feature capability..."
             />
           </div>
@@ -88,7 +88,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2 rounded-lg border border-slate-200 text-slate-600 font-semibold text-xs hover:bg-slate-50 transition-colors"
+            className="flex-1 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold text-xs hover:bg-slate-50 transition-colors"
           >
             Cancel
           </button>
@@ -96,7 +96,7 @@ function CreateFeatureModal({ onClose, onCreate }) {
             type="button"
             onClick={handleCreate}
             disabled={loading || !name.trim()}
-            className="flex-1 py-2 rounded-lg bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-sm"
+            className="flex-1 py-2 rounded-xl bg-primary text-white font-semibold text-xs hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-sm"
           >
             {loading ? 'Creating...' : 'Save Feature'}
           </button>
@@ -314,13 +314,13 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
         />
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); submitForm(formData.is_published); }} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Main Form Fields */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); submitForm(formData.is_published); }} className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+          <div className="lg:col-span-7 space-y-4">
+            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-xs space-y-4">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">General Information</h3>
-              
+
               <div>
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Product Name *</label>
                 <input
@@ -330,12 +330,12 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                   placeholder="e.g. Next.js SaaS Starter Kit"
                 />
               </div>
 
-              {/* Pricing & Fees Grid */}
+
               <div className="space-y-3 pt-2">
                 <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Pricing & Fees (product_prices)</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -348,7 +348,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                       step="any"
                       value={formData.price}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="0"
                     />
                   </div>
@@ -362,7 +362,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                       step="any"
                       value={formData.discount}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-emerald-600 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-emerald-600 focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="0"
                     />
                   </div>
@@ -376,7 +376,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                       step="any"
                       value={formData.setup_fee}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="0"
                     />
                     <span className="text-[10px] text-slate-400 font-normal block mt-1">Domain &amp; Hosting cost</span>
@@ -391,7 +391,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                       step="any"
                       value={formData.service_charge}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="0"
                     />
                     <span className="text-[10px] text-slate-400 font-normal block mt-1">Maintenance fee (after every year)</span>
@@ -406,14 +406,14 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                   name="demo_url"
                   value={formData.demo_url || ''}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="https://demo.example.com"
                 />
               </div>
             </div>
 
-            {/* YouTube Videos Section (product_videos) */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs space-y-4">
+
+            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FiYoutube className="w-5 h-5 text-red-600" />
@@ -428,14 +428,14 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                   value={newVideoUrl}
                   onChange={e => setNewVideoUrl(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddVideo(); } }}
-                  className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="https://www.youtube.com/watch?v=..."
                 />
                 <button
                   type="button"
                   onClick={handleAddVideo}
                   disabled={!newVideoUrl.trim()}
-                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1 shrink-0"
+                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors disabled:opacity-50 flex items-center gap-1 shrink-0"
                 >
                   <FiPlus size={14} />
                   Add Video
@@ -445,7 +445,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
               {videos.length > 0 && (
                 <div className="space-y-2 pt-1">
                   {videos.map((vid, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg text-xs">
+                    <div key={idx} className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs">
                       <div className="flex items-center gap-2 overflow-hidden truncate">
                         <FiVideo className="text-red-500 shrink-0" size={14} />
                         <span className="font-medium text-slate-800 truncate">{vid.url}</span>
@@ -463,8 +463,8 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
               )}
             </div>
 
-            {/* Description Card */}
-            <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-xs space-y-3">
+
+            <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-xs space-y-3">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Detailed Overview & Specifications</h3>
               <TiptapEditor
                 value={formData.description || ''}
@@ -474,13 +474,13 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
             </div>
           </div>
 
-          {/* Sidebar / Configuration */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Status & Options Card */}
-            <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-xs space-y-4">
+
+          <div className="lg:col-span-5 space-y-4">
+
+            <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-xs space-y-4">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Product Options</h3>
-              
-              <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-lg border border-slate-100">
+
+              <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100">
                 <div>
                   <div className="text-xs font-semibold text-slate-800">Featured Product</div>
                   <div className="text-[11px] text-slate-500">Show on homepage featured section</div>
@@ -498,8 +498,8 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
               </div>
             </div>
 
-            {/* Product Gallery Card */}
-            <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-xs space-y-4">
+
+            <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Product Gallery</h3>
                 <span className="text-[11px] font-semibold text-slate-400 font-poppins">{images.length} Loaded</span>
@@ -568,8 +568,8 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
               )}
             </div>
 
-            {/* Feature Checklist Card */}
-            <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-xs space-y-3">
+
+            <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Feature Tags</h3>
@@ -578,7 +578,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
-                  className="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+                  className="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-xl text-xs font-semibold transition-colors flex items-center gap-1"
                 >
                   <FiPlus size={13} />
                   New Tag
@@ -589,7 +589,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                 type="text"
                 value={featureSearch}
                 onChange={e => setFeatureSearch(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary font-medium"
                 placeholder="Search feature tags..."
               />
 
@@ -605,14 +605,14 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                         <div
                           key={f.id}
                           onClick={() => toggleFeature(f.id)}
-                          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all border ${
+                          className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition-all border ${
                             active
                               ? 'bg-primary/5 border-primary/30 text-primary font-semibold'
                               : 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/80 text-slate-700'
                           }`}
                         >
                           <span className="text-xs font-poppins truncate">{f.name}</span>
-                          <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                          <div className={`w-4 h-4 rounded-xl border flex items-center justify-center transition-colors ${
                             active ? 'bg-primary border-primary text-white' : 'border-slate-300 bg-white'
                           }`}>
                             {active && <FiCheck size={11} />}
@@ -624,13 +624,13 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
               </div>
             </div>
 
-            {/* Submit Action Controls */}
+
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => submitForm(false)}
                 disabled={loading}
-                className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <FiSave size={14} />
                 Save Draft
@@ -639,7 +639,7 @@ const ProductForm = ({ initialData, onSuccess, onCancel }) => {
                 type="button"
                 onClick={() => submitForm(true)}
                 disabled={loading}
-                className="flex-1 py-2.5 px-4 bg-primary hover:bg-primary-dark text-white font-semibold text-xs rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-2.5 px-4 bg-primary hover:bg-primary-dark text-white font-semibold text-xs rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <FiEye size={14} />
                 Publish Product

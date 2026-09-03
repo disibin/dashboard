@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single blog by ID OR slug for staff/manager
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();

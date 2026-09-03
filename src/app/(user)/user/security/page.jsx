@@ -13,21 +13,21 @@ export default function UserSecurityPage() {
   const router = useRouter();
   const { userData, setUserData, logout } = useContext(Context);
 
-  // 2FA State
+
   const [is2faActive, setIs2faActive] = useState(false);
   const [tfaLoading, setTfaLoading] = useState(false);
 
-  // Password state
+
   const [pwdForm, setPwdForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [pwdLoading, setPwdLoading] = useState(false);
 
-  // Email change state
+
   const [emailForm, setEmailForm] = useState({ newEmail: '', code: '' });
-  const [emailStep, setEmailStep] = useState('request'); // 'request' | 'verify'
+  const [emailStep, setEmailStep] = useState('request'); 
   const [emailLoading, setEmailLoading] = useState(false);
   const [pendingTargetEmail, setPendingTargetEmail] = useState('');
 
-  // Delete account state
+
   const [deletePassword, setDeletePassword] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -38,7 +38,7 @@ export default function UserSecurityPage() {
     }
   }, [userData]);
 
-  // Handle 2FA Toggle
+
   const handleToggle2fa = async (newValue) => {
     setTfaLoading(true);
     try {
@@ -61,7 +61,7 @@ export default function UserSecurityPage() {
     }
   };
 
-  // Handle password change
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (pwdForm.newPassword !== pwdForm.confirmPassword) {
@@ -92,7 +92,7 @@ export default function UserSecurityPage() {
     }
   };
 
-  // Step 1: Request email change (code sent to current old email)
+
   const handleRequestEmailChange = async (e) => {
     e.preventDefault();
     if (!emailForm.newEmail) return toast.error('Please enter a new email address');
@@ -118,7 +118,7 @@ export default function UserSecurityPage() {
     }
   };
 
-  // Step 2: Verify email change code
+
   const handleVerifyEmailCode = async (e) => {
     e.preventDefault();
     if (!emailForm.code) return toast.error('Please enter the verification code');
@@ -145,7 +145,7 @@ export default function UserSecurityPage() {
     }
   };
 
-  // Handle account deletion
+
   const handleDeleteAccount = async (e) => {
     e.preventDefault();
     if (!deletePassword) return toast.error('Password is required');
@@ -172,11 +172,11 @@ export default function UserSecurityPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 block';
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Card */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-4">
+
+      <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
           <FiShield size={22} />
         </div>
@@ -188,8 +188,8 @@ export default function UserSecurityPage() {
         </div>
       </div>
 
-      {/* 2FA Toggle Card */}
-      <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+      <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           <div
             className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
@@ -230,9 +230,9 @@ export default function UserSecurityPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        {/* Password Update Card */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -288,7 +288,7 @@ export default function UserSecurityPage() {
           </form>
         </div>
 
-        {/* Email Address Update Card */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -376,7 +376,7 @@ export default function UserSecurityPage() {
           )}
         </div>
 
-        {/* Danger Zone: Account Deletion */}
+
         <div className="md:col-span-2 bg-rose-50/50 rounded-3xl p-7 border border-rose-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -400,7 +400,7 @@ export default function UserSecurityPage() {
 
       </div>
 
-      {/* Delete Confirmation Modal */}
+
       {showDeleteModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-7 border border-slate-100 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">

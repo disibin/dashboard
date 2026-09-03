@@ -3,7 +3,7 @@ import { isManager } from "@/lib/auth/staff";
 import { isUserLogin as isLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// POST - Create a review (User only)
+
 export async function POST(req) {
     try {
         const auth = await isLogin();
@@ -17,7 +17,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Rating must be between 1 and 5 stars" }, { status: 400 });
         }
 
-        // Check if user already submitted a review
+
         const checkRes = await dbQuery("SELECT id FROM reviews WHERE user_id = $1", [auth.data.id]);
         if (checkRes.rows.length > 0) {
             return NextResponse.json({ success: false, message: "You have already submitted a review." }, { status: 400 });
@@ -31,7 +31,7 @@ export async function POST(req) {
 
         const review = res.rows[0];
 
-        // Record activity log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES (NULL, $1, $2, $3, $4)
@@ -48,7 +48,7 @@ export async function POST(req) {
     }
 }
 
-// GET - Fetch reviews
+
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
@@ -56,7 +56,7 @@ export async function GET(req) {
         const limitParam = searchParams.get('limit');
         const limit = limitParam ? parseInt(limitParam) : null;
 
-        // Public showcase — approved reviews with user name
+
         if (type === 'public') {
             let sql = `
                 SELECT r.id, r.user_id, r.rating, r.comment, r.reply, r.is_approved, r.created_at, u.name as user_name
@@ -74,7 +74,7 @@ export async function GET(req) {
             return NextResponse.json({ success: true, data: res.rows });
         }
 
-        // Manager access — all reviews
+
         if (type === 'all') {
             const managerAuth = await isManager();
             if (!managerAuth.success) return NextResponse.json(managerAuth, { status: 403 });
@@ -90,7 +90,7 @@ export async function GET(req) {
             return NextResponse.json({ success: true, data: res.rows });
         }
 
-        // Current User review (or fallback to public if not logged in)
+
         const auth = await isLogin();
         if (auth.success) {
             const res = await dbQuery(`
@@ -103,7 +103,7 @@ export async function GET(req) {
             return NextResponse.json({ success: true, data: userReview });
         }
 
-        // Fallback for non-logged in GET requests without type
+
         let sql = `
             SELECT r.id, r.user_id, r.rating, r.comment, r.reply, r.is_approved, r.created_at, u.name as user_name
             FROM reviews r

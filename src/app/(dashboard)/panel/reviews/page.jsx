@@ -15,7 +15,7 @@ export default function TeamReviewsPage() {
   const [updating, setUpdating] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
-  // Reply Modal State
+
   const [selectedReview, setSelectedReview] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
@@ -109,11 +109,11 @@ export default function TeamReviewsPage() {
   const approvedCount = reviews.filter(r => r.is_approved).length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
@@ -136,7 +136,7 @@ export default function TeamReviewsPage() {
         </button>
       </div>
 
-      {/* Metric Badges & Filter Tabs */}
+
       <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-1 bg-slate-100/70 p-1 rounded-2xl w-full sm:w-auto">
           {[
@@ -164,15 +164,15 @@ export default function TeamReviewsPage() {
         </div>
       </div>
 
-      {/* Reviews Content Grid */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-secondary" size={28} />
             <p className="text-sm font-medium">Loading client reviews...</p>
           </div>
         ) : filteredReviews.length === 0 ? (
-          <div className="py-16 text-center space-y-3 px-4">
+          <div className="py-4 text-center space-y-3 px-4">
             <FiStar className="mx-auto text-slate-300" size={32} />
             <p className="font-semibold text-slate-800 text-base">No reviews found</p>
             <p className="text-xs text-slate-500">There are no client reviews matching your filter criteria.</p>
@@ -180,9 +180,9 @@ export default function TeamReviewsPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {filteredReviews.map((r) => (
-              <div key={r.id} className="p-6 space-y-4 hover:bg-slate-50/50 transition-colors">
+              <div key={r.id} className="p-4 space-y-4 hover:bg-slate-50/50 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  {/* User info & Stars */}
+
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-slate-900 text-base">{r.user_name}</h3>
@@ -201,7 +201,7 @@ export default function TeamReviewsPage() {
                     </div>
                   </div>
 
-                  {/* Moderation Controls */}
+
                   <div className="flex items-center gap-2 self-start sm:self-auto">
                     <button
                       onClick={() => toggleApproval(r, !r.is_approved)}
@@ -241,12 +241,12 @@ export default function TeamReviewsPage() {
                   </div>
                 </div>
 
-                {/* Comment Text */}
+
                 <p className="text-slate-800 text-sm leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
                   {r.comment || 'No text comment provided.'}
                 </p>
 
-                {/* Staff Reply callout */}
+
                 {r.reply && (
                   <div className="bg-primary/10/70 p-4 rounded-2xl border border-primary/20 space-y-1">
                     <p className="text-xs font-semibold text-primary-dark flex items-center gap-1.5">
@@ -263,11 +263,11 @@ export default function TeamReviewsPage() {
         )}
       </div>
 
-      {/* Staff Reply Modal */}
+
       {selectedReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                 <FiMessageSquare className="text-primary" size={18} />
                 Reply to {selectedReview.user_name}
@@ -280,7 +280,7 @@ export default function TeamReviewsPage() {
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-4 space-y-4">
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs space-y-1">
                 <p className="font-semibold text-slate-800">Review from {selectedReview.user_name}</p>
                 <p className="text-slate-600 line-clamp-2">{selectedReview.comment}</p>

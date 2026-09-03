@@ -5,15 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiSave } from 'react-icons/fi';
 
-/**
- * ProfileForm
- * -----------
- * Shared form for /user/profile and /user/settings.
- * Reads initial data from Context (userData) and from the /api/user endpoint.
- *
- * Props
- *   onSaved — optional (updatedUser) => void callback after a successful save
- */
+
 const ProfileForm = ({ onSaved }) => {
   const { userData, setUserData } = useContext(Context);
   const [loading,    setLoading]    = useState(false);
@@ -79,9 +71,9 @@ const ProfileForm = ({ onSaved }) => {
   const labelCls = 'text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400 ml-1';
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Personal Info card */}
-      <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <div className="space-y-4 bg-white p-5 rounded-[32px] border border-slate-100 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-4">
           <FiUser className="text-primary" /> Personal Info
         </h2>
@@ -111,8 +103,8 @@ const ProfileForm = ({ onSaved }) => {
         </div>
       </div>
 
-      {/* Address card */}
-      <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+
+      <div className="space-y-4 bg-white p-5 rounded-[32px] border border-slate-100 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2 mb-4">
           <FiMapPin className="text-primary" /> Address Details
         </h2>
@@ -150,11 +142,11 @@ const ProfileForm = ({ onSaved }) => {
         </div>
       </div>
 
-      {/* Save button */}
+
       <div className="md:col-span-2 flex justify-end mt-4">
         <button
           disabled={loading}
-          className="flex items-center gap-2 px-10 py-4 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
+          className="flex items-center gap-2 px-4 py-4 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
         >
           <FiSave /> {loading ? 'Saving Changes...' : 'Save Changes'}
         </button>

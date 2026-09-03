@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// POST — Checkout single or multiple packages with payment details
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -23,7 +22,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "At least one package must be selected" }, { status: 400 });
         }
 
-        // 1. Fetch all selected packages
         const placeholders = package_ids.map((_, i) => `$${i + 1}`).join(',');
         const pkgRes = await dbQuery(
             `SELECT id, name, price, discount FROM packages WHERE id IN (${placeholders})`,
@@ -41,7 +39,6 @@ export async function POST(req) {
         let totalDiscount = 0;
         let totalNet = 0;
 
-        // 2. Insert each package purchase with the generated order_id
         const createdPurchases = [];
         for (const pkg of selectedPackages) {
             const pkgPrice = Number(pkg.price || 0);
@@ -61,7 +58,6 @@ export async function POST(req) {
             createdPurchases.push(purRes.rows[0]);
         }
 
-        // 3. Insert consolidated payments record
         const paymentRes = await dbQuery(
             `INSERT INTO payments (
                 order_id, user_id, price, paid, due, 
@@ -84,7 +80,6 @@ export async function POST(req) {
         );
         const newPayment = paymentRes.rows[0];
 
-        // 4. Send notification to user
         const packageNames = selectedPackages.map(p => p.name).join(', ');
         await dbQuery(
             `INSERT INTO notifications (user_id, title, message, type, link)
@@ -97,14 +92,12 @@ export async function POST(req) {
             ]
         ).catch(() => {});
 
-        // 5. Notify staff via activity logs
         await dbQuery(
             `INSERT INTO activity_logs (action, entity_type, description)
              VALUES ('NEW_ORDER_PAYMENT', 'payments', $1)`,
             [`User ID ${userId} submitted payment for Order ${orderId} (${selectedPackages.length} packages). Trx: ${transaction_id || 'N/A'}`]
         ).catch(() => {});
 
-        // 6. Clear user_cart for purchased packages
         await dbQuery(
             `DELETE FROM user_cart WHERE user_id = $1 AND package_id = ANY($2::int[])`,
             [userId, selectedPackages.map(p => p.id)]

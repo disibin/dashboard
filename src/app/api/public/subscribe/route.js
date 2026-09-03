@@ -22,7 +22,7 @@ export async function POST(req) {
             );
         }
 
-        // Check if email already exists in client_leads
+
         const checkRes = await dbQuery(
             "SELECT id FROM client_leads WHERE LOWER(email) = $1",
             [cleanEmail]
@@ -35,9 +35,9 @@ export async function POST(req) {
             );
         }
 
-        // Extract name from the part before '@'
+
         const rawPrefix = cleanEmail.split('@')[0] || 'Subscriber';
-        // Capitalize first letter
+
         const extractedName = rawPrefix.charAt(0).toUpperCase() + rawPrefix.slice(1);
 
         const insertRes = await dbQuery(
@@ -49,7 +49,7 @@ export async function POST(req) {
 
         const newLead = insertRes.rows[0];
 
-        // Log activity
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES (NULL, 'NEWSLETTER_SUBSCRIBE', 'client_lead', $1, $2)`,

@@ -16,7 +16,7 @@ const RecoverAccountForm = () => {
   const [loading, setLoading]         = useState(false);
   const [submitted, setSubmitted]     = useState(false);
 
-  // Step 1 — Request reset email
+
   const handleRequestReset = async (e) => {
     e.preventDefault();
     if (!email) return toast.error('Please enter your email');
@@ -39,7 +39,7 @@ const RecoverAccountForm = () => {
     }
   };
 
-  // Step 2 — Reset password with token
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || !confirmPassword) return toast.error('Please fill all fields');
@@ -67,11 +67,11 @@ const RecoverAccountForm = () => {
   const inputCls = 'input-style';
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1';
 
-  // Step 2 — Password reset form (token present in URL)
+
   if (token) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
-        <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-6 rounded-2xl">
+        <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-4 rounded-2xl">
           <div className="w-full flex flex-col gap-2 mb-4 items-center justify-center">
             <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Set New Password</h1>
             <p className="text-slate-500 text-sm text-center">
@@ -122,10 +122,10 @@ const RecoverAccountForm = () => {
     );
   }
 
-  // Step 1 — Email request form
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
-      <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-6 rounded-2xl">
+      <div className="w-full max-w-sm flex flex-col items-center justify-center gap-3 p-4 rounded-2xl">
         <div className="w-full flex flex-col gap-2 mb-4 items-center justify-center">
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Reset Password</h1>
           <p className="text-slate-500 text-sm text-center">

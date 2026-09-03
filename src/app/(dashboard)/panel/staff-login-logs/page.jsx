@@ -49,11 +49,11 @@ export default function TeamLoginLogsPage() {
   const failCount = logs.filter(l => l.status === 'fail').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -76,7 +76,7 @@ export default function TeamLoginLogsPage() {
         </button>
       </div>
 
-      {/* Filter Bar */}
+
       <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-1 bg-slate-100/70 p-1 rounded-2xl w-full sm:w-auto">
           {[
@@ -115,15 +115,15 @@ export default function TeamLoginLogsPage() {
         </div>
       </div>
 
-      {/* Main Table Container */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-primary" size={28} />
             <p className="text-sm font-medium">Loading staff login audit trail...</p>
           </div>
         ) : filteredLogs.length === 0 ? (
-          <div className="py-16 text-center space-y-3 px-4">
+          <div className="py-4 text-center space-y-3 px-4">
             <FiShield className="mx-auto text-slate-300" size={32} />
             <p className="font-semibold text-slate-800 text-base">No login logs found</p>
             <p className="text-xs text-slate-500">There are no staff authentication records matching your filter criteria.</p>
@@ -133,28 +133,28 @@ export default function TeamLoginLogsPage() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Staff Member</th>
-                  <th className="px-6 py-4">Role</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Event Description</th>
-                  <th className="px-6 py-4 text-right">Timestamp</th>
+                  <th className="px-4 py-4">Staff Member</th>
+                  <th className="px-4 py-4">Role</th>
+                  <th className="px-4 py-4">Status</th>
+                  <th className="px-4 py-4">Event Description</th>
+                  <th className="px-4 py-4 text-right">Timestamp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <p className="font-semibold text-slate-900 text-xs">{log.staff_name || 'Staff Member'}</p>
                       <p className="text-[10px] text-slate-400">{log.staff_email}</p>
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <span className="text-[10px] px-2.5 py-0.5 rounded-full font-semibold uppercase bg-slate-100 text-slate-700">
                         {log.staff_role || 'Staff'}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                         log.status === 'success'
                           ? 'bg-primary/10 text-primary border border-primary/20'
@@ -165,11 +165,11 @@ export default function TeamLoginLogsPage() {
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-xs font-medium text-slate-700">
+                    <td className="px-4 py-4 text-xs font-medium text-slate-700">
                       {log.description || 'Login attempt'}
                     </td>
 
-                    <td className="px-6 py-4 text-xs text-slate-400 text-right font-medium">
+                    <td className="px-4 py-4 text-xs text-slate-400 text-right font-medium">
                       <span className="inline-flex items-center gap-1">
                         <FiClock size={12} />
                         {new Date(log.created_at).toLocaleString()}

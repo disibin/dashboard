@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isSupport } from "@/lib/auth/staff";
 
-// GET — List all support tickets for staff members
+
 export async function GET() {
     try {
         const auth = await isSupport();

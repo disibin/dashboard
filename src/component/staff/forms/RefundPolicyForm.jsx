@@ -12,7 +12,7 @@ export default function RefundPolicyForm({
   isEditing = false
 }) {
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-6 sm:p-8 mb-8 animate-in fade-in duration-200">
+    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-4 sm:p-5 mb-8 animate-in fade-in duration-200">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
         <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <FiDollarSign className="text-primary" />
@@ -96,7 +96,7 @@ export default function RefundPolicyForm({
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-all shadow-md disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition-all shadow-md disabled:opacity-50"
           >
             {saving ? (
               <>

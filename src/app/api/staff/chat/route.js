@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isStaffLogin } from "@/lib/auth/staff";
 
-// GET — List conversations for the logged-in staff member
+
 export async function GET() {
     try {
         const auth = await isStaffLogin();
@@ -66,7 +66,7 @@ export async function GET() {
     }
 }
 
-// POST — Create a new chat (1-on-1 or Group)
+
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -82,7 +82,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Please select at least one staff member" }, { status: 400 });
         }
 
-        // If 1-on-1, check if direct chat between these 2 users already exists
+
         if (!isGroup && staffIds.length === 1) {
             const targetId = staffIds[0];
             const existingRes = await dbQuery(
@@ -103,7 +103,7 @@ export async function POST(req) {
             }
         }
 
-        // Create new chat row
+
         const chatTitle = isGroup ? (title || "Group Chat").trim() : null;
         const chatRes = await dbQuery(
             `INSERT INTO chats (title, is_group, created_by) 
@@ -113,13 +113,13 @@ export async function POST(req) {
         );
         const chat = chatRes.rows[0];
 
-        // Add logged-in staff member to chat_participants
+
         await dbQuery(
             `INSERT INTO chat_participants (chat_id, staff_id, last_read_at) VALUES ($1, $2, now())`,
             [chat.id, currentStaffId]
         );
 
-        // Add other selected participants
+
         for (const tid of staffIds) {
             if (tid !== currentStaffId) {
                 await dbQuery(

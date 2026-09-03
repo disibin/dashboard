@@ -13,9 +13,9 @@ const layout = async({ children }) => {
 
   return (
     <div className="w-full min-h-screen flex flex-col lg:flex-row bg-tertiary-light">
-      <div className="w-full lg:w-1/2 hidden lg:flex flex-col items-center justify-center p-8 lg:p-12 bg-primary/5 border-r border-primary/10 text-center">
+      <div className="w-full lg:w-1/2 hidden lg:flex flex-col items-center justify-center p-5 lg:p-4 bg-primary/5 border-r border-primary/10 text-center">
         <div className="max-w-md flex flex-col items-center gap-4">
-          
+
           <h1 className="text-3xl lg:text-4xl font-semibold text-tertiary-dark">
             Build Your Digital Future
           </h1>

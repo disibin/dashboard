@@ -67,9 +67,9 @@ export default function TeamReportsPage() {
   const repliedCount = reports.filter((r) => r.status === 'replied').length;
 
   return (
-    <div className="p-6 w-full space-y-6">
-      {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-6 rounded-3xl border border-amber-500/20">
+    <div className="p-4 w-full space-y-4">
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 rounded-3xl border border-amber-500/20">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-secondary/100 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 shrink-0">
             <FiAlertTriangle size={24} />
@@ -91,7 +91,7 @@ export default function TeamReportsPage() {
         </button>
       </div>
 
-      {/* Metrics Strip */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div>
@@ -124,7 +124,7 @@ export default function TeamReportsPage() {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
+
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
         <div className="relative w-full sm:w-80">
           <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -144,7 +144,7 @@ export default function TeamReportsPage() {
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all flex-1 sm:flex-initial ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all flex-1 sm:flex-initial ${
                   statusFilter === st
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-500 hover:text-slate-900'
@@ -157,36 +157,36 @@ export default function TeamReportsPage() {
         </div>
       </div>
 
-      {/* Reports Table */}
+
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Reporter</th>
-                <th className="px-6 py-4">Subject</th>
-                <th className="px-6 py-4">Submitted At</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-4 py-4">Status</th>
+                <th className="px-4 py-4">Reporter</th>
+                <th className="px-4 py-4">Subject</th>
+                <th className="px-4 py-4">Submitted At</th>
+                <th className="px-4 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan={5} className="px-4 py-5 text-center text-slate-400">
                     Loading issue reports...
                   </td>
                 </tr>
               ) : filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan={5} className="px-4 py-5 text-center text-slate-400">
                     No issue reports found matching criteria.
                   </td>
                 </tr>
               ) : (
                 filteredReports.map((report) => (
                   <tr key={report.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       {report.status === 'replied' ? (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
                           <FiCheckCircle size={12} />
@@ -200,16 +200,16 @@ export default function TeamReportsPage() {
                       )}
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <div className="font-semibold text-slate-900">{report.name}</div>
                       <div className="text-xs text-slate-400">{report.email}</div>
                     </td>
 
-                    <td className="px-6 py-4 max-w-xs truncate">
+                    <td className="px-4 py-4 max-w-xs truncate">
                       <span className="font-medium text-slate-800">{report.subject}</span>
                     </td>
 
-                    <td className="px-6 py-4 text-xs text-slate-500">
+                    <td className="px-4 py-4 text-xs text-slate-500">
                       {new Date(report.created_at).toLocaleString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -219,18 +219,18 @@ export default function TeamReportsPage() {
                       })}
                     </td>
 
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/panel/reports/${report.id}`}
-                          className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                          className="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                           title="View / Reply"
                         >
                           <FiEye size={16} />
                         </Link>
                         <button
                           onClick={() => handleDelete(report.id)}
-                          className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
+                          className="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
                           title="Delete Report"
                         >
                           <FiTrash2 size={16} />

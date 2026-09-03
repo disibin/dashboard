@@ -3,7 +3,7 @@ import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import cloudinary from "@/lib/database/cloudinary";
 
-// POST submit job application (Public candidate submission with resume upload)
+
 export async function POST(req) {
     try {
         const formData = await req.formData();
@@ -12,13 +12,13 @@ export async function POST(req) {
         const full_name = formData.get('full_name');
         const email = formData.get('email');
         const cover_letter = formData.get('cover_letter');
-        const resumeFile = formData.get('resume'); // File object
+        const resumeFile = formData.get('resume'); 
 
         if (!job_id || !full_name || !email) {
             return NextResponse.json({ success: false, message: "Missing required fields (job_id, full_name, email)" }, { status: 400 });
         }
 
-        // Upload resume to Cloudinary if provided as a File or String
+
         let resume_url = "";
 
         if (resumeFile && typeof resumeFile === 'object' && resumeFile.arrayBuffer) {
@@ -76,7 +76,7 @@ export async function POST(req) {
     }
 }
 
-// GET list applications (Manager only)
+
 export async function GET(req) {
     try {
         const auth = await isManager();
@@ -105,7 +105,7 @@ export async function GET(req) {
     }
 }
 
-// PATCH update status (Manager only)
+
 export async function PATCH(req) {
     try {
         const auth = await isManager();
@@ -141,7 +141,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE application (Manager only)
+
 export async function DELETE(req) {
     try {
         const auth = await isManager();

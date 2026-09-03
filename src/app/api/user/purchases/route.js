@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List user's purchases & payments
 export async function GET() {
     try {
         const auth = await isUserLogin();
@@ -50,7 +49,6 @@ export async function GET() {
     }
 }
 
-// DELETE — User delete non-completed purchase (completed purchases & paid records remain)
 export async function DELETE(req) {
     try {
         const auth = await isUserLogin();
@@ -65,7 +63,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "purchase_id or order_id is required" }, { status: 400 });
         }
 
-        // Fetch purchase and check status
         let purRes;
         if (purchaseId) {
             purRes = await dbQuery(
@@ -92,7 +89,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Purchase record not found" }, { status: 404 });
         }
 
-        // Condition: completed purchases and paid payments MUST remain!
         const hasCompleted = purRes.rows.some(
             r => (r.status || '').toLowerCase() === 'complete' || (r.payment_status || '').toLowerCase() === 'paid'
         );
@@ -104,7 +100,6 @@ export async function DELETE(req) {
             }, { status: 400 });
         }
 
-        // Delete unverified payment(s) and non-complete purchase(s)
         if (orderId) {
             await dbQuery(`DELETE FROM payments WHERE order_id = $1 AND status != 'paid'`, [orderId]);
             await dbQuery(`DELETE FROM purchases WHERE order_id = $1 AND status != 'complete'`, [orderId]);
@@ -112,7 +107,7 @@ export async function DELETE(req) {
             const row = purRes.rows[0];
             if (row.order_id) {
                 await dbQuery(`DELETE FROM purchases WHERE id = $1 AND status != 'complete'`, [purchaseId]);
-                // Check if remaining purchases exist for this order
+
                 const remaining = await dbQuery(`SELECT id FROM purchases WHERE order_id = $1`, [row.order_id]);
                 if (remaining.rows.length === 0) {
                     await dbQuery(`DELETE FROM payments WHERE order_id = $1 AND status != 'paid'`, [row.order_id]);

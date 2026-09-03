@@ -3,7 +3,7 @@ import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { isStaffLogin, isManager, isSupport } from "@/lib/auth/staff";
 
-// Helper — check if manager OR support role
+
 async function isManagerOrSupport() {
     const auth = await isStaffLogin();
     if (!auth.success) return { success: false, message: "Please login" };
@@ -13,14 +13,14 @@ async function isManagerOrSupport() {
     return { success: true, data: auth.data };
 }
 
-// GET — List all support requests (Manager or Support)
+
 export async function GET(req) {
     try {
         const auth = await isManagerOrSupport();
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const { searchParams } = new URL(req.url);
-        const status = searchParams.get("status"); // optional: 'pending' | 'replied'
+        const status = searchParams.get("status"); 
 
         let query = `
             SELECT 
@@ -48,7 +48,7 @@ export async function GET(req) {
     }
 }
 
-// PATCH — Reply to a support request, send email, record activity log
+
 export async function PATCH(req) {
     try {
         const auth = await isManagerOrSupport();
@@ -64,7 +64,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "Reply text cannot be empty" }, { status: 400 });
         }
 
-        // Fetch the support request
+
         const supportRes = await dbQuery("SELECT * FROM supports WHERE id = $1", [id]);
         const support = supportRes.rows[0];
 
@@ -72,7 +72,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "Support request not found" }, { status: 404 });
         }
 
-        // Save reply, mark as replied, record who responded
+
         const updateRes = await dbQuery(
             `UPDATE supports 
              SET reply = $1, status = 'replied', responded_by = $2, updated_at = now()
@@ -82,7 +82,7 @@ export async function PATCH(req) {
         );
         const updated = updateRes.rows[0];
 
-        // Send reply email to the original submitter
+
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 22px; font-weight: 700; margin-bottom: 8px;">Reply to your support request</h1>
@@ -106,7 +106,7 @@ export async function PATCH(req) {
             htmlContent
         }).catch((err) => console.error("Reply email failed:", err));
 
-        // Record in activity_logs
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, $2, $3, $4, $5)`,
@@ -119,7 +119,7 @@ export async function PATCH(req) {
             ]
         ).catch((err) => console.error("Activity log failed:", err));
 
-        // Send in-app notification if user account exists with this email
+
         const userMatchRes = await dbQuery("SELECT id FROM users WHERE email = $1 LIMIT 1", [support.email]).catch(() => ({ rows: [] }));
         if (userMatchRes.rows.length > 0) {
             const userId = userMatchRes.rows[0].id;
@@ -135,7 +135,7 @@ export async function PATCH(req) {
             ]).catch((err) => console.error("Support notification insertion failed:", err));
         }
 
-        // Return updated record with responder name
+
         return NextResponse.json({
             success: true,
             message: "Reply saved and email sent to the submitter",
@@ -147,7 +147,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete a support request (Manager or Support)
+
 export async function DELETE(req) {
     try {
         const auth = await isManagerOrSupport();
@@ -171,7 +171,7 @@ export async function DELETE(req) {
 
         const deleted = res.rows[0];
 
-        // Record in activity_logs
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, $2, $3, $4, $5)`,

@@ -3,7 +3,7 @@ import { isStaffLogin, isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import cloudinary from "@/lib/database/cloudinary";
 
-// GET — Fetch board member by ID
+
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -24,7 +24,7 @@ export async function GET(req, { params }) {
     }
 }
 
-// PATCH — Update board member details by ID
+
 export async function PATCH(req, { params }) {
     try {
         const auth = await isManager();
@@ -101,7 +101,7 @@ export async function PATCH(req, { params }) {
     }
 }
 
-// DELETE — Remove board member by ID
+
 export async function DELETE(req, { params }) {
     try {
         const auth = await isManager();

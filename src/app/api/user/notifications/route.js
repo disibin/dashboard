@@ -28,7 +28,7 @@ async function ensureNotificationsTable() {
     }
 }
 
-// GET — List user notifications
+
 export async function GET() {
     try {
         const auth = await isUserLogin();
@@ -44,7 +44,7 @@ export async function GET() {
             LIMIT 50
         `, [auth.data.id]).catch(() => ({ rows: [] }));
 
-        // Seed default welcome notification into database if user has no notifications
+
         let notifications = res.rows;
         if (notifications.length === 0) {
             const welcomeRes = await dbQuery(`
@@ -69,7 +69,7 @@ export async function GET() {
     }
 }
 
-// PATCH — Mark notifications as read
+
 export async function PATCH(req) {
     try {
         const auth = await isUserLogin();

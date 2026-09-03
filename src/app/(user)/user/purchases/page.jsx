@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
 import { formatCurrency, CURRENCY } from '@/lib/database/secret';
+import { printReceipt } from '@/lib/printableSlip';
 
 export default function UserPurchasesPage() {
   const [purchases, setPurchases] = useState([]);
@@ -16,10 +17,8 @@ export default function UserPurchasesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  // Receipt Modal State
   const [selectedReceipt, setSelectedReceipt] = useState(null);
 
-  // Pay / Submit Proof Modal State
   const [payModalItem, setPayModalItem] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('bkash');
   const [transactionId, setTransactionId] = useState('');
@@ -157,16 +156,14 @@ export default function UserPurchasesPage() {
     return titleMatch;
   });
 
-  // Calculate Metrics
   const totalSpent = purchases.reduce((sum, item) => sum + Number(item.paid || 0), 0);
   const totalDue = purchases.reduce((sum, item) => sum + Number(item.due || 0), 0);
   const completedCount = purchases.filter((item) => item.payment_status === 'paid' || item.purchase_status === 'complete').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
@@ -185,8 +182,7 @@ export default function UserPurchasesPage() {
         </Link>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="p-3.5 rounded-xl bg-primary/10 text-primary">
             <FiCreditCard size={22} />
@@ -218,7 +214,6 @@ export default function UserPurchasesPage() {
         </div>
       </div>
 
-      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative max-w-sm w-full">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -242,7 +237,7 @@ export default function UserPurchasesPage() {
             <button
               key={tab.id}
               onClick={() => setFilterStatus(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 filterStatus === tab.id
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -254,14 +249,13 @@ export default function UserPurchasesPage() {
         </div>
       </div>
 
-      {/* Orders List */}
       {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
           <FiLoader className="animate-spin text-primary" size={26} />
           <p className="text-xs font-medium">Loading purchases...</p>
         </div>
       ) : filteredPurchases.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center space-y-3">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center space-y-3">
           <FiShoppingBag size={32} className="mx-auto text-slate-300" />
           <h3 className="text-sm font-semibold text-slate-700">No purchases found</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -275,7 +269,7 @@ export default function UserPurchasesPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredPurchases.map((item) => {
             const netPrice = Math.max(0, (item.price || 0) - (item.discount || 0));
             const isPayable = item.payment_status === 'unpaid' || item.payment_status === 'due' || item.payment_status === 'rejected';
@@ -287,7 +281,7 @@ export default function UserPurchasesPage() {
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                    <span className="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-xl">
                       #{item.order_id || `PUR-${item.purchase_id}`}
                     </span>
                     <StatusBadge status={item.payment_status} />
@@ -336,23 +330,23 @@ export default function UserPurchasesPage() {
                           setPaymentMethod(item.payment_method || 'bkash');
                           setTransactionId(item.transaction_id || '');
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-colors cursor-pointer"
                       >
                         <FiUploadCloud size={13} /> Pay / Submit
                       </button>
                     )}
 
                     <button
-                      onClick={() => setSelectedReceipt(item)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                      onClick={() => printReceipt(item)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                     >
-                      <FiFileText size={13} /> Receipt
+                      <FiFileText size={13} /> Print Slip
                     </button>
 
                     {!((item.payment_status || '').toLowerCase() === 'paid' || (item.purchase_status || '').toLowerCase() === 'complete') && (
                       <button
                         onClick={() => handleDeletePurchase(item)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Delete Purchase"
                       >
                         <FiTrash2 size={13} />
@@ -366,10 +360,9 @@ export default function UserPurchasesPage() {
         </div>
       )}
 
-      {/* Pay / Submit Transaction ID Modal */}
       {payModalItem && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-3xl max-w-md w-full p-4 shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -382,7 +375,7 @@ export default function UserPurchasesPage() {
               </div>
               <button
                 onClick={() => !submittingPay && setPayModalItem(null)}
-                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
               >
                 <FiX size={18} />
               </button>
@@ -397,7 +390,7 @@ export default function UserPurchasesPage() {
                       key={m}
                       type="button"
                       onClick={() => setPaymentMethod(m)}
-                      className={`p-2 rounded-lg border text-xs font-bold capitalize transition-all cursor-pointer ${
+                      className={`p-2 rounded-xl border text-xs font-bold capitalize transition-all cursor-pointer ${
                         paymentMethod === m ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-200'
                       }`}
                     >
@@ -475,98 +468,6 @@ export default function UserPurchasesPage() {
         </div>
       )}
 
-      {/* Receipt Modal */}
-      {selectedReceipt && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 space-y-6 animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <FiFileText className="text-primary" /> Order Receipt & Invoice
-              </h2>
-              <button
-                onClick={() => setSelectedReceipt(null)}
-                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
-              >
-                <FiX size={18} />
-              </button>
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl p-4 space-y-2.5 border border-slate-100 text-xs">
-              <div className="flex justify-between text-slate-500">
-                <span>Order Ref:</span>
-                <span className="font-mono font-bold text-slate-900">
-                  #{selectedReceipt.order_id || `PUR-${selectedReceipt.purchase_id}`}
-                </span>
-              </div>
-              <div className="flex justify-between text-slate-500">
-                <span>Date:</span>
-                <span className="font-semibold text-slate-800">{new Date(selectedReceipt.created_at).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-slate-500 items-center">
-                <span>Status:</span>
-                <StatusBadge status={selectedReceipt.payment_status} />
-              </div>
-              {selectedReceipt.transaction_id && (
-                <div className="flex justify-between text-slate-500">
-                  <span>Trx ID:</span>
-                  <span className="font-mono font-bold text-slate-800">{selectedReceipt.transaction_id}</span>
-                </div>
-              )}
-              {selectedReceipt.payment_method && (
-                <div className="flex justify-between text-slate-500 capitalize">
-                  <span>Payment Method:</span>
-                  <span className="font-semibold text-slate-800">{selectedReceipt.payment_method.replace('_', ' ')}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Package Item:</span>
-                <span className="font-bold text-slate-900">{selectedReceipt.package_title}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">List Price:</span>
-                <span className="font-semibold text-slate-800">{formatCurrency(selectedReceipt.price)}</span>
-              </div>
-              {selectedReceipt.discount > 0 && (
-                <div className="flex justify-between text-emerald-600">
-                  <span>Discount Applied:</span>
-                  <span className="font-bold">-{formatCurrency(selectedReceipt.discount)}</span>
-                </div>
-              )}
-              <div className="pt-2 border-t border-slate-100 flex justify-between text-sm font-bold">
-                <span className="text-slate-800">Net Payable:</span>
-                <span className="text-slate-900">{formatCurrency(Math.max(0, (selectedReceipt.price || 0) - (selectedReceipt.discount || 0)))}</span>
-              </div>
-              <div className="flex justify-between text-xs text-slate-500">
-                <span>Amount Paid:</span>
-                <span className="font-semibold text-emerald-600">{formatCurrency(selectedReceipt.paid || 0)}</span>
-              </div>
-              {selectedReceipt.due > 0 && (
-                <div className="flex justify-between text-xs text-amber-600">
-                  <span className="font-semibold">Remaining Due:</span>
-                  <span className="font-bold">{formatCurrency(selectedReceipt.due)}</span>
-                </div>
-              )}
-            </div>
-
-            {selectedReceipt.note && (
-              <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-100 text-xs text-amber-900">
-                <span className="font-bold block mb-0.5">Note:</span>
-                <p className="text-[11px] leading-relaxed">{selectedReceipt.note}</p>
-              </div>
-            )}
-
-            <button
-              onClick={() => setSelectedReceipt(null)}
-              className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors cursor-pointer"
-            >
-              Close Receipt
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

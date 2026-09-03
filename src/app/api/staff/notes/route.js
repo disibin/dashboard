@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List staff notes (Supports staff scope & manager oversight)
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -11,7 +10,6 @@ export async function GET(req) {
         const { searchParams } = new URL(req.url);
         const staffIdParam = searchParams.get("staff_id");
 
-        // Managers can view all notes or specific staff's notes; staff view their own notes
         let query = `
             SELECT n.id, n.staff_id, n.title, n.description, n.created_at, n.updated_at,
                    st.name AS staff_name, st.email AS staff_email
@@ -40,7 +38,6 @@ export async function GET(req) {
     }
 }
 
-// POST — Create staff note
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -53,7 +50,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Note title is required" }, { status: 400 });
         }
 
-        // Target staff ID defaults to logged in staff member
         const assignedStaffId = (auth.data.role === 'manager' && staff_id) ? staff_id : auth.data.id;
 
         const res = await dbQuery(
@@ -74,7 +70,6 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update staff note
 export async function PUT(req) {
     try {
         const auth = await isStaffLogin();
@@ -87,7 +82,6 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Note ID is required" }, { status: 400 });
         }
 
-        // Verify note ownership unless manager
         if (auth.data.role !== 'manager') {
             const check = await dbQuery("SELECT staff_id FROM staff_notes WHERE id = $1", [id]);
             if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {
@@ -120,7 +114,6 @@ export async function PUT(req) {
     }
 }
 
-// DELETE — Remove staff note
 export async function DELETE(req) {
     try {
         const auth = await isStaffLogin();
@@ -133,7 +126,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Note ID is required" }, { status: 400 });
         }
 
-        // Verify note ownership unless manager
         if (auth.data.role !== 'manager') {
             const check = await dbQuery("SELECT staff_id FROM staff_notes WHERE id = $1", [id]);
             if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {

@@ -38,7 +38,7 @@ const NewProductPage = () => {
   }, [router]);
 
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 p-6">
+    <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 p-4">
       <Toaster position="top-center" />
       <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-sky-500/20">
         <FiPackage size={24} />

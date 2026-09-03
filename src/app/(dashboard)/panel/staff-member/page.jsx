@@ -21,8 +21,8 @@ const TeamMemberManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
 
-  const [statusLoading, setStatusLoading] = useState(null); // id | null
-  const [deleteLoading, setDeleteLoading] = useState(null); // id | null
+  const [statusLoading, setStatusLoading] = useState(null); 
+  const [deleteLoading, setDeleteLoading] = useState(null); 
 
   useEffect(() => { fetchMembers(); }, []);
 
@@ -92,7 +92,7 @@ const TeamMemberManagement = () => {
     }
   };
 
-  // Derived values
+
   const totalMembers = members.length;
   const activeMembers = members.filter((m) => m.is_active).length;
   const managerCount = members.filter((m) => m.role === 'manager' && m.is_active).length;
@@ -108,10 +108,10 @@ const TeamMemberManagement = () => {
   const roles = ['manager', 'support', 'developer'];
 
   return (
-    <div className="p-6 space-y-6 min-h-screen bg-slate-50/50">
+    <div className="p-4 space-y-4 min-h-screen bg-slate-50/50">
       <Toaster position="top-center" />
 
-      {/* Page Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
@@ -132,7 +132,7 @@ const TeamMemberManagement = () => {
         </Link>
       </div>
 
-      {/* Stats Row */}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           { icon: <FiUsers className="text-primary" size={20} />, label: 'Total Members', value: totalMembers, bg: 'bg-primary/10' },
@@ -149,10 +149,10 @@ const TeamMemberManagement = () => {
         ))}
       </div>
 
-      {/* Table Card */}
+
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        
-        {/* Toolbar */}
+
+
         <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row gap-3">
           <div className="flex items-center gap-2 flex-1 bg-slate-50 rounded-xl px-4 py-2.5 border border-slate-100">
             <FiSearch className="text-slate-400 shrink-0" size={15} />
@@ -181,22 +181,22 @@ const TeamMemberManagement = () => {
           </select>
         </div>
 
-        {/* Table */}
+
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest font-semibold border-b border-slate-100">
               <tr>
-                <th className="px-6 py-4">Member</th>
-                <th className="px-6 py-4">Role</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Joined</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-4 py-4">Member</th>
+                <th className="px-4 py-4">Role</th>
+                <th className="px-4 py-4">Status</th>
+                <th className="px-4 py-4">Joined</th>
+                <th className="px-4 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-16 text-center">
+                  <td colSpan="5" className="px-4 py-4 text-center">
                     <div className="flex flex-col items-center gap-3 text-slate-400">
                       <div className="w-8 h-8 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
                       <span className="text-sm">Loading staff members...</span>
@@ -205,7 +205,7 @@ const TeamMemberManagement = () => {
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-16 text-center">
+                  <td colSpan="5" className="px-4 py-4 text-center">
                     <div className="flex flex-col items-center gap-3 text-slate-400">
                       <FiUsers size={32} className="text-slate-200" />
                       <span className="text-sm">No staff members found</span>
@@ -215,8 +215,8 @@ const TeamMemberManagement = () => {
               ) : (
                 filtered.map((m) => (
                   <tr key={m.id} className="hover:bg-slate-50/60 transition-colors group">
-                    {/* Member */}
-                    <td className="px-6 py-4">
+
+                    <td className="px-4 py-4">
                       <div>
                         <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                           {m.name}
@@ -227,12 +227,12 @@ const TeamMemberManagement = () => {
                       </div>
                     </td>
 
-                    {/* Role selector */}
-                    <td className="px-6 py-4">
+
+                    <td className="px-4 py-4">
                       <select
                         value={m.role}
                         onChange={(e) => updateRole(m, e.target.value)}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold capitalize border outline-none cursor-pointer transition-colors ${
+                        className={`px-2.5 py-1 rounded-xl text-xs font-semibold capitalize border outline-none cursor-pointer transition-colors ${
                           m.role === 'manager' ? 'bg-secondary/10 text-secondary border-secondary/20' :
                           m.role === 'developer' ? 'bg-primary/10 text-violet-700 border-primary/20' :
                           'bg-primary/10 text-primary border-primary/20'
@@ -246,32 +246,32 @@ const TeamMemberManagement = () => {
                       </select>
                     </td>
 
-                    {/* Status */}
-                    <td className="px-6 py-4">
+
+                    <td className="px-4 py-4">
                       {m.is_active ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-primary/10 text-primary">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold bg-primary/10 text-primary">
                           <FiCheckCircle size={11} /> Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-500">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 text-slate-500">
                           <FiXCircle size={11} /> Inactive
                         </span>
                       )}
                     </td>
 
-                    {/* Joined */}
-                    <td className="px-6 py-4 text-slate-500 text-xs">
+
+                    <td className="px-4 py-4 text-slate-500 text-xs">
                       {fmtDate(m.created_at)}
                     </td>
 
-                    {/* Actions */}
-                    <td className="px-6 py-4 text-right">
+
+                    <td className="px-4 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => toggleStatus(m)}
                           disabled={statusLoading === m.id}
                           title={m.is_active ? 'Deactivate Member' : 'Activate Member'}
-                          className={`p-2 rounded-lg transition-all ${
+                          className={`p-2 rounded-xl transition-all ${
                             m.is_active
                               ? 'text-slate-400 hover:text-secondary hover:bg-secondary/10'
                               : 'text-slate-400 hover:text-primary hover:bg-primary/10'
@@ -289,7 +289,7 @@ const TeamMemberManagement = () => {
                           onClick={() => removeMember(m)}
                           disabled={deleteLoading === m.id}
                           title="Remove Staff Member"
-                          className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all"
+                          className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all"
                         >
                           {deleteLoading === m.id ? (
                             <div className="w-4 h-4 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Public Privacy Policy items (all published records)
+
 export async function GET() {
     try {
         const res = await dbQuery(`

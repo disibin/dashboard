@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List items in user's cart
 export async function GET() {
     try {
         const auth = await isUserLogin();
@@ -36,7 +35,6 @@ export async function GET() {
     }
 }
 
-// POST — Add a package to user's cart
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -50,13 +48,11 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "package_id is required" }, { status: 400 });
         }
 
-        // Verify package exists
         const pkgRes = await dbQuery(`SELECT id, name FROM packages WHERE id = $1`, [package_id]);
         if (pkgRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Package not found" }, { status: 404 });
         }
 
-        // Insert into user_cart
         await dbQuery(`
             INSERT INTO user_cart (user_id, package_id)
             VALUES ($1, $2)
@@ -73,7 +69,6 @@ export async function POST(req) {
     }
 }
 
-// DELETE — Remove item(s) from cart
 export async function DELETE(req) {
     try {
         const auth = await isUserLogin();

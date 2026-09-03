@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET single product by slug OR id (Public / User Panel)
 export async function GET(req, { params }) {
     try {
         const resolvedParams = await params;

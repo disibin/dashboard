@@ -7,7 +7,7 @@ import { isUserLogin } from "@/lib/auth/user";
 
 export async function POST(req) {
     try {
-        // Redirect if already logged in
+
         const auth = await isUserLogin();
         if (auth.success) {
             return NextResponse.json({ success: false, message: "Already logged in" }, { status: 403 });
@@ -32,11 +32,11 @@ export async function POST(req) {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            // Log failed attempt
+
             await dbQuery(
                 `INSERT INTO user_login_logs (user_id, action, description, status) VALUES ($1, $2, $3, $4)`,
                 [user.id, 'login', 'Failed login attempt', 'fail']
-            ).catch(() => {}); // non-blocking
+            ).catch(() => {}); 
             return NextResponse.json({ success: false, message: "Invalid email or password" }, { status: 401 });
         }
 
@@ -47,14 +47,14 @@ export async function POST(req) {
             );
         }
 
-        // Update last login & log success
+
         await dbQuery("UPDATE users SET last_login = now() WHERE id = $1", [user.id]);
         await dbQuery(
             `INSERT INTO user_login_logs (user_id, action, description, status) VALUES ($1, $2, $3, $4)`,
             [user.id, 'login', 'Successful login', 'success']
-        ).catch(() => {}); // non-blocking
+        ).catch(() => {}); 
 
-        // Sign JWT — no username in schema, use name
+
         const token = jwt.sign(
             { id: user.id, email: user.email, name: user.name },
             JWT_SECRET,

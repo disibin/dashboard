@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// PATCH — Update business lead
+
 export async function PATCH(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -40,7 +40,7 @@ export async function PATCH(req, { params }) {
     }
 }
 
-// DELETE — Delete business lead
+
 export async function DELETE(req, { params }) {
     try {
         const auth = await isStaffLogin();

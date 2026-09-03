@@ -112,9 +112,9 @@ export default function BoardMemberDetailPage() {
 
   if (!member) {
     return (
-      <div className="p-6 max-w-3xl mx-auto space-y-4 text-center">
+      <div className="p-4 max-w-3xl mx-auto space-y-4 text-center">
         <Toaster position="top-center" />
-        <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+        <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <FiAlertCircle className="mx-auto text-secondary" size={36} />
           <h2 className="text-lg font-semibold text-slate-800">Board Member Not Found</h2>
           <p className="text-xs text-slate-500">The requested board member record does not exist.</p>
@@ -130,10 +130,10 @@ export default function BoardMemberDetailPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Top Bar */}
+
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/panel/board"
@@ -151,9 +151,9 @@ export default function BoardMemberDetailPage() {
         </button>
       </div>
 
-      {/* Card Detail Form */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100">
+
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 pb-6 border-b border-slate-100">
           {imagePreview ? (
             <img
               src={imagePreview}
@@ -247,7 +247,7 @@ export default function BoardMemberDetailPage() {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+              className="px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
             >
               {saving ? <FiLoader className="animate-spin" size={14} /> : <FiSave size={14} />}
               {saving ? 'Saving Changes...' : 'Save Profile Changes'}

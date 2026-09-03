@@ -82,9 +82,9 @@ export default function NewPartnerPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
-      
-      {/* Top Header */}
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
+
+
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/panel/partners"
@@ -94,8 +94,8 @@ export default function NewPartnerPage() {
         </Link>
       </div>
 
-      {/* Main Form Container */}
-      <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-10 shadow-sm space-y-8">
+
+      <div className="bg-white rounded-3xl border border-slate-100 p-4 sm:p-4 shadow-sm space-y-4">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-semibold uppercase tracking-wider mb-2">
             <FaHandshake size={14} /> Partner Ecosystem
@@ -108,15 +108,15 @@ export default function NewPartnerPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          
-          {/* Logo Upload Box */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
               Partner Logo Image *
             </label>
-            
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6 p-4 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
               <div className="w-24 h-24 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 relative shadow-sm">
                 {form.image ? (
                   <img src={form.image} alt="Logo preview" className="w-full h-full object-contain p-2" />
@@ -147,9 +147,9 @@ export default function NewPartnerPage() {
             </div>
           </div>
 
-          {/* Form Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <div className="space-y-2">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
                 Company / Organization Name *
@@ -202,18 +202,18 @@ export default function NewPartnerPage() {
             </div>
           </div>
 
-          {/* Submit Actions */}
+
           <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
             <Link
               href="/panel/partners"
-              className="px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold text-xs hover:bg-slate-200 transition-colors"
+              className="px-4 py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold text-xs hover:bg-slate-200 transition-colors"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={saving || uploading}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-primary transition-colors disabled:bg-slate-400 cursor-pointer shadow-lg shadow-slate-900/10"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-primary transition-colors disabled:bg-slate-400 cursor-pointer shadow-lg shadow-slate-900/10"
             >
               <FiCheck size={16} /> {saving ? 'Saving Partner...' : 'Create Partner'}
             </button>

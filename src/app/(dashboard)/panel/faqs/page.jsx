@@ -150,7 +150,7 @@ export default function TeamFaqsPage() {
     <div className="p-4 w-full min-h-screen pb-24">
       <Toaster position="top-right" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 p-6 sm:p-8 rounded-3xl text-primary shadow-sm bg-white border border-slate-100">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 p-4 sm:p-5 rounded-3xl text-primary shadow-sm bg-white border border-slate-100">
         <div>
           <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-slate-900">Frequently Asked Questions</h1>
           <p className="text-slate-500 text-sm mt-1 max-w-xl font-medium">
@@ -166,7 +166,7 @@ export default function TeamFaqsPage() {
         </button>
       </div>
 
-      {/* Inline Form Component */}
+
       {showForm && (
         <FaqForm
           formData={formData}
@@ -178,7 +178,7 @@ export default function TeamFaqsPage() {
         />
       )}
 
-      {/* Controls */}
+
       <div className="flex items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
         <div className="text-xs font-semibold text-slate-500">
           Total FAQs: <span className="text-primary font-black">{faqs.length}</span>
@@ -206,14 +206,14 @@ export default function TeamFaqsPage() {
         </div>
       </div>
 
-      {/* Table Data */}
+
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 shadow-sm">
+        <div className="flex flex-col items-center justify-center py-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiRefreshCw className="w-8 h-8 text-primary animate-spin mb-3" />
           <p className="text-slate-500 font-medium text-sm">Loading FAQs...</p>
         </div>
       ) : filteredFaqs.length === 0 ? (
-        <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
+        <div className="text-center py-4 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiHelpCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-slate-800">No FAQs found</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-6">
@@ -232,22 +232,22 @@ export default function TeamFaqsPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/60 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="py-4 px-6">Order</th>
-                  <th className="py-4 px-6">Question & Answer</th>
-                  <th className="py-4 px-6">Status</th>
-                  <th className="py-4 px-6">Creator</th>
-                  <th className="py-4 px-6 text-right">Actions</th>
+                  <th className="py-4 px-4">Order</th>
+                  <th className="py-4 px-4">Question & Answer</th>
+                  <th className="py-4 px-4">Status</th>
+                  <th className="py-4 px-4">Creator</th>
+                  <th className="py-4 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {filteredFaqs.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
-                    <td className="py-4 px-6 max-w-xl">
+                    <td className="py-4 px-4 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
+                    <td className="py-4 px-4 max-w-xl">
                       <p className="font-semibold text-slate-900">{item.question}</p>
                       <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">{item.answer}</p>
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4">
                       <button
                         onClick={() => handleTogglePublish(item)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
@@ -267,10 +267,10 @@ export default function TeamFaqsPage() {
                         )}
                       </button>
                     </td>
-                    <td className="py-4 px-6 text-slate-500 text-xs font-medium">
+                    <td className="py-4 px-4 text-slate-500 text-xs font-medium">
                       {item.creator_name || 'System'}
                     </td>
-                    <td className="py-4 px-6 text-right space-x-2">
+                    <td className="py-4 px-4 text-right space-x-2">
                       <a
                         href="/faq"
                         target="_blank"

@@ -55,10 +55,10 @@ export default function TeamSettingsPage() {
   };
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-4">
+      <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white flex-shrink-0">
           <FiSettings size={22} />
         </div>
@@ -68,9 +68,9 @@ export default function TeamSettingsPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        {/* Personal Details */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-4">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -127,7 +127,7 @@ export default function TeamSettingsPage() {
           </div>
         </div>
 
-        {/* Address Information */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-4">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -211,12 +211,12 @@ export default function TeamSettingsPage() {
           </div>
         </div>
 
-        {/* Submit */}
+
         <div className="md:col-span-2 flex justify-end">
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50"
           >
             <FiSave size={16} />
             {loading ? 'Saving Changes...' : 'Save Settings'}

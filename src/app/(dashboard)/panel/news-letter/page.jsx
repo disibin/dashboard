@@ -16,7 +16,7 @@ export default function NewsLetterPage() {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [testEmail, setTestEmail] = useState('');
-  const [activeTab, setActiveTab] = useState('compose'); // 'compose' | 'preview'
+  const [activeTab, setActiveTab] = useState('compose'); 
   const [sending, setSending] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
 
@@ -104,11 +104,11 @@ export default function NewsLetterPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -131,7 +131,7 @@ export default function NewsLetterPage() {
         </button>
       </div>
 
-      {/* Audience Metric Cards */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div
           onClick={() => setTargetGroup('all')}
@@ -210,14 +210,14 @@ export default function NewsLetterPage() {
         </div>
       </div>
 
-      {/* Main Form & Editor Workspace */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden space-y-0">
-        {/* Workspace Bar / Tabs */}
+
         <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-1 bg-slate-200/60 p-1 rounded-xl">
             <button
               onClick={() => setActiveTab('compose')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'compose' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -225,7 +225,7 @@ export default function NewsLetterPage() {
             </button>
             <button
               onClick={() => setActiveTab('preview')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'preview' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -238,9 +238,9 @@ export default function NewsLetterPage() {
           </div>
         </div>
 
-        {/* Tab 1: Compose Email */}
+
         {activeTab === 'compose' ? (
-          <form onSubmit={handleSendCampaign} className="p-6 space-y-5">
+          <form onSubmit={handleSendCampaign} className="p-4 space-y-5">
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Email Subject Line *
@@ -266,7 +266,7 @@ export default function NewsLetterPage() {
               />
             </div>
 
-            {/* Test Email Bar */}
+
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex-1 w-full">
                 <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
@@ -291,7 +291,7 @@ export default function NewsLetterPage() {
               </button>
             </div>
 
-            {/* Action Bar */}
+
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">
               <p className="text-xs text-slate-400">
                 Brevo Mailer will send this email campaign to <strong>{getRecipientCount()} recipient(s)</strong>.
@@ -299,7 +299,7 @@ export default function NewsLetterPage() {
               <button
                 type="submit"
                 disabled={sending || getRecipientCount() === 0}
-                className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-md shadow-primary/20 shrink-0 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold text-xs sm:text-sm transition-all disabled:opacity-50 shadow-md shadow-primary/20 shrink-0 cursor-pointer"
               >
                 {sending ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
                 {sending ? 'Dispatching Newsletter...' : `Dispatch to ${getRecipientCount()} Recipient(s)`}
@@ -307,9 +307,9 @@ export default function NewsLetterPage() {
             </div>
           </form>
         ) : (
-          /* Tab 2: Live HTML Email Preview */
-          <div className="p-6 space-y-4 bg-slate-50/40 min-h-[400px]">
-            <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-md space-y-4">
+
+          <div className="p-4 space-y-4 bg-slate-50/40 min-h-[400px]">
+            <div className="max-w-2xl mx-auto bg-white p-5 rounded-3xl border border-slate-200 shadow-md space-y-4">
               <div className="border-b border-slate-100 pb-4 space-y-1">
                 <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Subject Line</p>
                 <h2 className="text-xl font-semibold text-slate-900">{subject || 'No subject line specified'}</h2>

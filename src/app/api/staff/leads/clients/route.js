@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch all client leads (Staff roles only)
+
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -34,7 +34,7 @@ export async function GET(req) {
     }
 }
 
-// POST — Manually create a client lead (Staff roles only)
+
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();

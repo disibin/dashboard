@@ -16,7 +16,6 @@ export default function UserProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Create Project Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -90,33 +89,34 @@ export default function UserProjectsPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'completed':
-        return <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiCheckCircle size={10} /> Completed</span>;
+        return <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiCheckCircle size={10} /> Completed</span>;
       case 'working':
-        return <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiActivity size={10} /> Working</span>;
+        return <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiActivity size={10} /> Working</span>;
       case 'progress':
-        return <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiPlayCircle size={10} /> In Progress</span>;
+        return <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiPlayCircle size={10} /> In Progress</span>;
       case 'spam':
-        return <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiSlash size={10} /> Spam</span>;
+        return <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiSlash size={10} /> Spam</span>;
       default:
-        return <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold rounded-md inline-flex items-center gap-1"><FiClock size={10} /> Waiting</span>;
+        return <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold rounded-xl inline-flex items-center gap-1"><FiClock size={10} /> Waiting</span>;
     }
   };
 
-  const filteredProjects = projects.filter((p) => {
-    if (!search.trim()) return true;
-    const term = search.toLowerCase();
-    return (
-      (p.project_title || '').toLowerCase().includes(term) ||
-      (p.description || '').toLowerCase().includes(term) ||
-      (p.last_message || '').toLowerCase().includes(term)
-    );
-  });
+  const filteredProjects = projects
+    .filter((p) => {
+      if (!search.trim()) return true;
+      const term = search.toLowerCase();
+      return (
+        (p.project_title || '').toLowerCase().includes(term) ||
+        (p.description || '').toLowerCase().includes(term) ||
+        (p.last_message || '').toLowerCase().includes(term)
+      );
+    })
+    .sort((a, b) => new Date(b.last_message_at || b.created_at || 0) - new Date(a.last_message_at || a.created_at || 0) || Number(b.id || 0) - Number(a.id || 0));
 
   return (
     <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
@@ -130,14 +130,14 @@ export default function UserProjectsPage() {
           <button
             onClick={fetchProjects}
             disabled={loading}
-            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-medium transition-colors cursor-pointer"
             title="Refresh Projects"
           >
             <FiRefreshCw className={loading ? 'animate-spin' : ''} size={15} />
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
           >
             <FiPlus size={15} />
             Create Project
@@ -145,7 +145,6 @@ export default function UserProjectsPage() {
         </div>
       </div>
 
-      {/* Search Bar */}
       <div className="relative max-w-sm">
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
         <input
@@ -153,7 +152,7 @@ export default function UserProjectsPage() {
           placeholder="Search projects by title or message..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
+          className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
         />
         {search && (
           <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -162,15 +161,14 @@ export default function UserProjectsPage() {
         )}
       </div>
 
-      {/* Projects List */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-12 text-center text-slate-400 space-y-2">
+          <div className="py-5 text-center text-slate-400 space-y-2">
             <FiLoader className="animate-spin mx-auto text-primary" size={24} />
             <p className="text-xs">Loading projects...</p>
           </div>
         ) : filteredProjects.length === 0 ? (
-          <div className="py-12 text-center space-y-3 px-4">
+          <div className="py-5 text-center space-y-3 px-4">
             <FiMessageSquare className="mx-auto text-slate-300" size={28} />
             <p className="font-semibold text-slate-700 text-sm">No projects found</p>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -178,7 +176,7 @@ export default function UserProjectsPage() {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
             >
               <FiPlus size={15} />
               Create Your First Project
@@ -217,7 +215,7 @@ export default function UserProjectsPage() {
 
                   <button
                     onClick={(e) => handleDeleteProject(p.package_chat_id || p.id, p.project_title, e)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                     title="Delete Project"
                   >
                     <FiTrash2 size={14} />
@@ -229,10 +227,9 @@ export default function UserProjectsPage() {
         )}
       </div>
 
-      {/* Create Project Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-4 shadow-xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -245,7 +242,7 @@ export default function UserProjectsPage() {
               </div>
               <button
                 onClick={() => !creating && setIsModalOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
               >
                 <FiX size={18} />
               </button>

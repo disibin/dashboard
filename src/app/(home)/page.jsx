@@ -30,7 +30,7 @@ const Hero = () => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.3 }}
-      className="w-full h-screen flex flex-col items-center justify-center gap-6 p-4 md:p-6 relative overflow-hidden"
+      className="w-full h-screen flex flex-col items-center justify-center gap-4 p-4 md:p-4 relative overflow-hidden"
     >
       <motion.div variants={itemVariants} className="w-auto flex flex-col items-center justify-center gap-2 text-center">
         <p className="text-5xl md:text-8xl font-semibold font-poppins text-slate-900 tracking-tight">
@@ -54,7 +54,7 @@ const Hero = () => {
         <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
           <Link
             href="/user-auth"
-            className="w-full sm:w-auto inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-poppins font-semibold px-8 py-3.5 rounded-full shadow-md shadow-primary/20 transition-colors min-w-[200px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-poppins font-semibold px-5 py-3.5 rounded-full shadow-md shadow-primary/20 transition-colors min-w-[200px]"
           >
             Get Started
           </Link>

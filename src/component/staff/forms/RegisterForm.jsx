@@ -67,7 +67,7 @@ const RegisterForm = () => {
           </div>
           <button
             disabled={loading}
-            className="w-full py-2 rounded-lg cursor-pointer bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 mt-4 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
+            className="w-full py-2 rounded-xl cursor-pointer bg-slate-900 text-white font-semibold hover:bg-primary transition-all duration-300 mt-4 shadow-xl shadow-slate-900/10 disabled:bg-slate-400"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>

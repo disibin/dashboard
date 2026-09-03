@@ -5,7 +5,7 @@ import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { BASE_URL, getBaseUrl } from "@/lib/database/secret";
 
-// POST — Request password reset email for staff member
+
 export async function POST(req) {
     try {
         const { email } = await req.json();
@@ -17,7 +17,7 @@ export async function POST(req) {
         const res = await dbQuery("SELECT id, name FROM staffs WHERE email = $1", [email]);
         const staff = res.rows[0];
 
-        // Always return success for security (don't reveal if email exists)
+
         if (!staff) {
             return NextResponse.json({
                 success: true,
@@ -25,7 +25,7 @@ export async function POST(req) {
             });
         }
 
-        // Generate reset token (1 hour expiry)
+
         const token = crypto.randomBytes(32).toString("hex");
         const expiresAt = new Date(Date.now() + 3600000);
 
@@ -57,7 +57,7 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Reset password using token
+
 export async function PATCH(req) {
     try {
         const { token, newPassword } = await req.json();

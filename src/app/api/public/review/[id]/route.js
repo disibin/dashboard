@@ -3,7 +3,7 @@ import { isManager } from "@/lib/auth/staff";
 import { isUserLogin as isLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// PATCH - Approve/reject review and update staff reply (Manager only)
+
 export async function PATCH(req, { params }) {
     try {
         const auth = await isManager();
@@ -42,13 +42,13 @@ export async function PATCH(req, { params }) {
             return NextResponse.json({ success: false, message: "Review not found" }, { status: 404 });
         }
 
-        // Record activity log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, $2, $3, $4, $5)
         `, [auth.data.id, 'REVIEW_UPDATE', 'review', reviewId, `Updated review #${reviewId} (approved: ${review.is_approved})`]).catch(() => {});
 
-        // Send notification to user if review was approved
+
         if (Boolean(is_approved) && review.user_id) {
             await dbQuery(`
                 INSERT INTO notifications (user_id, title, message, type, link)
@@ -84,7 +84,7 @@ export async function PATCH(req, { params }) {
     }
 }
 
-// DELETE - Remove a review (User deletes their own, Manager can delete any)
+
 export async function DELETE(req, { params }) {
     try {
         const resolvedParams = await params;
@@ -100,7 +100,7 @@ export async function DELETE(req, { params }) {
         const isUserManager = managerAuth.success;
 
         if (!isUserManager) {
-            // Check if this is the user's review
+
             const userReviewRes = await dbQuery("SELECT id FROM reviews WHERE id = $1 AND user_id = $2", [reviewId, userAuth.data.id]);
             if (userReviewRes.rows.length === 0) {
                 return NextResponse.json({ success: false, message: "Unauthorized to delete this review" }, { status: 403 });

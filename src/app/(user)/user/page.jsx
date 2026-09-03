@@ -51,7 +51,6 @@ export default function UserDashboardHome() {
 
   const user = profile || userData;
 
-  // Calculated Metrics
   const activeProjectsCount = projects.length;
   const pendingTicketsCount = tickets.filter(t => t.status !== 'closed' && t.status !== 'resolved').length;
   const totalPurchasesCount = purchases.length;
@@ -59,12 +58,12 @@ export default function UserDashboardHome() {
   const unreadNotifCount = notifications.filter(n => !Boolean(n.is_read)).length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
         <div className="space-y-2 z-10">
-          
+
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Welcome back, {user?.name || 'Valued Client'}
           </h1>
@@ -89,13 +88,11 @@ export default function UserDashboardHome() {
         </div>
       </div>
 
-      {/* Metrics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        
-        {/* Metric 1: Active Projects */}
+
         <Link
           href="/user/projects"
-          className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
+          className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
         >
           <div className="flex items-center justify-between">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -115,10 +112,9 @@ export default function UserDashboardHome() {
           </div>
         </Link>
 
-        {/* Metric 2: Pending Tickets */}
         <Link
           href="/user/tickets"
-          className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
+          className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
         >
           <div className="flex items-center justify-between">
             <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -138,10 +134,9 @@ export default function UserDashboardHome() {
           </div>
         </Link>
 
-        {/* Metric 3: Total Purchases */}
         <Link
           href="/user/purchases"
-          className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
+          className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
         >
           <div className="flex items-center justify-between">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -161,10 +156,9 @@ export default function UserDashboardHome() {
           </div>
         </Link>
 
-        {/* Metric 4: Notifications */}
         <Link
           href="/user/notifications"
-          className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
+          className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group space-y-3"
         >
           <div className="flex items-center justify-between">
             <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform relative">
@@ -188,11 +182,9 @@ export default function UserDashboardHome() {
         </Link>
       </div>
 
-      {/* Two Column Section: Recent Projects & Recent Tickets */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-        {/* Recent Projects */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+        <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FiBriefcase className="text-indigo-600" size={18} />
@@ -204,9 +196,9 @@ export default function UserDashboardHome() {
           </div>
 
           {loading ? (
-            <div className="py-8 text-center text-xs text-slate-400">Loading active projects...</div>
+            <div className="py-5 text-center text-xs text-slate-400">Loading active projects...</div>
           ) : projects.length === 0 ? (
-            <div className="py-10 text-center space-y-2">
+            <div className="py-4 text-center space-y-2">
               <FiFolder size={28} className="mx-auto text-slate-300" />
               <p className="text-xs font-medium text-slate-500">No active projects assigned yet.</p>
             </div>
@@ -239,8 +231,7 @@ export default function UserDashboardHome() {
           )}
         </div>
 
-        {/* Recent Tickets */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+        <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FiLifeBuoy className="text-amber-600" size={18} />
@@ -252,9 +243,9 @@ export default function UserDashboardHome() {
           </div>
 
           {loading ? (
-            <div className="py-8 text-center text-xs text-slate-400">Loading tickets...</div>
+            <div className="py-5 text-center text-xs text-slate-400">Loading tickets...</div>
           ) : tickets.length === 0 ? (
-            <div className="py-10 text-center space-y-2">
+            <div className="py-4 text-center space-y-2">
               <FiLifeBuoy size={28} className="mx-auto text-slate-300" />
               <p className="text-xs font-medium text-slate-500">No support tickets created yet.</p>
               <Link href="/user/tickets" className="text-xs text-primary font-semibold hover:underline block">
@@ -287,11 +278,10 @@ export default function UserDashboardHome() {
 
       </div>
 
-      {/* Quick Action Cards */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+      <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm space-y-4">
         <h2 className="text-base font-semibold text-slate-900">Explore Products & Packages</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          
+
           <Link
             href="/user/products"
             className="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/60 border border-slate-100 transition-all flex items-center gap-3 group"

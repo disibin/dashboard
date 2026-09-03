@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch all registered users or search by email/name (Staff staff only)
+
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();

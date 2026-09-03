@@ -14,11 +14,10 @@ export default function TeamPartnersManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Form & Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
   const [form, setForm] = useState({ company_name: '', business_url: '', email: '', image: '', image_id: '' });
-  
+
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [saving, setSaving] = useState(false);
@@ -167,65 +166,61 @@ export default function TeamPartnersManagement() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-7 max-w-6xl mx-auto w-full space-y-5">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <FaHandshake size={20} />
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="space-y-0.5">
+          <h1 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <FaHandshake size={18} />
             </span>
             Partners Management
           </h1>
-          <p className="text-slate-500 text-sm pl-11">
+          <p className="text-slate-500 text-xs pl-10">
             Manage official business partners displayed across public pages
           </p>
         </div>
 
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold text-xs sm:text-sm transition-all shadow-md shrink-0 self-start sm:self-auto cursor-pointer"
+          className="flex items-center justify-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs transition-all shadow-xs shrink-0 self-start sm:self-auto cursor-pointer"
         >
-          <FaPlus size={14} />
+          <FaPlus size={13} />
           Add New Partner
         </button>
       </div>
 
-      {/* Main Grid Container */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        {/* Search Bar */}
-        <div className="p-4 border-b border-slate-100 bg-slate-50/60">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="p-3.5 border-b border-slate-100 bg-slate-50/60">
           <div className="relative max-w-md">
-            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="input-style pl-10 pr-9 text-sm py-2"
+              className="input-style pl-9 pr-8 text-xs py-1.5"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                <FaTimes size={14} />
+                <FaTimes size={13} />
               </button>
             )}
           </div>
         </div>
 
-        {/* Content */}
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
-            <FiLoader className="animate-spin mx-auto text-primary" size={28} />
-            <p className="text-sm font-medium">Loading partner list...</p>
+          <div className="py-5 text-center text-slate-400 space-y-2">
+            <FiLoader className="animate-spin mx-auto text-primary" size={24} />
+            <p className="text-xs font-medium">Loading partner list...</p>
           </div>
         ) : filteredPartners.length === 0 ? (
-          <div className="py-16 text-center space-y-4 px-4">
-            <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-              <FaHandshake size={32} />
+          <div className="py-5 text-center space-y-3 px-4">
+            <div className="w-14 h-14 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+              <FaHandshake size={28} />
             </div>
             <div className="space-y-1 max-w-sm mx-auto">
-              <h3 className="font-semibold text-slate-800 text-base">No partners found</h3>
+              <h3 className="font-semibold text-slate-800 text-sm">No partners found</h3>
               <p className="text-xs text-slate-500">
                 {search ? 'No partners match your search term.' : 'Add your first partner to showcase on public pages.'}
               </p>
@@ -238,61 +233,61 @@ export default function TeamPartnersManagement() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-5">
             {filteredPartners.map((p) => (
               <div
                 key={p.id}
-                className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
+                className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between space-y-3 group"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden shrink-0">
                       {p.image ? (
                         <img src={p.image} alt={p.company_name} className="w-full h-full object-contain p-1" />
                       ) : (
-                        <span className="font-semibold text-primary text-lg">{p.company_name?.charAt(0)}</span>
+                        <span className="font-semibold text-primary text-base">{p.company_name?.charAt(0)}</span>
                       )}
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-slate-900 text-sm truncate group-hover:text-primary transition-colors">
+                      <h3 className="font-semibold text-slate-900 text-xs truncate group-hover:text-primary transition-colors">
                         {p.company_name}
                       </h3>
-                      <p className="text-[11px] text-slate-400 truncate">/{p.slug}</p>
+                      <p className="text-[10px] text-slate-400 truncate">/{p.slug}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={() => openEditModal(p)}
-                      className="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
                       title="Edit Partner"
                     >
-                      <FaEdit size={14} />
+                      <FaEdit size={13} />
                     </button>
                     <button
                       onClick={() => handleDelete(p)}
                       disabled={deletingId === p.id}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all disabled:opacity-40 cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all disabled:opacity-40 cursor-pointer"
                       title="Delete Partner"
                     >
-                      {deletingId === p.id ? <FiLoader className="animate-spin" size={14} /> : <FaTrash size={14} />}
+                      {deletingId === p.id ? <FiLoader className="animate-spin" size={13} /> : <FaTrash size={13} />}
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-slate-500 pt-2 border-t border-slate-100">
+                <div className="space-y-1 text-xs text-slate-500 pt-2 border-t border-slate-100">
                   <a
                     href={p.business_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-primary truncate font-medium"
+                    className="flex items-center gap-1.5 hover:text-primary truncate font-medium text-[11px]"
                   >
-                    <FaGlobe size={12} className="text-slate-400 shrink-0" />
+                    <FaGlobe size={11} className="text-slate-400 shrink-0" />
                     <span className="truncate">{p.business_url}</span>
                   </a>
-                  <div className="flex items-center gap-2 text-slate-500 truncate">
-                    <FaEnvelope size={12} className="text-slate-400 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-slate-500 truncate text-[11px]">
+                    <FaEnvelope size={11} className="text-slate-400 shrink-0" />
                     <span className="truncate">{p.email}</span>
                   </div>
                 </div>
@@ -302,26 +297,25 @@ export default function TeamPartnersManagement() {
         )}
       </div>
 
-      {/* Add / Edit Partner Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-                <FaHandshake className="text-primary" size={18} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                <FaHandshake className="text-primary" size={16} />
                 {editingPartner ? 'Edit Partner' : 'Add New Partner'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
+                className="w-7 h-7 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
               >
-                <FaTimes size={16} />
+                <FaTimes size={14} />
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 space-y-4">
+            <form onSubmit={handleSave} className="p-5 space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
                   Company Name *
                 </label>
                 <input
@@ -329,13 +323,13 @@ export default function TeamPartnersManagement() {
                   value={form.company_name}
                   onChange={e => setForm(p => ({ ...p, company_name: e.target.value }))}
                   required
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
                     Business Website URL *
                   </label>
                   <input
@@ -343,12 +337,12 @@ export default function TeamPartnersManagement() {
                     value={form.business_url}
                     onChange={e => setForm(p => ({ ...p, business_url: e.target.value }))}
                     required
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
                     Contact Email *
                   </label>
                   <input
@@ -356,14 +350,13 @@ export default function TeamPartnersManagement() {
                     value={form.email}
                     onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                     required
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                   />
                 </div>
               </div>
 
-              {/* Company Logo Uploader */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
                   Company Logo *
                 </label>
 
@@ -377,7 +370,7 @@ export default function TeamPartnersManagement() {
 
                 <div className="flex items-center gap-3">
                   {imagePreview ? (
-                    <div className="relative w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 shrink-0">
+                    <div className="relative w-14 h-14 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 shrink-0">
                       <img src={imagePreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
                       <button
                         type="button"
@@ -392,29 +385,29 @@ export default function TeamPartnersManagement() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 border border-slate-200 cursor-pointer"
+                    className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 border border-slate-200 cursor-pointer"
                   >
-                    <FiPaperclip size={14} />
+                    <FiPaperclip size={13} />
                     {imagePreview ? 'Replace Logo' : 'Select Logo File'}
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-all cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2 cursor-pointer"
+                  className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
-                  {saving ? <FiLoader className="animate-spin" size={14} /> : null}
-                  {saving ? 'Uploading & Saving...' : editingPartner ? 'Update Partner' : 'Save Partner'}
+                  {saving ? <FiLoader className="animate-spin" size={13} /> : null}
+                  {saving ? 'Saving...' : editingPartner ? 'Update Partner' : 'Save Partner'}
                 </button>
               </div>
             </form>

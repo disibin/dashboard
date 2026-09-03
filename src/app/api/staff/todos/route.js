@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List staff to-dos
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -40,7 +39,6 @@ export async function GET(req) {
     }
 }
 
-// POST — Create to-do task
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -79,7 +77,6 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update to-do item
 export async function PUT(req) {
     try {
         const auth = await isStaffLogin();
@@ -92,7 +89,6 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "To-do ID is required" }, { status: 400 });
         }
 
-        // Verify ownership unless manager
         if (auth.data.role !== 'manager') {
             const check = await dbQuery("SELECT staff_id FROM staff_todos WHERE id = $1", [id]);
             if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {
@@ -128,7 +124,6 @@ export async function PUT(req) {
     }
 }
 
-// PATCH — Toggle completion status
 export async function PATCH(req) {
     try {
         const auth = await isStaffLogin();
@@ -141,7 +136,6 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "To-do ID is required" }, { status: 400 });
         }
 
-        // Verify ownership unless manager
         if (auth.data.role !== 'manager') {
             const check = await dbQuery("SELECT staff_id FROM staff_todos WHERE id = $1", [id]);
             if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {
@@ -172,7 +166,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete to-do item
 export async function DELETE(req) {
     try {
         const auth = await isStaffLogin();
@@ -185,7 +178,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "To-do ID is required" }, { status: 400 });
         }
 
-        // Verify ownership unless manager
         if (auth.data.role !== 'manager') {
             const check = await dbQuery("SELECT staff_id FROM staff_todos WHERE id = $1", [id]);
             if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {

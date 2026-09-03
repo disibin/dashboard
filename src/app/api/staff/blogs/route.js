@@ -3,7 +3,6 @@ import { isStaffLogin, isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import cloudinary from "@/lib/database/cloudinary";
 
-// Helper utility to generate clean URL slug
 function slugify(text) {
     if (!text) return `blog-${Date.now()}`;
     const slug = text
@@ -16,7 +15,6 @@ function slugify(text) {
     return slug || `blog-${Date.now()}`;
 }
 
-// GET — List all blogs (Staff login required)
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -50,7 +48,6 @@ export async function GET(req) {
     }
 }
 
-// POST — Create Blog (Manager Only, auto-generates slug from title)
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -66,10 +63,8 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Tenant is required" }, { status: 400 });
         }
 
-        // Generate slug from title in API
         let blogSlug = slugify(title.trim());
 
-        // Ensure slug uniqueness
         const dupCheck = await dbQuery("SELECT id FROM blogs WHERE slug = $1", [blogSlug]);
         if (dupCheck.rows.length > 0) {
             blogSlug = `${blogSlug}-${Date.now()}`;
@@ -91,7 +86,6 @@ export async function POST(req) {
 
         const record = res.rows[0];
 
-        // Audit Log
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'BLOG_CREATE', 'blogs', $2, $3)
@@ -103,7 +97,6 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update Blog (Manager Only, updates slug from title in API)
 export async function PUT(req) {
     try {
         const auth = await isManager();
@@ -119,14 +112,12 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Tenant is required" }, { status: 400 });
         }
 
-        // Check if blog exists
         const checkRes = await dbQuery("SELECT * FROM blogs WHERE id = $1", [id]);
         if (checkRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Blog record not found" }, { status: 404 });
         }
         const existingBlog = checkRes.rows[0];
 
-        // Re-generate slug if title changed or generate from existing
         const updatedTitle = title?.trim() || existingBlog.title;
         let blogSlug = slugify(updatedTitle);
 
@@ -135,7 +126,6 @@ export async function PUT(req) {
             blogSlug = `${blogSlug}-${Date.now()}`;
         }
 
-        // If replacing image, clean up old image if different
         if (existingBlog.image_id && image_id && existingBlog.image_id !== image_id) {
             try {
                 await cloudinary.uploader.destroy(existingBlog.image_id);
@@ -167,7 +157,6 @@ export async function PUT(req) {
 
         const record = res.rows[0];
 
-        // Audit Log
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'BLOG_UPDATE', 'blogs', $2, $3)
@@ -179,7 +168,6 @@ export async function PUT(req) {
     }
 }
 
-// DELETE — Delete Blog (Manager Only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();
@@ -200,7 +188,6 @@ export async function DELETE(req) {
 
         const deleted = res.rows[0];
 
-        // Delete image from Cloudinary if image_id exists
         if (deleted.image_id) {
             try {
                 await cloudinary.uploader.destroy(deleted.image_id);
@@ -209,7 +196,6 @@ export async function DELETE(req) {
             }
         }
 
-        // Audit Log
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'BLOG_DELETE', 'blogs', $2, $3)

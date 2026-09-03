@@ -80,7 +80,7 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') cancelEdit(); }}
-              className="w-full px-3 py-1.5 rounded-lg  outline-none text-sm font-semibold"
+              className="w-full px-3 py-1.5 rounded-xl  outline-none text-sm font-semibold"
               placeholder="Feature name"
             />
             <input
@@ -96,7 +96,7 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-slate-900 text-sm">{feature.name}</span>
-              
+
               {feature.product_count > 0 ? (
                 <button
                   type="button"
@@ -125,14 +125,14 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-all flex items-center gap-1 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-all flex items-center gap-1 disabled:opacity-50"
               >
                 {saving ? <FiLoader size={12} className="animate-spin" /> : <FiCheck size={12} />}
                 Save
               </button>
               <button
                 onClick={cancelEdit}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-all"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-all"
               >
                 Cancel
               </button>
@@ -141,14 +141,14 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
             <>
               <button
                 onClick={startEdit}
-                className="p-1.5 text-primary-light hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                className="p-1.5 text-primary-light hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
                 title="Edit Feature"
               >
                 <FiEdit2 size={15} />
               </button>
               <button
                 onClick={handleDelete}
-                className="p-1.5 text-primary-light hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                className="p-1.5 text-primary-light hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                 title="Delete Feature"
               >
                 <FiTrash2 size={15} />
@@ -166,7 +166,7 @@ function FeatureItem({ feature, onUpdate, onDelete }) {
               <Link
                 key={p.id}
                 href={`/panel/products/${p.slug}`}
-                className="inline-flex items-center gap-1 text-xs text-slate-700 bg-tertiary hover:bg-primary/10 hover:text-primary px-2.5 py-1 rounded-md font-medium transition-colors"
+                className="inline-flex items-center gap-1 text-xs text-slate-700 bg-tertiary hover:bg-primary/10 hover:text-primary px-2.5 py-1 rounded-xl font-medium transition-colors"
               >
                 <FiPackage size={10} /> {p.name}
               </Link>
@@ -247,7 +247,7 @@ const FeaturesPage = () => {
   );
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -288,7 +288,7 @@ const FeaturesPage = () => {
               placeholder="Feature name (e.g. 24/7 Support) *"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              className="px-3.5 py-2 rounded-lg border border-slate-300 bg-white  outline-none text-xs font-semibold"
+              className="px-3.5 py-2 rounded-xl border border-slate-300 bg-white  outline-none text-xs font-semibold"
             />
             <input
               type="text"
@@ -302,14 +302,14 @@ const FeaturesPage = () => {
             <button
               type="button"
               onClick={() => setShowAdd(false)}
-              className="px-4 py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-white transition-all"
+              className="px-4 py-1.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-white transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-dark transition-all flex items-center gap-1 disabled:opacity-50"
+              className="px-5 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-dark transition-all flex items-center gap-1 disabled:opacity-50"
             >
               {submitting ? <FiLoader size={12} className="animate-spin" /> : <FiCheck size={12} />}
               {submitting ? 'Creating...' : 'Save Feature'}
@@ -338,12 +338,12 @@ const FeaturesPage = () => {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-16 text-primary-light text-xs font-semibold gap-2">
+        <div className="flex items-center justify-center py-4 text-primary-light text-xs font-semibold gap-2">
           <FiLoader size={16} className="animate-spin text-primary" />
           <span>Loading features...</span>
         </div>
       ) : filteredFeatures.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl text-primary-light">
+        <div className="text-center py-4 border-2 border-dashed border-slate-200 rounded-2xl text-primary-light">
           <FiTag size={32} className="mx-auto mb-2 opacity-40" />
           <p className="font-semibold text-slate-600 text-sm">
             {search ? `No features match "${search}"` : 'No features created yet'}

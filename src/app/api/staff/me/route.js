@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-// GET — Get authenticated staff member's full profile
+
 export async function GET() {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json({ success: false, message: "Not authenticated" }, { status: 401 });
-        
+
         const res = await dbQuery(
             `SELECT id, name, email, phone, role, is_active, is_verified, is_2fa_active,
                     city, country, address_line1, address_line2, state, postal_code, 
@@ -29,7 +29,7 @@ export async function GET() {
     }
 }
 
-// PATCH — Update own staff profile fields
+
 export async function PATCH(req) {
     try {
         const auth = await isStaffLogin();
@@ -38,7 +38,7 @@ export async function PATCH(req) {
         const staffId = auth.data.id;
         const body = await req.json();
 
-        // Strip out protected fields
+
         const { password, role, email, id, is_active, is_verified, pending_email, email_change_code, email_change_expires_at, ...updateData } = body;
 
         if (Object.keys(updateData).length === 0) {
@@ -72,7 +72,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete own staff account (requires password & guards last active manager)
+
 export async function DELETE(req) {
     try {
         const auth = await isStaffLogin();
@@ -98,7 +98,7 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Incorrect password" }, { status: 400 });
         }
 
-        // Guard: cannot delete the last active manager
+
         if (current.role === 'manager' && current.is_active) {
             const activeManagersRes = await dbQuery(
                 "SELECT COUNT(*) AS cnt FROM staffs WHERE role = 'manager' AND is_active = TRUE"
@@ -112,10 +112,10 @@ export async function DELETE(req) {
             }
         }
 
-        // Delete staff account
+
         await dbQuery("DELETE FROM staffs WHERE id = $1", [staffId]);
 
-        // Clear staff cookie
+
         const cookieStore = await cookies();
         cookieStore.delete('disibin-staff');
 

@@ -18,7 +18,6 @@ export default function UserPackagesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Cart IDs stored in DB
   const [cartPackageIds, setCartPackageIds] = useState([]);
 
   useEffect(() => {
@@ -47,7 +46,6 @@ export default function UserPackagesPage() {
     }
   };
 
-  // Add to DB user_cart
   const handleAddToCart = async (pkg) => {
     const isAlreadyInCart = cartPackageIds.includes(pkg.id);
 
@@ -66,7 +64,6 @@ export default function UserPackagesPage() {
     }
   };
 
-  // Buy Now: Add to DB cart and redirect directly to /user/cart
   const handleBuyNow = async (pkg) => {
     try {
       if (!cartPackageIds.includes(pkg.id)) {
@@ -91,11 +88,10 @@ export default function UserPackagesPage() {
     .reduce((sum, p) => sum + Math.max(0, Number(p.price || 0) - Number(p.discount || 0)), 0);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6 pb-24">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4 pb-24">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
             <FiBox size={24} />
@@ -134,7 +130,6 @@ export default function UserPackagesPage() {
         </div>
       </div>
 
-      {/* Search Bar */}
       <div className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm flex items-center gap-3 max-w-md">
         <FiSearch className="text-slate-400 ml-2" size={18} />
         <input
@@ -151,19 +146,18 @@ export default function UserPackagesPage() {
         )}
       </div>
 
-      {/* Packages Grid */}
       {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
           <FiLoader className="animate-spin text-primary" size={26} />
           <p className="text-xs">Loading available packages...</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400">
           <FiBox size={32} className="mx-auto mb-2 text-slate-300" />
           <p className="font-semibold text-sm">No packages match your search</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((pkg, idx) => (
             <PackageCard
               key={pkg.id}
@@ -177,7 +171,6 @@ export default function UserPackagesPage() {
         </div>
       )}
 
-      {/* Sticky Bottom Cart Bar */}
       {cartCount > 0 && (
         <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-full max-w-2xl px-4 animate-in fade-in slide-in-from-bottom-5">
           <div className="bg-slate-900 text-white rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-4 border border-slate-800">

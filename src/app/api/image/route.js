@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import cloudinary from "@/lib/database/cloudinary";
 
-// POST upload image to Cloudinary
+
 export async function POST(req) {
     try {
         const formData = await req.formData();
@@ -41,7 +41,7 @@ export async function POST(req) {
     }
 }
 
-// DELETE image from Cloudinary by public_id
+
 export async function DELETE(req) {
     try {
         const { searchParams } = new URL(req.url);

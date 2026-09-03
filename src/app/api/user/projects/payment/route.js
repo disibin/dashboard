@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// POST — Create payment record for a purchase (Status: unpaid)
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -16,7 +15,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "purchase_id is required" }, { status: 400 });
         }
 
-        // Fetch purchase details
         const purchaseRes = await dbQuery(
             `SELECT id, user_id, price, discount, status FROM purchases WHERE id = $1 AND user_id = $2`,
             [purchase_id, userId]
@@ -28,7 +26,6 @@ export async function POST(req) {
 
         const purchase = purchaseRes.rows[0];
 
-        // Check if payment row already exists
         const existingPayment = await dbQuery(
             `SELECT id, price, paid, due, status FROM payments WHERE purchase_id = $1`,
             [purchase_id]
@@ -62,7 +59,6 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Process payment (Status: paid)
 export async function PATCH(req) {
     try {
         const auth = await isUserLogin();
@@ -76,7 +72,6 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "purchase_id or payment_id is required" }, { status: 400 });
         }
 
-        // Verify purchase ownership
         const purchaseRes = await dbQuery(
             `SELECT p.id, pay.id AS payment_id, pay.price
              FROM purchases p
@@ -91,7 +86,6 @@ export async function PATCH(req) {
 
         const record = purchaseRes.rows[0];
 
-        // Update payment to paid
         const updatePaymentRes = await dbQuery(
             `UPDATE payments
              SET paid = price, due = 0, status = 'paid', updated_at = now()
@@ -100,7 +94,6 @@ export async function PATCH(req) {
             [record.id]
         );
 
-        // Update purchase status to complete
         await dbQuery(
             `UPDATE purchases SET status = 'complete', updated_at = now() WHERE id = $1`,
             [record.id]

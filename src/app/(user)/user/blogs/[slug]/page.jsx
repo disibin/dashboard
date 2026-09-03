@@ -62,7 +62,7 @@ export default function UserSingleBlogPage({ params }) {
 
   if (loading) {
     return (
-      <div className="p-4 sm:p-6 md:p-8 w-full max-w-4xl mx-auto space-y-6">
+      <div className="p-4 sm:p-4 md:p-5 w-full max-w-4xl mx-auto space-y-4">
         <div className="h-8 w-32 bg-white rounded-xl animate-pulse" />
         <div className="h-64 bg-white rounded-3xl animate-pulse" />
         <div className="h-96 bg-white rounded-3xl animate-pulse" />
@@ -72,7 +72,7 @@ export default function UserSingleBlogPage({ params }) {
 
   if (!blog) {
     return (
-      <div className="p-8 w-full max-w-4xl mx-auto text-center space-y-4">
+      <div className="p-5 w-full max-w-4xl mx-auto text-center space-y-4">
         <Toaster position="top-center" />
         <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
           <FiBookOpen size={32} />
@@ -93,10 +93,9 @@ export default function UserSingleBlogPage({ params }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Top Header & Navigation */}
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/user/blogs"
@@ -115,20 +114,17 @@ export default function UserSingleBlogPage({ params }) {
         </button>
       </div>
 
-      {/* Article Header Card */}
-      <div className="bg-white p-6 sm:p-10 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-        {/* Tenant Badge */}
+      <div className="bg-white p-4 sm:p-4 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
           <FiGlobe size={13} />
           <span>{blog.tenant_name || 'Tenant Article'}</span>
         </div>
 
-        {/* Title */}
         <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
           {blog.title}
         </h1>
 
-        {/* Author & Meta info */}
         <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 pt-4 border-t border-slate-100">
           <div className="flex items-center gap-2 font-medium text-slate-800">
             <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
@@ -154,7 +150,6 @@ export default function UserSingleBlogPage({ params }) {
           </div>
         </div>
 
-        {/* Featured Image */}
         {blog.image && (
           <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 max-h-[450px]">
             <img
@@ -165,7 +160,6 @@ export default function UserSingleBlogPage({ params }) {
           </div>
         )}
 
-        {/* Blog Content HTML */}
         <div className="pt-4 text-slate-800 leading-relaxed text-sm sm:text-base space-y-4">
           {blog.description ? (
             <div
@@ -178,11 +172,10 @@ export default function UserSingleBlogPage({ params }) {
         </div>
       </div>
 
-      {/* Bottom Back Button */}
       <div className="flex justify-center pt-4">
         <Link
           href="/user/blogs"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-semibold text-sm hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
+          className="inline-flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-2xl font-semibold text-sm hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
         >
           <FiArrowLeft size={16} />
           <span>Explore More Articles</span>

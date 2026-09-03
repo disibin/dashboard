@@ -15,7 +15,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "package_id is required" }, { status: 400 });
         }
 
-        // 1. Fetch package details
         const pkgRes = await dbQuery("SELECT id, name, price, discount, description FROM packages WHERE id = $1", [package_id]);
         if (pkgRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Package not found" }, { status: 404 });
@@ -24,7 +23,6 @@ export async function POST(req) {
 
         const chatTitle = `${pkg.name} Project`;
 
-        // 2. Check if project chat already exists for this user with same title
         const existingChatRes = await dbQuery(
             `SELECT pc.id, pc.title
              FROM project_chats pc
@@ -47,7 +45,6 @@ export async function POST(req) {
             });
         }
 
-        // 3. Create purchase record
         const purchaseRes = await dbQuery(
             `INSERT INTO purchases (user_id, package_id, price, discount, status)
              VALUES ($1, $2, $3, $4, 'incomplete')
@@ -56,7 +53,6 @@ export async function POST(req) {
         );
         const purchase = purchaseRes.rows[0];
 
-        // 4. Create project_chats record without package_id
         const chatRes = await dbQuery(
             `INSERT INTO project_chats (title, description, status)
              VALUES ($1, $2, 'waiting')
@@ -65,7 +61,6 @@ export async function POST(req) {
         );
         const projectChat = chatRes.rows[0];
 
-        // 5. Add user as participant in project_chats_participants
         await dbQuery(
             `INSERT INTO project_chats_participants (chat_id, user_id)
              VALUES ($1, $2)
@@ -73,13 +68,11 @@ export async function POST(req) {
             [projectChat.id, userId]
         );
 
-        // 6. Get a staff ID for initial welcome message
         const staffRes = await dbQuery("SELECT id FROM staffs ORDER BY id ASC LIMIT 1");
         const staffId = staffRes.rows.length > 0 ? staffRes.rows[0].id : null;
 
-        // 7. Insert initial welcome message into project_chats_messages
         const welcomeText = `Welcome to your project discussion for "${pkg.name}"! Our technical team and staff project manager will review your scope and assist you right away. Feel free to leave any initial requirements below.`;
-        
+
         if (staffId) {
             await dbQuery(
                 `INSERT INTO project_chats_messages (chat_id, staff_id, content)
@@ -94,7 +87,6 @@ export async function POST(req) {
             );
         }
 
-        // Send user notification
         await dbQuery(
             `INSERT INTO notifications (user_id, title, message, type, link)
              VALUES ($1, $2, $3, 'project', $4)`,

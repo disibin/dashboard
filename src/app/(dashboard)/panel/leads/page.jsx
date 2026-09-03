@@ -36,9 +36,9 @@ export default function LeadsOverviewPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
-      
-      {/* Header */}
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
+
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
@@ -65,8 +65,8 @@ export default function LeadsOverviewPage() {
         </div>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="p-3.5 rounded-xl bg-primary/10 text-primary">
             <FiUsers size={22} />
@@ -104,11 +104,11 @@ export default function LeadsOverviewPage() {
         </div>
       </div>
 
-      {/* Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* Client Leads Card */}
-        <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-6">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+        <div className="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
               <FiUserCheck size={24} />
@@ -132,8 +132,8 @@ export default function LeadsOverviewPage() {
           </div>
         </div>
 
-        {/* Business Leads Card */}
-        <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-6">
+
+        <div className="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
               <FiBriefcase size={24} />

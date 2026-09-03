@@ -87,9 +87,9 @@ export default function SupportDetailPage() {
 
   if (!support) {
     return (
-      <div className="p-6 max-w-3xl mx-auto space-y-4 text-center">
+      <div className="p-4 max-w-3xl mx-auto space-y-4 text-center">
         <Toaster position="top-center" />
-        <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
           <FiAlertCircle className="mx-auto text-secondary" size={36} />
           <h2 className="text-lg font-semibold text-slate-800">Support Request Not Found</h2>
           <Link
@@ -106,10 +106,10 @@ export default function SupportDetailPage() {
   const isPending = support.status === 'pending';
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Navigation & Actions */}
+
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/panel/support"
@@ -128,8 +128,8 @@ export default function SupportDetailPage() {
         </button>
       </div>
 
-      {/* Header Info Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -145,7 +145,7 @@ export default function SupportDetailPage() {
           </div>
         </div>
 
-        {/* Sender details row */}
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
           <div className="flex items-center gap-2 text-slate-700">
             <FiUser className="text-primary shrink-0" size={14} />
@@ -173,8 +173,8 @@ export default function SupportDetailPage() {
         </div>
       </div>
 
-      {/* Message Body */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Original Inquiry</h3>
         <div
           className="text-slate-800 text-sm leading-relaxed prose prose-slate max-w-none"
@@ -182,9 +182,9 @@ export default function SupportDetailPage() {
         />
       </div>
 
-      {/* Saved Reply Callout (if available) */}
+
       {support.reply && (
-        <div className="bg-primary/10 p-6 sm:p-8 rounded-2xl border border-primary/20 shadow-sm space-y-3">
+        <div className="bg-primary/10 p-4 sm:p-5 rounded-2xl border border-primary/20 shadow-sm space-y-3">
           <div className="flex items-center justify-between text-xs font-semibold text-primary">
             <span className="flex items-center gap-1.5 uppercase tracking-wider">
               <FiCheckCircle size={13} /> Saved Reply Sent to Submitter
@@ -200,9 +200,9 @@ export default function SupportDetailPage() {
         </div>
       )}
 
-      {/* Reply Composer — Only show if pending (not replied yet) */}
+
       {isPending ? (
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Compose Email Reply
           </h3>
@@ -220,7 +220,7 @@ export default function SupportDetailPage() {
             <button
               onClick={handleSendReply}
               disabled={replyLoading}
-              className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl font-semibold text-xs transition-all disabled:opacity-50 shadow-md shrink-0"
+              className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-primary text-white rounded-xl font-semibold text-xs transition-all disabled:opacity-50 shadow-md shrink-0"
             >
               {replyLoading ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
               {replyLoading ? 'Sending...' : 'Send Email Reply'}

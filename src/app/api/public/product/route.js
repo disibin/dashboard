@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET all products (Public)
 export async function GET() {
     try {
         const res = await dbQuery(`

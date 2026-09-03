@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch chat messages, images & detailed project metadata
 export async function GET(req) {
     try {
         const auth = await isUserLogin();
@@ -16,7 +15,6 @@ export async function GET(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Verify user participation & fetch project metadata
         const chatRes = await dbQuery(
             `SELECT 
                 pc.id, 
@@ -37,7 +35,6 @@ export async function GET(req) {
 
         const chat = chatRes.rows[0];
 
-        // Fetch messages from project_chats_messages
         const msgRes = await dbQuery(
             `SELECT 
                 pcm.id, 
@@ -63,7 +60,6 @@ export async function GET(req) {
             [chatId]
         );
 
-        // Fetch shared images from project_chats_images
         const imgRes = await dbQuery(
             `SELECT pci.id, pci.chat_id, pci.user_id, pci.staff_id, pci.file_url, pci.file_id, pci.created_at,
                     u.name AS user_name, stf.name AS staff_name
@@ -89,7 +85,6 @@ export async function GET(req) {
     }
 }
 
-// POST — Send a new message / images in project chat
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -106,7 +101,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "chat_id and message/images are required" }, { status: 400 });
         }
 
-        // Verify user participation in chat
         const participantRes = await dbQuery(
             `SELECT chat_id FROM project_chats_participants WHERE chat_id = $1 AND user_id = $2`,
             [chat_id, userId]
@@ -160,7 +154,6 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Rename project chat title or update status / description
 export async function PATCH(req) {
     try {
         const auth = await isUserLogin();
@@ -174,7 +167,6 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Verify user participation in chat
         const participantRes = await dbQuery(
             `SELECT chat_id FROM project_chats_participants WHERE chat_id = $1 AND user_id = $2`,
             [chat_id, userId]
@@ -226,7 +218,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete project chat
 export async function DELETE(req) {
     try {
         const auth = await isUserLogin();
@@ -240,7 +231,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Verify user participation in chat
         const participantRes = await dbQuery(
             `SELECT chat_id FROM project_chats_participants WHERE chat_id = $1 AND user_id = $2`,
             [chatId, userId]
@@ -250,7 +240,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Project chat not found or access denied" }, { status: 403 });
         }
 
-        // Delete project chat (Cascades to messages, participants, images)
         await dbQuery(`DELETE FROM project_chats WHERE id = $1`, [chatId]);
 
         return NextResponse.json({

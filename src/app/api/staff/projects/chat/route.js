@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch chat messages, images & project metadata for staff
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -15,7 +14,6 @@ export async function GET(req) {
             return NextResponse.json({ success: false, message: "chat_id is required" }, { status: 400 });
         }
 
-        // Fetch project metadata & client details
         const chatRes = await dbQuery(
             `SELECT 
                 pc.id, 
@@ -41,7 +39,6 @@ export async function GET(req) {
 
         const chat = chatRes.rows[0];
 
-        // Fetch messages from project_chats_messages
         const msgRes = await dbQuery(
             `SELECT 
                 pcm.id, 
@@ -67,7 +64,6 @@ export async function GET(req) {
             [chatId]
         );
 
-        // Fetch shared images from project_chats_images
         const imgRes = await dbQuery(
             `SELECT pci.id, pci.chat_id, pci.user_id, pci.staff_id, pci.file_url, pci.file_id, pci.created_at,
                     u.name AS user_name, stf.name AS staff_name
@@ -93,7 +89,6 @@ export async function GET(req) {
     }
 }
 
-// POST — Send a new message / images as staff
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -110,13 +105,11 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "chat_id and message/images are required" }, { status: 400 });
         }
 
-        // Verify chat existence
         const chatCheck = await dbQuery(`SELECT id, title FROM project_chats WHERE id = $1`, [chat_id]);
         if (chatCheck.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Project chat not found" }, { status: 404 });
         }
 
-        // Add staff as participant if not already
         await dbQuery(
             `INSERT INTO project_chats_participants (chat_id, staff_id)
              VALUES ($1, $2)
@@ -150,7 +143,6 @@ export async function POST(req) {
             }
         }
 
-        // Notify client user about staff message
         const clientParticipant = await dbQuery(
             `SELECT user_id FROM project_chats_participants WHERE chat_id = $1 AND user_id IS NOT NULL`,
             [chat_id]
@@ -187,7 +179,6 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Staff update project status, title, description
 export async function PATCH(req) {
     try {
         const auth = await isStaffLogin();
@@ -242,7 +233,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Staff delete project chat
 export async function DELETE(req) {
     try {
         const auth = await isStaffLogin();

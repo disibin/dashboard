@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single package by slug OR id (Staff / Panel)
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -42,7 +41,6 @@ export async function GET(req, { params }) {
 
         const pkg = pkgRes.rows[0];
 
-        // Fetch package features
         const featuresRes = await dbQuery(`
             SELECT 
                 pf.id, 

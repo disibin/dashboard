@@ -16,7 +16,7 @@ export default function BusinessLeadsPage() {
   const [search, setSearch] = useState('');
   const [deleting, setDeleting] = useState(null);
 
-  // Inline Row Edit State (NO POPUP MODALS)
+
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', email: '', phone: '', address: '', note: '' });
   const [savingEdit, setSavingEdit] = useState(false);
@@ -109,11 +109,11 @@ export default function BusinessLeadsPage() {
   const totalLeads = leads.length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
@@ -145,7 +145,7 @@ export default function BusinessLeadsPage() {
         </div>
       </div>
 
-      {/* Stat Card */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0 font-semibold">
@@ -168,9 +168,9 @@ export default function BusinessLeadsPage() {
         </div>
       </div>
 
-      {/* Main Table Container */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden space-y-0">
-        {/* Search & Filter Bar */}
+
         <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between gap-4">
           <div className="relative w-full sm:w-80">
             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -195,14 +195,14 @@ export default function BusinessLeadsPage() {
           </span>
         </div>
 
-        {/* Content */}
+
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-secondary" size={28} />
             <p className="text-sm font-medium">Loading business leads...</p>
           </div>
         ) : filteredLeads.length === 0 ? (
-          <div className="py-16 text-center space-y-4 px-4">
+          <div className="py-4 text-center space-y-4 px-4">
             <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
               <FiBriefcase size={32} />
             </div>
@@ -226,12 +226,12 @@ export default function BusinessLeadsPage() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Business Name</th>
-                  <th className="px-6 py-4">Contact Info</th>
-                  <th className="px-6 py-4">Address</th>
-                  <th className="px-6 py-4">Note / Details</th>
-                  <th className="px-6 py-4">Date Added</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-4 py-4">Business Name</th>
+                  <th className="px-4 py-4">Contact Info</th>
+                  <th className="px-4 py-4">Address</th>
+                  <th className="px-4 py-4">Note / Details</th>
+                  <th className="px-4 py-4">Date Added</th>
+                  <th className="px-4 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -241,7 +241,7 @@ export default function BusinessLeadsPage() {
                   if (isEditing) {
                     return (
                       <tr key={lead.id} className="bg-secondary/10/40">
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
                           <input
                             type="text"
                             value={editForm.name}
@@ -250,7 +250,7 @@ export default function BusinessLeadsPage() {
                             placeholder="Business Name *"
                           />
                         </td>
-                        <td className="px-6 py-4 space-y-1">
+                        <td className="px-4 py-4 space-y-1">
                           <input
                             type="email"
                             value={editForm.email}
@@ -266,7 +266,7 @@ export default function BusinessLeadsPage() {
                             placeholder="Phone"
                           />
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
                           <input
                             type="text"
                             value={editForm.address}
@@ -275,7 +275,7 @@ export default function BusinessLeadsPage() {
                             placeholder="Address"
                           />
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
                           <input
                             type="text"
                             value={editForm.note}
@@ -284,21 +284,21 @@ export default function BusinessLeadsPage() {
                             placeholder="Note"
                           />
                         </td>
-                        <td className="px-6 py-4 text-xs text-slate-400 font-medium">
+                        <td className="px-4 py-4 text-xs text-slate-400 font-medium">
                           Editing...
                         </td>
-                        <td className="px-6 py-4 text-right space-x-1">
+                        <td className="px-4 py-4 text-right space-x-1">
                           <button
                             onClick={() => handleSaveInlineEdit(lead.id)}
                             disabled={savingEdit}
-                            className="p-2 text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-all disabled:opacity-50"
+                            className="p-2 text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition-all disabled:opacity-50"
                             title="Save Changes"
                           >
                             {savingEdit ? <FiLoader className="animate-spin" size={14} /> : <FiCheck size={14} />}
                           </button>
                           <button
                             onClick={cancelInlineEdit}
-                            className="p-2 text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-lg transition-all"
+                            className="p-2 text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-xl transition-all"
                             title="Cancel"
                           >
                             <FiX size={14} />
@@ -310,11 +310,11 @@ export default function BusinessLeadsPage() {
 
                   return (
                     <tr key={lead.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-semibold text-slate-900">
+                      <td className="px-4 py-4 font-semibold text-slate-900">
                         {lead.name}
                       </td>
 
-                      <td className="px-6 py-4 space-y-1">
+                      <td className="px-4 py-4 space-y-1">
                         <div className="flex items-center gap-1.5 text-slate-700 text-xs">
                           <FiMail className="text-secondary shrink-0" size={13} />
                           <a href={`mailto:${lead.email}`} className="hover:underline">{lead.email}</a>
@@ -327,7 +327,7 @@ export default function BusinessLeadsPage() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-slate-600 max-w-xs truncate">
+                      <td className="px-4 py-4 text-xs text-slate-600 max-w-xs truncate">
                         {lead.address ? (
                           <span className="flex items-center gap-1.5">
                             <FiMapPin className="text-rose-500 shrink-0" size={13} />
@@ -338,9 +338,9 @@ export default function BusinessLeadsPage() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         {lead.note ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium bg-slate-100 text-slate-700">
                             <FiFileText size={11} />
                             {lead.note}
                           </span>
@@ -349,17 +349,17 @@ export default function BusinessLeadsPage() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-slate-500">
+                      <td className="px-4 py-4 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
                           <FiCalendar size={12} />
                           {new Date(lead.created_at).toLocaleDateString()}
                         </span>
                       </td>
 
-                      <td className="px-6 py-4 text-right space-x-1">
+                      <td className="px-4 py-4 text-right space-x-1">
                         <button
                           onClick={() => startInlineEdit(lead)}
-                          className="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-lg transition-all"
+                          className="p-2 text-slate-400 hover:text-secondary hover:bg-secondary/10 rounded-xl transition-all"
                           title="Edit Lead Inline"
                         >
                           <FiEdit2 size={15} />
@@ -367,7 +367,7 @@ export default function BusinessLeadsPage() {
                         <button
                           onClick={() => handleDelete(lead)}
                           disabled={deleting === lead.id}
-                          className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all disabled:opacity-40"
+                          className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all disabled:opacity-40"
                           title="Delete Lead"
                         >
                           <FiTrash2 size={15} />

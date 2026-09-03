@@ -141,10 +141,10 @@ export default function PayrollPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
             <FiCreditCard size={24} />
@@ -250,7 +250,7 @@ export default function PayrollPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 <FiCheck size={16} />
                 {submitting ? 'Generating...' : 'Generate Payroll Cycle'}
@@ -261,11 +261,11 @@ export default function PayrollPage() {
       )}
 
       {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400">
           Loading payroll records...
         </div>
       ) : payrolls.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400">
           <FiCreditCard size={32} className="mx-auto mb-2 text-slate-300" />
           <p className="font-semibold text-sm">No payroll cycles created yet</p>
         </div>
@@ -284,7 +284,7 @@ export default function PayrollPage() {
               >
                 <div
                   onClick={() => setExpandedId(isExpanded ? null : p.id)}
-                  className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors"
+                  className="p-4 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-semibold text-sm shrink-0">
@@ -309,7 +309,7 @@ export default function PayrollPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="text-lg font-semibold text-slate-900">{formatCurrency(p.total_amount)}</div>
                       <div className="text-xs text-slate-400">
@@ -334,7 +334,7 @@ export default function PayrollPage() {
                 </div>
 
                 {isExpanded && (
-                  <div className="border-t border-slate-100 p-6 bg-slate-50/30">
+                  <div className="border-t border-slate-100 p-4 bg-slate-50/30">
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
                       Staff Salary Breakdown ({salaries.length} Staff Members)
                     </h4>

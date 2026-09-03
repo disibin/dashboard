@@ -30,13 +30,13 @@ export async function POST(req) {
             );
         }
 
-        // Check email uniqueness
+
         const emailRes = await dbQuery("SELECT id FROM staffs WHERE email = $1", [email]);
         if (emailRes.rows.length > 0) {
             return NextResponse.json({ success: false, message: "Email already registered" }, { status: 400 });
         }
 
-        // Check phone uniqueness (if provided)
+
         if (phone) {
             const phoneRes = await dbQuery("SELECT id FROM staffs WHERE phone = $1", [phone]);
             if (phoneRes.rows.length > 0) {
@@ -44,11 +44,11 @@ export async function POST(req) {
             }
         }
 
-        // Use DEMO_PASSWORD as the default temp password
+
         const tempPassword = DEMO_PASSWORD || crypto.randomBytes(8).toString("hex");
         const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
-        // Generate verification token (7-day expiry)
+
         const verificationToken = crypto.randomBytes(32).toString("hex");
         const verificationExpiresAt = new Date(Date.now() + 7 * 24 * 3600000);
 
@@ -60,7 +60,7 @@ export async function POST(req) {
         );
         const newMember = insertRes.rows[0];
 
-        // Send invitation / verification email
+
         const baseUrl = getBaseUrl(req);
         const verifyLink = `${baseUrl}/staff-auth/verify?token=${verificationToken}`;
         const htmlContent = `

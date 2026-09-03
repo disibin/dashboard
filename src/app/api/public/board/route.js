@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Public board members showcase
+
 export async function GET() {
     try {
         const res = await dbQuery(`

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin, isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List all terms & conditions entries (Staff login required)
+
 export async function GET() {
     try {
         const auth = await isStaffLogin();
@@ -23,7 +23,7 @@ export async function GET() {
     }
 }
 
-// POST — Create Terms & Conditions Item (Manager Only)
+
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -50,7 +50,7 @@ export async function POST(req) {
 
         const record = res.rows[0];
 
-        // Audit Log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'TERMS_CONDITION_CREATE', 'terms_and_conditions', $2, $3)
@@ -62,7 +62,7 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update Terms & Conditions Item (Manager Only)
+
 export async function PUT(req) {
     try {
         const auth = await isManager();
@@ -100,7 +100,7 @@ export async function PUT(req) {
 
         const record = res.rows[0];
 
-        // Audit Log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'TERMS_CONDITION_UPDATE', 'terms_and_conditions', $2, $3)
@@ -112,7 +112,7 @@ export async function PUT(req) {
     }
 }
 
-// DELETE — Delete Terms & Conditions Item (Manager Only)
+
 export async function DELETE(req) {
     try {
         const auth = await isManager();
@@ -133,7 +133,7 @@ export async function DELETE(req) {
 
         const deleted = res.rows[0];
 
-        // Audit Log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'TERMS_CONDITION_DELETE', 'terms_and_conditions', $2, $3)

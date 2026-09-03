@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List all tenants (Staff only)
 export async function GET() {
     try {
         const auth = await isManager();
@@ -20,7 +19,6 @@ export async function GET() {
     }
 }
 
-// POST — Create a new tenant (Manager only)
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -37,9 +35,8 @@ export async function POST(req) {
         }
 
         const nameTrimmed = name.trim();
-        const urlFormatted = url.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/$/, '');
+        const urlFormatted = url.trim().toLowerCase().replace(/^https?:\/\//, '');
 
-        // Check duplicate URL
         const dupCheck = await dbQuery("SELECT id FROM tenants WHERE LOWER(url) = $1", [urlFormatted]);
         if (dupCheck.rows.length > 0) {
             return NextResponse.json({ success: false, message: "A tenant with this URL already exists" }, { status: 409 });
@@ -52,7 +49,6 @@ export async function POST(req) {
             [nameTrimmed, urlFormatted]
         );
 
-        // Audit Log
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'TENANT_CREATE', 'tenants', $2, $3)`,
@@ -70,7 +66,6 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update an existing tenant (Manager only)
 export async function PUT(req) {
     try {
         const auth = await isManager();
@@ -83,7 +78,7 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Tenant ID is required" }, { status: 400 });
         }
 
-        const urlFormatted = url ? url.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/$/, '') : null;
+        const urlFormatted = url ? url.trim().toLowerCase().replace(/^https?:\/\//, '') : '';
 
         const res = await dbQuery(
             `UPDATE tenants 
@@ -99,7 +94,6 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
         }
 
-        // Audit Log
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'TENANT_UPDATE', 'tenants', $2, $3)`,
@@ -117,7 +111,6 @@ export async function PUT(req) {
     }
 }
 
-// DELETE — Remove a tenant (Manager only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();
@@ -137,7 +130,6 @@ export async function DELETE(req) {
 
         const deleted = res.rows[0];
 
-        // Audit Log
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'TENANT_DELETE', 'tenants', $2, $3)`,

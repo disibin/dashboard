@@ -19,7 +19,6 @@ export default function UserPackageDetailPage() {
   const [pkg, setPkg] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Checkout Modal State
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('bkash');
   const [transactionId, setTransactionId] = useState('');
@@ -109,7 +108,7 @@ export default function UserPackageDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-12 text-center text-slate-400 space-y-3 max-w-xl mx-auto">
+      <div className="p-4 text-center text-slate-400 space-y-3 max-w-xl mx-auto">
         <Toaster position="top-center" />
         <FiLoader className="animate-spin mx-auto text-primary" size={28} />
         <p className="text-xs font-medium">Loading package details...</p>
@@ -119,14 +118,14 @@ export default function UserPackageDetailPage() {
 
   if (!pkg) {
     return (
-      <div className="p-8 max-w-xl mx-auto text-center space-y-3">
+      <div className="p-5 max-w-xl mx-auto text-center space-y-3">
         <Toaster position="top-center" />
         <FiAlertCircle className="mx-auto text-amber-500" size={32} />
         <h2 className="text-base font-semibold text-slate-800">Package Not Found</h2>
         <p className="text-xs text-slate-500">The requested package could not be found or has been removed.</p>
         <Link
           href="/user/packages"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-xl text-xs font-semibold hover:bg-slate-900 transition-colors"
         >
           <FiArrowLeft size={14} /> Back to Packages
         </Link>
@@ -137,22 +136,20 @@ export default function UserPackageDetailPage() {
   const netPrice = Math.max(0, (pkg.price || 0) - (pkg.discount || 0));
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Navigation Header */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200">
         <Link
           href="/user/packages"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-medium transition-colors"
         >
           <FiArrowLeft size={15} /> Back to Packages
         </Link>
         <span className="text-xs font-mono text-slate-400">ID: #{pkg.id}</span>
       </div>
 
-      {/* Card Header */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -166,7 +163,6 @@ export default function UserPackageDetailPage() {
             )}
           </div>
 
-          {/* Pricing */}
           <div className="text-right bg-slate-50 p-4 rounded-xl border border-slate-100 min-w-[160px]">
             <div className="flex items-baseline justify-end gap-1.5">
               <span className="text-2xl font-black text-slate-900">{formatCurrency(netPrice)}</span>
@@ -182,14 +178,12 @@ export default function UserPackageDetailPage() {
           </div>
         </div>
 
-        {/* Image Preview if available */}
         {pkg.image && (
           <div className="aspect-video w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
             <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
           </div>
         )}
 
-        {/* Description */}
         {pkg.description && (
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Package Details</h3>
@@ -200,7 +194,6 @@ export default function UserPackageDetailPage() {
           </div>
         )}
 
-        {/* Features Checklist */}
         {pkg.features && pkg.features.length > 0 && (
           <div className="space-y-3 pt-4 border-t border-slate-100">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Included Features & Scope</h3>
@@ -217,7 +210,6 @@ export default function UserPackageDetailPage() {
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
           <button
             type="button"
@@ -239,10 +231,9 @@ export default function UserPackageDetailPage() {
         </div>
       </div>
 
-      {/* Checkout Modal for this package */}
       {checkoutModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 my-8 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-2xl border border-slate-100 space-y-4 my-8 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -255,7 +246,7 @@ export default function UserPackageDetailPage() {
               </div>
               <button
                 onClick={() => !submitting && setCheckoutModalOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
               >
                 <FiX size={20} />
               </button>
@@ -357,7 +348,7 @@ export default function UserPackageDetailPage() {
                 <button
                   type="submit"
                   disabled={submitting || !transactionId.trim()}
-                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white transition-all shadow-md disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white transition-all shadow-md disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                 >
                   {submitting ? <FiLoader className="animate-spin" size={14} /> : <FiCheck size={14} />}
                   Confirm Payment

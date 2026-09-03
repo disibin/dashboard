@@ -13,7 +13,7 @@ export default function TeamCareerPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal / Form state
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
   const [form, setForm] = useState({
@@ -150,11 +150,11 @@ export default function TeamCareerPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -184,15 +184,15 @@ export default function TeamCareerPage() {
         </div>
       </div>
 
-      {/* Job Grid / List */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-primary" size={28} />
             <p className="text-sm font-medium">Loading job vacancies...</p>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="py-16 text-center space-y-4 px-4">
+          <div className="py-4 text-center space-y-4 px-4">
             <FiBriefcase className="mx-auto text-slate-300" size={32} />
             <div className="space-y-1 max-w-sm mx-auto">
               <h3 className="font-semibold text-slate-800 text-base">No career positions created</h3>
@@ -208,7 +208,7 @@ export default function TeamCareerPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {jobs.map((job) => (
-              <div key={job.job_id} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div key={job.job_id} className="p-4 hover:bg-slate-50/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-2 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-semibold text-slate-900 truncate">{job.title}</h3>
@@ -220,13 +220,13 @@ export default function TeamCareerPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
-                    <span className="bg-slate-100 px-2.5 py-1 rounded-lg text-slate-700">{job.job_type}</span>
-                    <span className="bg-slate-100 px-2.5 py-1 rounded-lg text-slate-700">{job.level}</span>
-                    <span className="bg-primary/10 px-2.5 py-1 rounded-lg text-primary flex items-center gap-1">
+                    <span className="bg-slate-100 px-2.5 py-1 rounded-xl text-slate-700">{job.job_type}</span>
+                    <span className="bg-slate-100 px-2.5 py-1 rounded-xl text-slate-700">{job.level}</span>
+                    <span className="bg-primary/10 px-2.5 py-1 rounded-xl text-primary flex items-center gap-1">
                       <FiMapPin size={12} /> {job.location}
                     </span>
                     {job.compensation && (
-                      <span className="bg-primary/10 px-2.5 py-1 rounded-lg text-primary font-semibold">{job.compensation}</span>
+                      <span className="bg-primary/10 px-2.5 py-1 rounded-xl text-primary font-semibold">{job.compensation}</span>
                     )}
                   </div>
                 </div>
@@ -263,11 +263,11 @@ export default function TeamCareerPage() {
         )}
       </div>
 
-      {/* Add / Edit Job Modal */}
+
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                 <FiBriefcase className="text-primary" size={18} />
                 {editingJob ? 'Edit Job Opening' : 'Create New Job Vacancy'}
@@ -280,7 +280,7 @@ export default function TeamCareerPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 flex-1 overflow-y-auto space-y-4">
+            <form onSubmit={handleSave} className="p-4 flex-1 overflow-y-auto space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Job Title *
@@ -433,7 +433,7 @@ export default function TeamCareerPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+                  className="px-4 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
                 >
                   {saving ? <FiLoader className="animate-spin" size={14} /> : null}
                   {saving ? 'Saving...' : editingJob ? 'Update Vacancy' : 'Create Vacancy'}

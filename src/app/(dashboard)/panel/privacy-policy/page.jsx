@@ -15,7 +15,7 @@ export default function TeamPrivacyPolicyPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Form State
+
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
@@ -149,7 +149,7 @@ export default function TeamPrivacyPolicyPage() {
     <div className="p-4 w-full mx-auto min-h-screen pb-24">
       <Toaster position="top-right" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-tertiary p-6 sm:p-8 rounded-3xl text-primary shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-tertiary p-4 sm:p-5 rounded-3xl text-primary shadow-sm">
         <div>
           <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">Privacy Policy Management</h1>
           <p className=" text-sm mt-1 max-w-xl">
@@ -165,7 +165,7 @@ export default function TeamPrivacyPolicyPage() {
         </button>
       </div>
 
-      {/* Inline Form Component for Privacy Policy */}
+
       {showForm && (
         <PrivacyPolicyForm
           formData={formData}
@@ -177,7 +177,7 @@ export default function TeamPrivacyPolicyPage() {
         />
       )}
 
-      {/* Controls */}
+
       <div className="flex items-center justify-between gap-4 mb-6 border-b border-slate-200 pb-4">
         <div className="relative">
           <FiSearch className="absolute left-3.5 top-3 text-slate-400 w-4 h-4" />
@@ -199,14 +199,14 @@ export default function TeamPrivacyPolicyPage() {
         </button>
       </div>
 
-      {/* Main Table */}
+
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 shadow-sm">
+        <div className="flex flex-col items-center justify-center py-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiRefreshCw className="w-8 h-8 text-primary animate-spin mb-3" />
           <p className="text-slate-500 font-medium text-sm">Loading Privacy Policy entries...</p>
         </div>
       ) : filteredData.length === 0 ? (
-        <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
+        <div className="text-center py-4 px-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
           <FiFileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-slate-800">No Privacy Policy items</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-6">
@@ -225,22 +225,22 @@ export default function TeamPrivacyPolicyPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/60 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="py-4 px-6">Order</th>
-                  <th className="py-4 px-6">Title</th>
-                  <th className="py-4 px-6">Status</th>
-                  <th className="py-4 px-6">Created By</th>
-                  <th className="py-4 px-6">Last Updated</th>
-                  <th className="py-4 px-6 text-right">Actions</th>
+                  <th className="py-4 px-4">Order</th>
+                  <th className="py-4 px-4">Title</th>
+                  <th className="py-4 px-4">Status</th>
+                  <th className="py-4 px-4">Created By</th>
+                  <th className="py-4 px-4">Last Updated</th>
+                  <th className="py-4 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                 {filteredData.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
-                    <td className="py-4 px-6 font-semibold text-slate-900 max-w-xs truncate">
+                    <td className="py-4 px-4 font-mono text-xs text-slate-500 font-semibold">#{item.order_num || 0}</td>
+                    <td className="py-4 px-4 font-semibold text-slate-900 max-w-xs truncate">
                       {item.title}
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4">
                       <button
                         onClick={() => handleTogglePublish(item)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
@@ -260,17 +260,17 @@ export default function TeamPrivacyPolicyPage() {
                         )}
                       </button>
                     </td>
-                    <td className="py-4 px-6 text-slate-600 text-xs">
+                    <td className="py-4 px-4 text-slate-600 text-xs">
                       {item.creator_name || 'System'}
                     </td>
-                    <td className="py-4 px-6 text-slate-500 text-xs">
+                    <td className="py-4 px-4 text-slate-500 text-xs">
                       {new Date(item.updated_at || item.created_at).toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'
                       })}
                     </td>
-                    <td className="py-4 px-6 text-right space-x-2">
+                    <td className="py-4 px-4 text-right space-x-2">
                       <a
                         href="/privacy-policy"
                         target="_blank"

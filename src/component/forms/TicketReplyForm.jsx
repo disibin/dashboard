@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { FiSend, FiPaperclip, FiX, FiLoader, FiImage } from 'react-icons/fi';
+import { FiSend, FiPaperclip, FiX, FiLoader } from 'react-icons/fi';
 
 export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
   const [message, setMessage] = useState('');
@@ -83,25 +83,23 @@ export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
 
   return (
     <div className="border-t border-slate-100 bg-white/80 backdrop-blur-md p-3 sm:p-4 space-y-3">
-      {/* Image Attachments Preview Strip */}
       {images.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {images.map((img, idx) => (
-            <div key={idx} className="relative group shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+            <div key={idx} className="relative group shrink-0 w-14 h-14 rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-50">
               <img src={img.file_url} alt="Attachment preview" className="w-full h-full object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(idx)}
-                className="absolute top-1 right-1 w-5 h-5 rounded-full bg-slate-900/80 text-white flex items-center justify-center text-xs hover:bg-rose-600 transition-colors shadow-md"
+                className="absolute top-1 right-1 w-4 h-4 rounded-full bg-slate-900/80 text-white flex items-center justify-center text-[10px] hover:bg-rose-600 transition-colors shadow-xs"
               >
-                <FiX size={12} />
+                <FiX size={10} />
               </button>
             </div>
           ))}
         </div>
       )}
 
-      {/* Message Input Container */}
       <form onSubmit={handleSubmit} className="flex items-end gap-2">
         <input
           type="file"
@@ -116,13 +114,13 @@ export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || sending}
-          className="p-3 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-2xl transition-all disabled:opacity-50 shrink-0"
+          className="p-2.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all disabled:opacity-50 shrink-0"
           title="Attach image"
         >
-          {uploading ? <FiLoader className="animate-spin text-primary" size={19} /> : <FiPaperclip size={19} />}
+          {uploading ? <FiLoader className="animate-spin text-primary" size={18} /> : <FiPaperclip size={18} />}
         </button>
 
-        <div className="flex-1 bg-slate-100/70 focus-within:bg-white rounded-2xl border border-transparent focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 transition-all p-2.5 shadow-inner">
+        <div className="flex-1 bg-slate-100/70 focus-within:bg-white rounded-xl border border-transparent focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all p-2 shadow-inner">
           <textarea
             value={message}
             onChange={e => setMessage(e.target.value)}
@@ -134,16 +132,16 @@ export default function TicketReplyForm({ ticketId, onSent, isTeam = false }) {
             }}
             placeholder="Write your message... (Press Enter to send, Shift+Enter for new line)"
             rows={1}
-            className="w-full bg-transparent border-0 resize-none text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none max-h-32 px-1 py-0.5"
+            className="w-full bg-transparent border-0 resize-none text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none max-h-32 px-1 py-0.5"
           />
         </div>
 
         <button
           type="submit"
           disabled={(!message.trim() && images.length === 0) || uploading || sending}
-          className="p-3.5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-semibold transition-all disabled:opacity-30 disabled:hover:bg-primary shrink-0 shadow-md flex items-center justify-center"
+          className="p-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold transition-all disabled:opacity-30 disabled:hover:bg-primary shrink-0 shadow-xs flex items-center justify-center"
         >
-          {sending ? <FiLoader className="animate-spin" size={18} /> : <FiSend size={18} />}
+          {sending ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
         </button>
       </form>
     </div>

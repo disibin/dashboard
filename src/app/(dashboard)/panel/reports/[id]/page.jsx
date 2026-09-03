@@ -85,8 +85,8 @@ export default function ReportDetailPage() {
   if (!report) return null;
 
   return (
-    <div className="p-6 w-full space-y-6">
-      {/* Back button & header */}
+    <div className="p-4 w-full space-y-4">
+
       <div className="flex items-center justify-between gap-4">
         <button
           onClick={() => router.push('/panel/reports')}
@@ -105,12 +105,12 @@ export default function ReportDetailPage() {
         </button>
       </div>
 
-      {/* Main Detail Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
+              <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600">
                 Report #{report.id}
               </span>
               {report.status === 'replied' ? (
@@ -136,7 +136,7 @@ export default function ReportDetailPage() {
           </div>
         </div>
 
-        {/* Submitter Info */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm">
           <div className="flex items-center gap-3">
             <FiUser className="text-slate-400" size={18} />
@@ -154,7 +154,7 @@ export default function ReportDetailPage() {
           </div>
         </div>
 
-        {/* Report Content */}
+
         <div className="space-y-2">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Issue Description</h3>
           <div
@@ -164,8 +164,8 @@ export default function ReportDetailPage() {
         </div>
       </div>
 
-      {/* Reply Composer Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
           <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-semibold">
             <FiSend size={20} />
@@ -187,7 +187,7 @@ export default function ReportDetailPage() {
             <button
               type="submit"
               disabled={sending}
-              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
             >
               {sending ? (
                 <span>Sending Email...</span>

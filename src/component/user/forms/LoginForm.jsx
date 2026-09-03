@@ -46,7 +46,7 @@ const LoginForm = () => {
   return (
     <div className="flex w-full items-center justify-center min-h-screen p-4">
       <Toaster position="top-center" />
-      <div className="w-full max-w-sm flex flex-col p-6 rounded-2xl items-center justify-center gap-3">
+      <div className="w-full max-w-sm flex flex-col p-4 rounded-2xl items-center justify-center gap-3">
 
         <div className='w-full flex flex-col gap-2 mb-4 items-center justify-center'>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Welcome Back</h1>

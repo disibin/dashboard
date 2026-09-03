@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// PATCH — Update an existing client lead (Staff roles only)
+
 export async function PATCH(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -51,7 +51,7 @@ export async function PATCH(req, { params }) {
     }
 }
 
-// DELETE — Remove a client lead (Staff roles only)
+
 export async function DELETE(req, { params }) {
     try {
         const auth = await isStaffLogin();

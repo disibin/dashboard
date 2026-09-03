@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET all features (Manager only)
 export async function GET() {
     try {
         const auth = await isManager();
@@ -27,7 +26,6 @@ export async function GET() {
     }
 }
 
-// POST create new feature (Manager only)
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -41,7 +39,6 @@ export async function POST(req) {
 
         const nameTrimmed = name.trim();
 
-        // Check for duplicate name
         const dupCheck = await dbQuery(
             "SELECT id FROM features WHERE LOWER(name) = LOWER($1)",
             [nameTrimmed]
@@ -50,7 +47,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "A feature with this name already exists" }, { status: 409 });
         }
 
-        // Generate unique slug
         const baseSlug = nameTrimmed.toLowerCase()
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/(^-|-$)/g, '');
@@ -79,7 +75,6 @@ export async function POST(req) {
     }
 }
 
-// DELETE feature (Manager only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();

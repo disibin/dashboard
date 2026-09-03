@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isUserLogin } from "@/lib/auth/user";
 import { dbQuery } from "@/lib/database/pg";
 
-// POST — User submit payment proof for an existing purchase/order
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -28,7 +27,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Transaction ID / Reference is required" }, { status: 400 });
         }
 
-        // Verify purchase ownership
         let purchaseRes;
         if (order_id) {
             purchaseRes = await dbQuery(
@@ -49,7 +47,6 @@ export async function POST(req) {
         const targetOrderId = purchaseRes.rows[0].order_id || null;
         const targetPurchaseId = purchaseRes.rows[0].id;
 
-        // Check if payment row already exists
         const paymentCheck = await dbQuery(
             `SELECT id, price, paid, due, status FROM payments WHERE (order_id = $1 AND $1 IS NOT NULL) OR purchase_id = $2`,
             [targetOrderId, targetPurchaseId]
@@ -97,14 +94,12 @@ export async function POST(req) {
             updatedPayment = insertRes.rows[0];
         }
 
-        // Update purchase status to pending
         if (targetOrderId) {
             await dbQuery(`UPDATE purchases SET status = 'pending', updated_at = now() WHERE order_id = $1`, [targetOrderId]);
         } else {
             await dbQuery(`UPDATE purchases SET status = 'pending', updated_at = now() WHERE id = $1`, [targetPurchaseId]);
         }
 
-        // Notify staff via activity log
         await dbQuery(
             `INSERT INTO activity_logs (action, entity_type, entity_id, description)
              VALUES ('PAYMENT_PROOF_SUBMITTED', 'payments', $1, $2)`,

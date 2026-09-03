@@ -1,16 +1,8 @@
 import * as brevo from "@getbrevo/brevo";
 import { BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME } from "./secret";
 
-
-/**
- * Unified email sender.
- * Accepts either:
- *   { to, subject, htmlContent }          — legacy shorthand
- *   { toEmail, toName, subject, htmlContent } — explicit form
- */
 export const sendEmail = async (options) => {
     try {
-        // Support both call signatures
         const toEmail = options.toEmail || options.to;
         const rawName = options.toName || options.name || '';
         const toName = typeof rawName === 'string' ? rawName.trim() : '';
@@ -50,7 +42,6 @@ export const sendEmail = async (options) => {
     }
 };
 
-
 export const sendVerificationEmail = async (email, name, verificationUrl) => {
     const subject = "Verify your Disibin Account";
     const htmlContent = `
@@ -64,7 +55,6 @@ export const sendVerificationEmail = async (email, name, verificationUrl) => {
     `;
     return await sendEmail({ toEmail: email, toName: name, subject, htmlContent });
 };
-
 
 export const sendStaffInvitationEmail = async (email, name, activationUrl) => {
     const subject = "Invitation to join Disibin Staff";

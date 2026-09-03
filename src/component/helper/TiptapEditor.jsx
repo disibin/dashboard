@@ -37,7 +37,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('bold') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Bold"
@@ -48,7 +48,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('italic') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Italic"
@@ -59,7 +59,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('strike') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Strikethrough"
@@ -72,7 +72,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('bulletList') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Bullet List"
@@ -83,7 +83,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('orderedList') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Numbered List"
@@ -96,7 +96,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`p-1.5 rounded-xl text-xs font-semibold transition-all ${
             editor.isActive('codeBlock') ? 'bg-slate-900 text-white' : 'hover:bg-slate-200 text-slate-700'
           }`}
           title="Code Block"
@@ -109,7 +109,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().undo().run()}
-          className="p-1.5 rounded-lg text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
+          className="p-1.5 rounded-xl text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
           title="Undo"
         >
           <FiRotateCcw size={14} />
@@ -118,7 +118,7 @@ export default function TiptapEditor({ value = '', onChange }) {
         <button
           type="button"
           onClick={() => editor.chain().focus().redo().run()}
-          className="p-1.5 rounded-lg text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
+          className="p-1.5 rounded-xl text-xs font-semibold hover:bg-slate-200 text-slate-700 transition-all"
           title="Redo"
         >
           <FiRotateCw size={14} />

@@ -65,7 +65,7 @@ export default function UserTicketsListPage() {
     <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Clean Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">Support Tickets</h1>
@@ -76,14 +76,14 @@ export default function UserTicketsListPage() {
           <button
             onClick={fetchTickets}
             disabled={loading}
-            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-medium transition-colors"
+            className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-medium transition-colors"
             title="Refresh Tickets"
           >
             <FiRefreshCw className={loading ? 'animate-spin' : ''} size={15} />
           </button>
           <button
             onClick={() => setShowNewModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold text-xs transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-semibold text-xs transition-colors shadow-sm"
           >
             <FiPlus size={15} />
             New Ticket
@@ -91,7 +91,7 @@ export default function UserTicketsListPage() {
         </div>
       </div>
 
-      {/* Search Bar */}
+
       <div className="relative max-w-sm">
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
         <input
@@ -99,7 +99,7 @@ export default function UserTicketsListPage() {
           placeholder="Search tickets..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
+          className="w-full pl-9 pr-8 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
         />
         {search && (
           <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -108,15 +108,15 @@ export default function UserTicketsListPage() {
         )}
       </div>
 
-      {/* Tickets List */}
+
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="py-12 text-center text-slate-400 space-y-2">
+          <div className="py-5 text-center text-slate-400 space-y-2">
             <FiLoader className="animate-spin mx-auto text-primary" size={24} />
             <p className="text-xs">Loading tickets...</p>
           </div>
         ) : filteredTickets.length === 0 ? (
-          <div className="py-12 text-center space-y-2 px-4">
+          <div className="py-5 text-center space-y-2 px-4">
             <FiMessageSquare className="mx-auto text-slate-300" size={28} />
             <p className="font-semibold text-slate-700 text-sm">No tickets found</p>
             <p className="text-xs text-slate-500">
@@ -155,7 +155,7 @@ export default function UserTicketsListPage() {
 
                   <button
                     onClick={(e) => handleDeleteTicket(t.id, t.title, e)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                     title="Delete Support Ticket"
                   >
                     <FiTrash2 size={14} />

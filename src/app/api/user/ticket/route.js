@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isUserLogin } from "@/lib/auth/user";
 
-// GET — List user's tickets
 export async function GET() {
     try {
         const auth = await isUserLogin();
@@ -45,7 +44,6 @@ export async function GET() {
     }
 }
 
-// POST — Create new ticket by user
 export async function POST(req) {
     try {
         const auth = await isUserLogin();
@@ -63,27 +61,23 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Initial message is required" }, { status: 400 });
         }
 
-        // 1. Insert Ticket
         const ticketRes = await dbQuery(
             `INSERT INTO tickets (title) VALUES ($1) RETURNING id, title, created_at, updated_at`,
             [ticketTitle]
         );
         const ticket = ticketRes.rows[0];
 
-        // 2. Add User as Participant
         await dbQuery(
             `INSERT INTO ticket_participants (ticket_id, user_id, last_read_at) VALUES ($1, $2, now())`,
             [ticket.id, userId]
         );
 
-        // 3. Insert Initial Message
         const msgRes = await dbQuery(
             `INSERT INTO ticket_messages (ticket_id, user_id, message) VALUES ($1, $2, $3) RETURNING id, ticket_id, user_id, message, created_at`,
             [ticket.id, userId, message.trim()]
         );
         const initialMsg = msgRes.rows[0];
 
-        // 4. Images / Attachments (if provided)
         const createdImages = [];
         if (Array.isArray(images) && images.length > 0) {
             for (const img of images) {
@@ -118,7 +112,6 @@ export async function POST(req) {
     }
 }
 
-// DELETE — User delete a ticket
 export async function DELETE(req) {
     try {
         const auth = await isUserLogin();
@@ -132,7 +125,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Ticket ID is required" }, { status: 400 });
         }
 
-        // Verify that user is participant
         const check = await dbQuery(
             `SELECT id FROM ticket_participants WHERE ticket_id = $1 AND user_id = $2`,
             [ticketId, userId]
@@ -141,7 +133,6 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Ticket not found or access denied" }, { status: 404 });
         }
 
-        // Delete ticket (cascades to participants, messages, attachments, images)
         await dbQuery(`DELETE FROM tickets WHERE id = $1`, [ticketId]);
 
         return NextResponse.json({

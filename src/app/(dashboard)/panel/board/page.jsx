@@ -15,7 +15,7 @@ export default function TeamBoardPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // Form / Inline Drawer State
+
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
@@ -96,7 +96,7 @@ export default function TeamBoardPage() {
 
     try {
       if (editingId) {
-        // Edit Mode
+
         const res = await axios.patch(`/api/staff/board/${editingId}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
@@ -109,7 +109,7 @@ export default function TeamBoardPage() {
           toast.error(res.data.message || 'Failed to update board member');
         }
       } else {
-        // Create Mode
+
         const res = await axios.post('/api/staff/board', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
@@ -160,11 +160,11 @@ export default function TeamBoardPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/100/10 text-primary flex items-center justify-center shrink-0">
@@ -195,9 +195,9 @@ export default function TeamBoardPage() {
         </div>
       </div>
 
-      {/* Form Drawer / Container */}
+
       {showForm && (
-        <div className="bg-white p-6 rounded-3xl border border-violet-100 shadow-lg space-y-4 animate-fade-down">
+        <div className="bg-white p-4 rounded-3xl border border-violet-100 shadow-lg space-y-4 animate-fade-down">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FiBriefcase className="text-primary" size={18} />
@@ -311,7 +311,7 @@ export default function TeamBoardPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
+                className="px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-semibold transition-all disabled:opacity-50 shadow-md flex items-center gap-2"
               >
                 {saving ? <FiLoader className="animate-spin" size={14} /> : null}
                 {saving ? 'Saving Member...' : editingId ? 'Update Board Member' : 'Add Board Member'}
@@ -321,9 +321,9 @@ export default function TeamBoardPage() {
         </div>
       )}
 
-      {/* Main Table Container */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        {/* Search Toolbar */}
+
         <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between gap-4">
           <div className="relative w-full sm:w-80">
             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -345,14 +345,14 @@ export default function TeamBoardPage() {
           </span>
         </div>
 
-        {/* Content */}
+
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-primary" size={28} />
             <p className="text-sm font-medium">Loading board members...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-16 text-center space-y-3 px-4">
+          <div className="py-4 text-center space-y-3 px-4">
             <FiLayout className="mx-auto text-slate-300" size={32} />
             <p className="font-semibold text-slate-800 text-base">No board members recorded</p>
             <p className="text-xs text-slate-500">Click "Add Board Member" to add your first executive or advisory member.</p>
@@ -362,17 +362,17 @@ export default function TeamBoardPage() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Board Member</th>
-                  <th className="px-6 py-4">Post Title / Position</th>
-                  <th className="px-6 py-4">Email</th>
-                  <th className="px-6 py-4 max-w-xs">Biography</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-4 py-4">Board Member</th>
+                  <th className="px-4 py-4">Post Title / Position</th>
+                  <th className="px-4 py-4">Email</th>
+                  <th className="px-4 py-4 max-w-xs">Biography</th>
+                  <th className="px-4 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
                 {filtered.map((m) => (
                   <tr key={m.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         {m.image ? (
                           <img src={m.image} alt={m.name} className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm shrink-0" />
@@ -387,13 +387,13 @@ export default function TeamBoardPage() {
                       </div>
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <span className="font-semibold text-slate-800 bg-slate-100 px-3 py-1 rounded-full text-xs">
                         {m.post}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-xs font-semibold text-slate-600">
+                    <td className="px-4 py-4 text-xs font-semibold text-slate-600">
                       {m.email ? (
                         <a href={`mailto:${m.email}`} className="text-primary hover:underline flex items-center gap-1">
                           <FiMail size={12} /> {m.email}
@@ -403,11 +403,11 @@ export default function TeamBoardPage() {
                       )}
                     </td>
 
-                    <td className="px-6 py-4 text-xs text-slate-500 max-w-xs truncate" title={m.bio}>
+                    <td className="px-4 py-4 text-xs text-slate-500 max-w-xs truncate" title={m.bio}>
                       {m.bio || '—'}
                     </td>
 
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <Link
                           href={`/panel/board/${m.id}`}

@@ -81,7 +81,7 @@ const NewStaffMemberForm = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50/50 p-6">
+    <div className="min-h-screen w-full bg-slate-50/50 p-4">
       <Toaster position="top-center" />
 
       <div className="w-full">
@@ -95,7 +95,7 @@ const NewStaffMemberForm = () => {
 
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
 
-          <div className="px-8 py-6 border-b border-slate-100 flex items-center gap-4">
+          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center shrink-0">
               <FiUserPlus className="text-white" size={22} />
             </div>
@@ -107,10 +107,10 @@ const NewStaffMemberForm = () => {
             </div>
           </div>
 
-          {/* Form Body */}
-          <form onSubmit={handleSubmit} className="px-8 py-8 space-y-6">
 
-            {/* Name + Email */}
+          <form onSubmit={handleSubmit} className="px-5 py-5 space-y-4">
+
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
                 <label className={labelCls} htmlFor="tm-name">
@@ -159,7 +159,7 @@ const NewStaffMemberForm = () => {
               </div>
             </div>
 
-            {/* Phone */}
+
             <div className="flex flex-col gap-1.5">
               <label className={labelCls} htmlFor="tm-phone">
                 Phone Number <span className="text-slate-400 font-normal normal-case">(optional)</span>
@@ -182,7 +182,7 @@ const NewStaffMemberForm = () => {
               </div>
             </div>
 
-            {/* Role Picker */}
+
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <FiShield size={14} className="text-slate-400" />
@@ -213,7 +213,7 @@ const NewStaffMemberForm = () => {
               </div>
             </div>
 
-            {/* Info box */}
+
             <div className="flex items-start gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20">
               <FiMail className="text-primary mt-0.5 flex-shrink-0" size={15} />
               <p className="text-xs text-primary-dark leading-relaxed">
@@ -222,12 +222,12 @@ const NewStaffMemberForm = () => {
               </p>
             </div>
 
-            {/* Submit */}
+
             <div className="flex items-center justify-between pt-2">
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="px-6 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+                className="px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
               >
                 Cancel
               </button>
@@ -235,7 +235,7 @@ const NewStaffMemberForm = () => {
                 id="create-staff-member-btn"
                 type="submit"
                 disabled={loading || !form.role}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-200 shadow-lg shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>

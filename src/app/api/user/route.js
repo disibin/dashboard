@@ -7,7 +7,7 @@ import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { isUserLogin } from "@/lib/auth/user";
 
-// GET — Get own profile (authenticated user)
+
 export async function GET() {
     try {
         const auth = await isUserLogin();
@@ -38,7 +38,7 @@ export async function GET() {
     }
 }
 
-// POST — Register a new user
+
 export async function POST(req) {
     try {
         const body = await req.json();
@@ -78,16 +78,16 @@ export async function POST(req) {
         );
         const user = userRes.rows[0];
 
-        // Generate verification token
+
         const verificationToken = crypto.randomBytes(32).toString("hex");
-        const expiresAt = new Date(Date.now() + 24 * 3600000); // 24 hours
+        const expiresAt = new Date(Date.now() + 24 * 3600000); 
 
         await dbQuery(
             `UPDATE users SET verification_token = $1, verification_expires_at = $2 WHERE id = $3`,
             [verificationToken, expiresAt, user.id]
         );
 
-        // Automatically create a client lead record upon user registration
+
         try {
             await dbQuery(
                 `INSERT INTO client_leads (name, email, phone, note) VALUES ($1, $2, $3, $4)`,
@@ -122,7 +122,7 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Update profile (authenticated user)
+
 export async function PATCH(req) {
     try {
         const auth = await isUserLogin();
@@ -133,7 +133,7 @@ export async function PATCH(req) {
         const userId = auth.data.id;
         const body = await req.json();
 
-        // Strip out protected fields
+
         const { password, role, email, id, user_id, is_active, is_verified, pending_email, email_change_code, email_change_expires_at, ...updateData } = body;
 
         if (Object.keys(updateData).length === 0) {
@@ -167,7 +167,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete user account (authenticated user, requires password verification)
+
 export async function DELETE(req) {
     try {
         const auth = await isUserLogin();
@@ -193,10 +193,10 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Incorrect password" }, { status: 400 });
         }
 
-        // Delete user account from DB
+
         await dbQuery("DELETE FROM users WHERE id = $1", [userId]);
 
-        // Clear user cookie
+
         const cookieStore = await cookies();
         cookieStore.delete('disibin-user');
 

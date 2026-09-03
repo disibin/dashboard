@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch all business leads (Staff roles only)
+
 export async function GET(req) {
     try {
         const auth = await isStaffLogin();
@@ -34,7 +34,7 @@ export async function GET(req) {
     }
 }
 
-// POST — Manually create a business lead (Staff roles only)
+
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -67,7 +67,7 @@ export async function POST(req) {
 
         const newLead = res.rows[0];
 
-        // Record activity log
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'BUSINESS_LEAD_CREATE', 'business_lead', $2, $3)`,

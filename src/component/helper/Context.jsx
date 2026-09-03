@@ -14,7 +14,6 @@ const ContextProvider = ({ children }) => {
   const [staffData, setStaffData] = useState(null);
   const isLoggedIn = !!userData;
 
-  // Fetch regular user session
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -26,14 +25,13 @@ const ContextProvider = ({ children }) => {
         } else {
           setUserData(null);
         }
-      } catch (error) {
+      } catch {
         setUserData(null);
       }
     };
     fetchUser();
   }, []);
 
-  // Fetch staff member session
   useEffect(() => {
     const fetchStaffUser = async () => {
       try {
@@ -45,7 +43,7 @@ const ContextProvider = ({ children }) => {
         } else {
           setStaffData(null);
         }
-      } catch (error) {
+      } catch {
         setStaffData(null);
       }
     };
@@ -79,9 +77,8 @@ const ContextProvider = ({ children }) => {
     dashboardSidebar, setDashboardSidebar,
     userData, setUserData,
     staffData, setStaffData,
-    staffData: staffData, setStaffData: setStaffData,
     isLoggedIn, logout,
-    staffLogout, staffLogout: staffLogout
+    staffLogout
   };
 
   return (

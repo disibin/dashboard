@@ -111,7 +111,7 @@ export default function TeamSecurityPage() {
     }
   };
 
-  // Step 2: Verify email change code
+
   const handleVerifyEmailCode = async (e) => {
     e.preventDefault();
     if (!emailForm.code) return toast.error('Please enter the verification code');
@@ -138,7 +138,7 @@ export default function TeamSecurityPage() {
     }
   };
 
-  // Handle account deletion
+
   const handleDeleteAccount = async (e) => {
     e.preventDefault();
     if (!deletePassword) return toast.error('Password is required');
@@ -165,10 +165,10 @@ export default function TeamSecurityPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 block';
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex items-center gap-4">
+      <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shrink-0">
           <FiShield size={22} />
         </div>
@@ -180,7 +180,7 @@ export default function TeamSecurityPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           <div
             className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
@@ -221,9 +221,9 @@ export default function TeamSecurityPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        {/* Password Update Card */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -279,7 +279,7 @@ export default function TeamSecurityPage() {
           </form>
         </div>
 
-        {/* Email Address Update Card */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -367,7 +367,7 @@ export default function TeamSecurityPage() {
           )}
         </div>
 
-        {/* Danger Zone: Staff Account Deletion */}
+
         <div className="md:col-span-2 bg-rose-50/50 rounded-3xl p-7 border border-rose-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -391,7 +391,7 @@ export default function TeamSecurityPage() {
 
       </div>
 
-      {/* Delete Confirmation Modal */}
+
       {showDeleteModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-7 border border-slate-100 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">

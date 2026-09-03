@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single blog by slug OR id for public / user panel
 export async function GET(req, { params }) {
     try {
         const resolvedParams = await params;

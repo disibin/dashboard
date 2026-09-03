@@ -23,7 +23,6 @@ async function ensureTicketImagesTable() {
     } catch (err) {}
 }
 
-// GET — Fetch thread for a specific staff ticket
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -34,7 +33,6 @@ export async function GET(req, { params }) {
         const resolvedParams = await params;
         const ticketId = resolvedParams.id;
 
-        // Fetch ticket details
         const ticketRes = await dbQuery(
             `SELECT id, title, created_at, updated_at FROM tickets WHERE id = $1`,
             [ticketId]
@@ -44,7 +42,6 @@ export async function GET(req, { params }) {
         }
         const ticket = ticketRes.rows[0];
 
-        // Fetch client user details
         const userRes = await dbQuery(
             `SELECT u.id, u.name, u.email
              FROM ticket_participants tp
@@ -54,7 +51,6 @@ export async function GET(req, { params }) {
         );
         const userInfo = userRes.rows.length > 0 ? userRes.rows[0] : null;
 
-        // Fetch messages with sender names
         const messagesRes = await dbQuery(
             `SELECT 
                 tm.id, 
@@ -74,7 +70,6 @@ export async function GET(req, { params }) {
             [ticketId]
         );
 
-        // Fetch shared images from ticket_images
         const imagesRes = await dbQuery(
             `SELECT ti.id, ti.ticket_id, ti.user_id, ti.staff_id, ti.file_url, ti.file_id, ti.created_at
              FROM ticket_images ti
@@ -83,7 +78,6 @@ export async function GET(req, { params }) {
             [ticketId]
         ).catch(() => ({ rows: [] }));
 
-        // Fetch attachments
         const attachmentsRes = await dbQuery(
             `SELECT id, ticket_id, user_id, staff_id, file_url, file_id, created_at
              FROM ticket_attachments
@@ -110,7 +104,6 @@ export async function GET(req, { params }) {
     }
 }
 
-// POST — Staff member sends reply / attachments to ticket
 export async function POST(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -131,7 +124,6 @@ export async function POST(req, { params }) {
             return NextResponse.json({ success: false, message: "Cannot send empty reply" }, { status: 400 });
         }
 
-        // Always create a message row
         const msgRes = await dbQuery(
             `INSERT INTO ticket_messages (ticket_id, staff_id, message) 
              VALUES ($1, $2, $3) 
@@ -161,10 +153,8 @@ export async function POST(req, { params }) {
             }
         }
 
-        // Update ticket modified time
         await dbQuery(`UPDATE tickets SET updated_at = now() WHERE id = $1`, [ticketId]);
 
-        // Send in-app notification to ticket user participant
         const userPart = await dbQuery(
             `SELECT user_id FROM ticket_participants WHERE ticket_id = $1 AND user_id IS NOT NULL`,
             [ticketId]
@@ -198,7 +188,6 @@ export async function POST(req, { params }) {
     }
 }
 
-// PATCH — Staff updates ticket title
 export async function PATCH(req, { params }) {
     try {
         const auth = await isStaffLogin();

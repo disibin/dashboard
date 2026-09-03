@@ -15,7 +15,7 @@ function toPgArray(arr) {
     return null;
 }
 
-// GET jobs
+
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
@@ -42,7 +42,7 @@ export async function GET(req) {
     }
 }
 
-// POST create job (Manager only)
+
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -79,7 +79,7 @@ export async function POST(req) {
         const res = await dbQuery(query, params);
         const job = res.rows[0];
 
-        // Record activity log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'CAREER_CREATE', 'career', $2, $3)
@@ -91,7 +91,7 @@ export async function POST(req) {
     }
 }
 
-// PATCH update job (Manager only)
+
 export async function PATCH(req) {
     try {
         const auth = await isManager();
@@ -146,7 +146,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE job (Manager only)
+
 export async function DELETE(req) {
     try {
         const auth = await isManager();

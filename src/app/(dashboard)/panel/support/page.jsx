@@ -56,7 +56,7 @@ export default function SupportsManagement() {
     }
   };
 
-  // Metrics
+
   const totalCount = supports.length;
   const pendingCount = supports.filter(s => s.status === 'pending').length;
   const repliedCount = supports.filter(s => s.status === 'replied').length;
@@ -76,11 +76,11 @@ export default function SupportsManagement() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Card */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
@@ -103,7 +103,7 @@ export default function SupportsManagement() {
         </button>
       </div>
 
-      {/* Metric Cards */}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -136,9 +136,9 @@ export default function SupportsManagement() {
         </div>
       </div>
 
-      {/* Main List Container */}
+
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden space-y-0">
-        {/* Controls Bar */}
+
         <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="relative w-full sm:w-80">
             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -168,7 +168,7 @@ export default function SupportsManagement() {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
-                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                   filter === tab.id
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-600 hover:text-slate-900'
@@ -185,14 +185,14 @@ export default function SupportsManagement() {
           </div>
         </div>
 
-        {/* Content */}
+
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-secondary" size={28} />
             <p className="text-sm font-medium">Loading support inquiries...</p>
           </div>
         ) : filteredSupports.length === 0 ? (
-          <div className="py-16 text-center space-y-4 px-4">
+          <div className="py-4 text-center space-y-4 px-4">
             <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
               <FiLifeBuoy size={32} />
             </div>
@@ -210,11 +210,11 @@ export default function SupportsManagement() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Sender Info</th>
-                  <th className="px-6 py-4">Subject</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Date</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-4 py-4">Sender Info</th>
+                  <th className="px-4 py-4">Subject</th>
+                  <th className="px-4 py-4">Status</th>
+                  <th className="px-4 py-4">Date</th>
+                  <th className="px-4 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -226,20 +226,20 @@ export default function SupportsManagement() {
                       onClick={() => router.push(`/panel/support/${item.id}`)}
                       className="hover:bg-slate-50/70 cursor-pointer transition-colors group"
                     >
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         <div className="font-semibold text-slate-900">{item.name}</div>
                         <div className="text-xs text-slate-400 font-medium">{item.email}</div>
                       </td>
 
-                      <td className="px-6 py-4 max-w-xs">
+                      <td className="px-4 py-4 max-w-xs">
                         <p className="font-semibold text-slate-800 line-clamp-1">{item.subject || 'No Subject'}</p>
                         <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
                           {item.description?.replace(/<[^>]+>/g, '') || ''}
                         </p>
                       </td>
 
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                      <td className="px-4 py-4">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold ${
                           isPending
                             ? 'bg-secondary/10 text-secondary border border-secondary/20'
                             : 'bg-primary/10 text-primary border border-primary/20'
@@ -249,21 +249,21 @@ export default function SupportsManagement() {
                         </span>
                       </td>
 
-                      <td className="px-6 py-4 text-xs text-slate-500 font-medium">
+                      <td className="px-4 py-4 text-xs text-slate-500 font-medium">
                         {new Date(item.created_at).toLocaleDateString()}
                       </td>
 
-                      <td className="px-6 py-4 text-right space-x-1" onClick={e => e.stopPropagation()}>
+                      <td className="px-4 py-4 text-right space-x-1" onClick={e => e.stopPropagation()}>
                         <Link
                           href={`/panel/support/${item.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-primary text-white rounded-xl text-xs font-semibold transition-all shadow-sm"
                         >
                           <FiMessageSquare size={13} /> {isPending ? 'Reply' : 'View Details'}
                         </Link>
                         <button
                           onClick={(e) => handleDelete(item.id, e)}
                           disabled={deleting === item.id}
-                          className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all disabled:opacity-40"
+                          className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all disabled:opacity-40"
                           title="Delete Request"
                         >
                           <FiTrash2 size={15} />

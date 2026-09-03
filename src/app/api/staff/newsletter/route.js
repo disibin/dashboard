@@ -3,7 +3,7 @@ import { dbQuery } from "@/lib/database/pg";
 import { isManager } from "@/lib/auth/staff";
 import { sendEmail } from "@/lib/database/brevo";
 
-// GET — Fetch lead and user audience counts for newsletter metrics
+
 export async function GET() {
     try {
         const auth = await isManager();
@@ -33,7 +33,7 @@ export async function GET() {
     }
 }
 
-// POST — Send newsletter campaign to selected group using Brevo
+
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -52,7 +52,7 @@ export async function POST(req) {
         const emailSubject = subject.trim();
         const emailMessageHtml = message.trim();
 
-        // If test email is requested
+
         if (testEmail && testEmail.trim()) {
             const cleanTestEmail = testEmail.trim();
             const htmlContent = `
@@ -106,7 +106,7 @@ export async function POST(req) {
             const res = await dbQuery("SELECT name, email FROM users WHERE email IS NOT NULL AND email != ''");
             recipients = res.rows;
         } else {
-            // Combine client_leads, business_leads, and users — deduplicate by email
+
             const clientRes = await dbQuery("SELECT name, email FROM client_leads WHERE email IS NOT NULL AND email != ''").catch(() => ({ rows: [] }));
             const businessRes = await dbQuery("SELECT name, email FROM business_leads WHERE email IS NOT NULL AND email != ''").catch(() => ({ rows: [] }));
             const userRes = await dbQuery("SELECT name, email FROM users WHERE email IS NOT NULL AND email != ''").catch(() => ({ rows: [] }));
@@ -124,7 +124,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "No email recipients found in the selected target group" }, { status: 400 });
         }
 
-        // Send email to each recipient via Brevo
+
         let sentCount = 0;
         let failCount = 0;
         let lastError = null;
@@ -157,7 +157,7 @@ export async function POST(req) {
             }
         }
 
-        // Record activity log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, description)
             VALUES ($1, $2, $3, $4)

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isStaffLogin } from "@/lib/auth/staff";
 
-// GET — Fetch thread for a specific staff chat conversation
+
 export async function GET(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
         const resolvedParams = await params;
         const chatId = resolvedParams.id;
 
-        // Check if staff member is participant
+
         const partRes = await dbQuery(
             `SELECT id FROM chat_participants WHERE chat_id = $1 AND staff_id = $2`,
             [chatId, currentStaffId]
@@ -21,14 +21,14 @@ export async function GET(req, { params }) {
             return NextResponse.json({ success: false, message: "Conversation not found or access denied" }, { status: 404 });
         }
 
-        // Fetch chat details
+
         const chatRes = await dbQuery(
             `SELECT id, title, is_group, created_by, created_at FROM chats WHERE id = $1`,
             [chatId]
         );
         const chat = chatRes.rows[0];
 
-        // Fetch participants
+
         const participantsRes = await dbQuery(
             `SELECT tp.staff_id, t.name, t.email, t.role 
              FROM chat_participants tp
@@ -37,7 +37,7 @@ export async function GET(req, { params }) {
             [chatId]
         );
 
-        // Fetch messages with sender details
+
         const messagesRes = await dbQuery(
             `SELECT 
                 cm.id, 
@@ -54,7 +54,7 @@ export async function GET(req, { params }) {
             [chatId]
         );
 
-        // Fetch attachments
+
         const attachmentsRes = await dbQuery(
             `SELECT ca.id, ca.chat_id, ca.sender_id, ca.image AS file_url, ca.image_id AS file_id, ca.created_at
              FROM chat_attachments ca
@@ -63,7 +63,7 @@ export async function GET(req, { params }) {
             [chatId]
         );
 
-        // Mark last_read_at
+
         await dbQuery(
             `UPDATE chat_participants SET last_read_at = now() WHERE chat_id = $1 AND staff_id = $2`,
             [chatId, currentStaffId]
@@ -84,7 +84,7 @@ export async function GET(req, { params }) {
     }
 }
 
-// POST — Send a message and/or image attachment to chat
+
 export async function POST(req, { params }) {
     try {
         const auth = await isStaffLogin();
@@ -103,7 +103,7 @@ export async function POST(req, { params }) {
             return NextResponse.json({ success: false, message: "Cannot send empty message" }, { status: 400 });
         }
 
-        // Check if staff member is participant
+
         const partRes = await dbQuery(
             `SELECT id FROM chat_participants WHERE chat_id = $1 AND staff_id = $2`,
             [chatId, currentStaffId]

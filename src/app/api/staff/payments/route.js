@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isStaffLogin, isManager, isRoleAllowed } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List all payments & transactions for staff verification and management
 export async function GET() {
     try {
         const auth = await isStaffLogin();
@@ -58,7 +57,6 @@ export async function GET() {
     }
 }
 
-// PATCH — Staff payment check & verification (Approve, Record Partial, Reject)
 export async function PATCH(req) {
     try {
         const auth = await isRoleAllowed(['support', 'manager']);
@@ -73,7 +71,6 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "payment_id is required" }, { status: 400 });
         }
 
-        // Fetch current payment
         const payRes = await dbQuery(`SELECT * FROM payments WHERE id = $1`, [payment_id]);
         if (payRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Payment record not found" }, { status: 404 });
@@ -116,7 +113,6 @@ export async function PATCH(req) {
             if (note) newNote = `${newNote ? newNote + ' | ' : ''}${note}`;
         }
 
-        // 1. Update payment record
         const updateRes = await dbQuery(
             `UPDATE payments
              SET status = $1, paid = $2, due = $3, note = $4, verified_by = $5, verified_at = now(), updated_at = now()
@@ -126,7 +122,6 @@ export async function PATCH(req) {
         );
         const updated = updateRes.rows[0];
 
-        // 2. Update linked purchases status
         const purchaseStatus = newStatus === 'paid' ? 'complete' : (newStatus === 'rejected' ? 'cancelled' : 'pending');
         if (currentPayment.order_id) {
             await dbQuery(
@@ -140,7 +135,6 @@ export async function PATCH(req) {
             );
         }
 
-        // 3. Notify user
         if (currentPayment.user_id) {
             let notificationTitle = `Payment Update for Order #${currentPayment.order_id || currentPayment.id}`;
             let notificationMsg = `Your payment status is now "${newStatus.toUpperCase()}".`;
@@ -160,7 +154,6 @@ export async function PATCH(req) {
             ).catch(() => {});
         }
 
-        // 4. Log staff activity
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'VERIFY_PAYMENT', 'payments', $2, $3)`,
@@ -178,7 +171,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Staff delete payment record
 export async function DELETE(req) {
     try {
         const auth = await isManager();

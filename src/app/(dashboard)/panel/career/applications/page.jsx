@@ -92,11 +92,11 @@ export default function TeamCareerApplicationsPage() {
   const rejectedCount = applications.filter(a => a.status === 'rejected').length;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -127,7 +127,7 @@ export default function TeamCareerApplicationsPage() {
         </div>
       </div>
 
-      {/* Metric Badges & Filter Tabs */}
+
       <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-1 bg-slate-100/70 p-1 rounded-2xl w-full sm:w-auto">
           {[
@@ -168,15 +168,15 @@ export default function TeamCareerApplicationsPage() {
         </div>
       </div>
 
-      {/* Applications List Grid */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-primary" size={28} />
             <p className="text-sm font-medium">Loading candidate applications...</p>
           </div>
         ) : filteredApps.length === 0 ? (
-          <div className="py-16 text-center space-y-3 px-4">
+          <div className="py-4 text-center space-y-3 px-4">
             <FiUsers className="mx-auto text-slate-300" size={32} />
             <p className="font-semibold text-slate-800 text-base">No job applications found</p>
             <p className="text-xs text-slate-500">There are no candidate applications matching your search query.</p>
@@ -184,9 +184,9 @@ export default function TeamCareerApplicationsPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {filteredApps.map((app) => (
-              <div key={app.app_id} className="p-6 space-y-4 hover:bg-slate-50/50 transition-colors">
+              <div key={app.app_id} className="p-4 space-y-4 hover:bg-slate-50/50 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  {/* Candidate Info */}
+
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-slate-900 text-base">{app.full_name}</h3>
@@ -212,7 +212,7 @@ export default function TeamCareerApplicationsPage() {
                     </p>
                   </div>
 
-                  {/* Actions & Resume Button */}
+
                   <div className="flex items-center gap-2 shrink-0">
                     <a
                       href={app.resume_url}
@@ -223,7 +223,7 @@ export default function TeamCareerApplicationsPage() {
                       <FiExternalLink size={13} /> View Resume
                     </a>
 
-                    {/* Status Dropdown Select */}
+
                     <select
                       value={app.status}
                       disabled={updatingId === app.app_id}
@@ -247,7 +247,7 @@ export default function TeamCareerApplicationsPage() {
                   </div>
                 </div>
 
-                {/* Cover Letter */}
+
                 {app.cover_letter && (
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1 text-xs">
                     <p className="font-semibold text-slate-700 uppercase tracking-wider">Cover Letter / Note</p>

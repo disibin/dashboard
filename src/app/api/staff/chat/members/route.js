@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { isStaffLogin } from "@/lib/auth/staff";
 
-// GET — List active staff members (excluding current staff user)
+
 export async function GET() {
     try {
         const auth = await isStaffLogin();

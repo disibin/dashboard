@@ -41,7 +41,7 @@ export default function NewBusinessLeadPage() {
   };
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
       <div className="space-y-4">
@@ -52,7 +52,7 @@ export default function NewBusinessLeadPage() {
           <FiArrowLeft size={16} /> Back to Business Leads
         </Link>
 
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
               <span className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
@@ -67,8 +67,8 @@ export default function NewBusinessLeadPage() {
         </div>
       </div>
 
-      {/* Form Card */}
-      <form onSubmit={handleSubmit} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+
+      <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Business / Company Name *</label>
           <input
@@ -131,14 +131,14 @@ export default function NewBusinessLeadPage() {
         <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-slate-100">
           <Link
             href="/panel/leads/business"
-            className="px-6 py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-all text-sm"
+            className="px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-all text-sm"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={loading}
-            className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-amber-600 text-white font-semibold transition-all text-sm disabled:opacity-50 flex items-center gap-2 shadow-md"
+            className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-amber-600 text-white font-semibold transition-all text-sm disabled:opacity-50 flex items-center gap-2 shadow-md"
           >
             {loading ? <FiLoader className="animate-spin" size={16} /> : <FiPlus size={16} />}
             {loading ? 'Creating...' : 'Create Business Lead'}

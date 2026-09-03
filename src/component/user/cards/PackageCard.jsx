@@ -31,7 +31,7 @@ export default function UserPackageCard({
           ? 'border-primary ring-2 ring-primary/20 shadow-md'
           : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
       }`}>
-        {/* Cart Pill */}
+
         <div className="absolute top-3 left-3 z-10">
           <button
             type="button"
@@ -121,7 +121,6 @@ export default function UserPackageCard({
           </div>
         </Link>
 
-        {/* Action Buttons */}
         <div className="p-3.5 border-t border-slate-100 bg-slate-50/50 flex items-center gap-2">
           <button
             type="button"

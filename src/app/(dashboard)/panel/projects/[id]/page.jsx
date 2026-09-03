@@ -27,9 +27,8 @@ export default function StaffProjectChatPage() {
   const [sendingMsg, setSendingMsg] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Options Menu state
   const [showMenu, setShowMenu] = useState(false);
-  const [activeTab, setActiveTab] = useState('status'); // 'status' | 'rename' | 'details' | 'purchase'
+  const [activeTab, setActiveTab] = useState('status'); 
   const [editingTitle, setEditingTitle] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('waiting');
   const [updatingTitle, setUpdatingTitle] = useState(false);
@@ -61,7 +60,6 @@ export default function StaffProjectChatPage() {
     }
   }, [thread?.chat?.title, thread?.chat?.status]);
 
-  // Click outside listener for options menu box
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -228,21 +226,21 @@ export default function StaffProjectChatPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'completed':
-        return <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiCheckCircle size={12} /> Completed</span>;
+        return <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-xl inline-flex items-center gap-1"><FiCheckCircle size={12} /> Completed</span>;
       case 'working':
-        return <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiActivity size={12} /> Working</span>;
+        return <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-xl inline-flex items-center gap-1"><FiActivity size={12} /> Working</span>;
       case 'progress':
-        return <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiPlayCircle size={12} /> In Progress</span>;
+        return <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold rounded-xl inline-flex items-center gap-1"><FiPlayCircle size={12} /> In Progress</span>;
       case 'spam':
-        return <span className="px-2.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiSlash size={12} /> Spam</span>;
+        return <span className="px-2.5 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-xl inline-flex items-center gap-1"><FiSlash size={12} /> Spam</span>;
       default:
-        return <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-lg inline-flex items-center gap-1"><FiClock size={12} /> Waiting</span>;
+        return <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-xl inline-flex items-center gap-1"><FiClock size={12} /> Waiting</span>;
     }
   };
 
   if (loading && !thread) {
     return (
-      <div className="p-12 text-center text-slate-400 space-y-2">
+      <div className="p-4 text-center text-slate-400 space-y-2">
         <Toaster position="top-center" />
         <FiLoader className="animate-spin mx-auto text-primary" size={28} />
         <p className="text-xs font-medium">Loading project conversation...</p>
@@ -252,13 +250,13 @@ export default function StaffProjectChatPage() {
 
   if (!thread || !thread.chat) {
     return (
-      <div className="p-6 max-w-xl mx-auto text-center space-y-3">
+      <div className="p-4 max-w-xl mx-auto text-center space-y-3">
         <Toaster position="top-center" />
         <FiAlertCircle className="mx-auto text-amber-500" size={32} />
         <h2 className="text-base font-semibold text-slate-800">Project Chat Not Found</h2>
         <Link
           href="/panel/projects"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-xl text-xs font-semibold hover:bg-slate-900"
         >
           <FiArrowLeft size={14} /> Back to Project Chats
         </Link>
@@ -273,12 +271,11 @@ export default function StaffProjectChatPage() {
     <div className="w-full space-y-4 p-4">
       <Toaster position="top-center" />
 
-      {/* Header Bar */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <Link
             href="/panel/projects"
-            className="p-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition-colors"
+            className="p-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl transition-colors"
             title="Back to Project Chats"
           >
             <FiArrowLeft size={16} />
@@ -296,7 +293,6 @@ export default function StaffProjectChatPage() {
           </div>
         </div>
 
-        {/* Top Bar Options Menu */}
         <div className="relative" ref={menuRef}>
           <button
             type="button"
@@ -309,11 +305,9 @@ export default function StaffProjectChatPage() {
             <span>Options Menu</span>
           </button>
 
-          {/* Absolute Popup Dropdown Box */}
           {showMenu && (
             <div className="absolute right-0 top-full mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-80 sm:w-96 space-y-4 animate-in fade-in zoom-in duration-150">
-              
-              {/* Menu Option Tabs */}
+
               <div className="grid grid-cols-2 gap-1.5 border-b border-slate-100 pb-3">
                 <button
                   type="button"
@@ -364,7 +358,6 @@ export default function StaffProjectChatPage() {
                 </button>
               </div>
 
-              {/* Option 1: Status Content */}
               {activeTab === 'status' && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -413,7 +406,6 @@ export default function StaffProjectChatPage() {
                 </div>
               )}
 
-              {/* Option 2: Rename Title Content */}
               {activeTab === 'rename' && (
                 <form onSubmit={handleRenameTitle} className="space-y-2">
                   <label className="text-xs font-semibold text-slate-700 block">Rename Title</label>
@@ -438,7 +430,6 @@ export default function StaffProjectChatPage() {
                 </form>
               )}
 
-              {/* Option 3: Project Details Content */}
               {activeTab === 'details' && (
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -465,7 +456,6 @@ export default function StaffProjectChatPage() {
                 </div>
               )}
 
-              {/* Option 4: Purchase & Payment Content */}
               {activeTab === 'purchase' && (
                 <div className="space-y-3">
                   <div>
@@ -480,15 +470,15 @@ export default function StaffProjectChatPage() {
                     <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Payment Status</span>
                     <div className="mt-1">
                       {chat.payment_status === 'paid' ? (
-                        <span className="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
+                        <span className="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-xl inline-flex items-center gap-1">
                           <FiCheck size={13} /> Paid — {formatCurrency(chat.paid || netPrice)}
                         </span>
                       ) : chat.payment_status === 'unpaid' ? (
-                        <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-lg inline-flex items-center gap-1">
+                        <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-xl inline-flex items-center gap-1">
                           <FiAlertCircle size={13} /> Payment Due — {formatCurrency(chat.due || netPrice)}
                         </span>
                       ) : (
-                        <span className="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-lg">
+                        <span className="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold rounded-xl">
                           No Payment Created Yet
                         </span>
                       )}
@@ -501,7 +491,6 @@ export default function StaffProjectChatPage() {
         </div>
       </div>
 
-      {/* Chat Thread Container */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[400px] shadow-sm">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {(() => {
@@ -526,7 +515,7 @@ export default function StaffProjectChatPage() {
 
             if (combinedTimeline.length === 0) {
               return (
-                <div className="py-12 text-center text-slate-400 text-xs">
+                <div className="py-5 text-center text-slate-400 text-xs">
                   No messages yet in this discussion. Send a response or image below.
                 </div>
               );
@@ -584,12 +573,11 @@ export default function StaffProjectChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Staff Reply Input Bar */}
         <div className="border-t border-slate-200 p-3 bg-slate-50 space-y-2">
           {attachedImages.length > 0 && (
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
               {attachedImages.map((img, idx) => (
-                <div key={idx} className="relative shrink-0 w-12 h-12 rounded-md overflow-hidden border border-slate-200">
+                <div key={idx} className="relative shrink-0 w-12 h-12 rounded-xl overflow-hidden border border-slate-200">
                   <img src={img.file_url} alt="Attachment" className="w-full h-full object-cover" />
                   <button
                     type="button"
@@ -617,7 +605,7 @@ export default function StaffProjectChatPage() {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingImage || sendingMsg}
-              className="p-2 border border-slate-200 hover:bg-white text-slate-500 rounded-lg text-xs transition-colors cursor-pointer"
+              className="p-2 border border-slate-200 hover:bg-white text-slate-500 rounded-xl text-xs transition-colors cursor-pointer"
               title="Attach Image"
             >
               {uploadingImage ? <FiLoader className="animate-spin text-primary" size={16} /> : <FiPaperclip size={16} />}
@@ -628,13 +616,13 @@ export default function StaffProjectChatPage() {
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               placeholder="Write response to customer..."
-              className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-primary"
+              className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
             />
 
             <button
               type="submit"
               disabled={(!messageText.trim() && attachedImages.length === 0) || uploadingImage || sendingMsg}
-              className="px-4 py-1.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 flex items-center gap-1 cursor-pointer shadow-sm"
+              className="px-4 py-1.5 bg-primary hover:bg-primary-dark text-white rounded-xl text-xs font-semibold transition-colors disabled:opacity-50 flex items-center gap-1 cursor-pointer shadow-sm"
             >
               {sendingMsg ? <FiLoader className="animate-spin" size={14} /> : <FiSend size={14} />}
               Send Reply
@@ -643,7 +631,6 @@ export default function StaffProjectChatPage() {
         </div>
       </div>
 
-      {/* Lightbox Preview Modal */}
       {previewImage && (
         <div
           onClick={() => setPreviewImage(null)}

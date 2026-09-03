@@ -31,6 +31,7 @@ import {
   FiCheckSquare,
   FiDollarSign,
   FiLayers,
+  FiShoppingBag,
 } from 'react-icons/fi'
 import { FaHandshake } from 'react-icons/fa'
 
@@ -67,6 +68,7 @@ const roleLinks = {
     {
       label: 'Finance & Sales',
       links: [
+        { name: 'Package Purchases', href: '/panel/purchases',           icon: <FiShoppingBag /> },
         { name: 'Payments',       href: '/panel/payments',             icon: <FiCreditCard /> },
         { name: 'Payroll & Salary', href: '/panel/payroll',           icon: <FiDollarSign /> },
         { name: 'Partners',       href: '/panel/partners',             icon: <FaHandshake /> },
@@ -157,7 +159,6 @@ const roleLinks = {
   ],
 }
 
-// Helper icon component for Projects
 function FiFolderIcon() {
   return <FiClipboard />
 }
@@ -181,7 +182,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile overlay */}
       {dashboardSidebar && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
@@ -194,11 +194,10 @@ const Sidebar = () => {
           dashboardSidebar ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Scrollable nav */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+        <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-4">
           {sections.map((section) => (
             <div key={section.label}>
-              <p className="px-4 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+              <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                 {section.label}
               </p>
               <div className="flex flex-col gap-0.5">
@@ -207,13 +206,13 @@ const Sidebar = () => {
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                    className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                       isActive(link.href)
-                        ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                        ? 'bg-primary/10 text-primary font-semibold shadow-xs'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    <span className="text-base shrink-0">{link.icon}</span>
+                    <span className="text-sm shrink-0">{link.icon}</span>
                     <span>{link.name}</span>
                   </Link>
                 ))}
@@ -222,63 +221,62 @@ const Sidebar = () => {
           ))}
 
           <div>
-            <p className="px-4 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
               Account Settings
             </p>
             <div className="flex flex-col gap-0.5">
               <Link
                 href="/panel/profile"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                   isActive('/panel/profile')
-                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <FiUser className="text-base shrink-0" />
+                <FiUser className="text-sm shrink-0" />
                 <span>My Profile</span>
               </Link>
               <Link
                 href="/panel/settings"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                   isActive('/panel/settings')
-                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <FiSettings className="text-base shrink-0" />
+                <FiSettings className="text-sm shrink-0" />
                 <span>Settings</span>
               </Link>
               <Link
                 href="/panel/security"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                   isActive('/panel/security')
-                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <FiShield className="text-base shrink-0" />
+                <FiShield className="text-sm shrink-0" />
                 <span>Security</span>
               </Link>
             </div>
           </div>
         </nav>
 
-        {/* User info + logout */}
-        <div className="px-4 py-4 border-t border-slate-100 space-y-2">
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-            <p className="text-sm font-semibold text-slate-900 truncate">{staffData?.name || 'Staff Member'}</p>
+        <div className="px-3 py-3 border-t border-slate-100 space-y-2">
+          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+            <p className="text-xs font-semibold text-slate-900 truncate">{staffData?.name || 'Staff Member'}</p>
             <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">
               {staffData?.role || 'Staff'}
             </p>
           </div>
           <button
             onClick={staffLogout}
-            className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold text-rose-500 hover:bg-rose-50 transition-all duration-200"
+            className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-500 hover:bg-rose-50 transition-all duration-150"
           >
-            <FiLogOut className="text-base shrink-0" />
+            <FiLogOut className="text-sm shrink-0" />
             <span>Log Out</span>
           </button>
         </div>

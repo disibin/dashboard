@@ -12,7 +12,7 @@ export default function FaqForm({
   isEditing = false
 }) {
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-6 sm:p-8 mb-8 animate-in fade-in duration-200">
+    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md p-4 sm:p-5 mb-8 animate-in fade-in duration-200">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
         <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
           <FiHelpCircle className="text-primary" />
@@ -75,7 +75,7 @@ export default function FaqForm({
             id="faq_is_published_inline"
             checked={formData.is_published}
             onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-            className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+            className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded-xl cursor-pointer"
           />
           <label htmlFor="faq_is_published_inline" className="text-sm font-medium text-slate-700 cursor-pointer">
             Publish FAQ (Make visible on public website)
@@ -94,7 +94,7 @@ export default function FaqForm({
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold transition-all shadow-md shadow-primary/20 disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-sm font-semibold transition-all shadow-md shadow-primary/20 disabled:opacity-50 cursor-pointer"
           >
             {saving ? (
               <>

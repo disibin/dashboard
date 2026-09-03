@@ -64,7 +64,7 @@ const RecoverAccountForm = () => {
   if (token) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
-        <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-lg">
+        <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-xl">
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Set New Password</h1>
           <p className="text-slate-500 text-sm font-medium text-center">
             Enter your new password below to reset your account credentials.
@@ -112,7 +112,7 @@ const RecoverAccountForm = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full">
-      <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-lg">
+      <div className="w-full max-w-md flex flex-col items-center justify-center gap-5 p-4 rounded-xl">
         <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Reset Password</h1>
         <p className="text-slate-500 text-sm font-medium text-center">
           {submitted

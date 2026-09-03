@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 
-// POST — Public contact/support form submission (no auth required)
+
 export async function POST(req) {
     try {
         const body = await req.json();
@@ -15,7 +15,7 @@ export async function POST(req) {
             );
         }
 
-        // Basic email format check
+
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return NextResponse.json(
                 { success: false, message: "Invalid email address" },
@@ -23,14 +23,14 @@ export async function POST(req) {
             );
         }
 
-        // Insert into supports table
+
         const res = await dbQuery(
             `INSERT INTO supports (name, email, subject, description) VALUES ($1, $2, $3, $4) RETURNING id, name, email, subject, created_at`,
             [name, email, subject, description]
         );
         const support = res.rows[0];
 
-        // Send confirmation email to submitter
+
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 22px; font-weight: 700; margin-bottom: 8px;">We received your message</h1>
@@ -43,7 +43,7 @@ export async function POST(req) {
             </div>
         `;
 
-        // Send async — don't block response on email failure
+
         sendEmail({ to: email, toName: name, subject: `We received your message — Disibin`, htmlContent }).catch(
             (err) => console.error("Support confirmation email failed:", err)
         );

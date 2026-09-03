@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List blogs for public / user panel
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);

@@ -4,14 +4,7 @@ import { FiStar } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-/**
- * ReviewForm
- * ----------
- * Star-rating + comment form for submitting a platform review.
- *
- * Props
- *   onSuccess — (reviewData) => void, called after successful submission
- */
+
 const ReviewForm = ({ onSuccess }) => {
   const [formData,   setFormData]   = useState({ rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -35,8 +28,8 @@ const ReviewForm = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-6">
-      {/* Star picker */}
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-4">
+
       <div className="space-y-2">
         <label className="text-sm font-semibold text-slate-700">Your Rating</label>
         <div className="flex items-center gap-2">
@@ -55,7 +48,7 @@ const ReviewForm = ({ onSuccess }) => {
         </div>
       </div>
 
-      {/* Comment */}
+
       <div className="space-y-2">
         <label className="text-sm font-semibold text-slate-700">Your Comment</label>
         <textarea
@@ -72,7 +65,7 @@ const ReviewForm = ({ onSuccess }) => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-8 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-primary transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
+          className="px-5 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-primary transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
         >
           {submitting ? 'Submitting...' : 'Submit Review'}
         </button>

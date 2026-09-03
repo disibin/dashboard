@@ -3,7 +3,7 @@ import { isStaffLogin, isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 import cloudinary from "@/lib/database/cloudinary";
 
-// GET — List all board members
+
 export async function GET() {
     try {
         const auth = await isStaffLogin();
@@ -21,7 +21,7 @@ export async function GET() {
     }
 }
 
-// POST — Create board member
+
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -71,7 +71,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Name and Post Title are required" }, { status: 400 });
         }
 
-        // Check unique email if provided
+
         if (email.trim()) {
             const check = await dbQuery("SELECT id FROM boards WHERE LOWER(email) = LOWER($1)", [email.trim()]);
             if (check.rows.length > 0) {
@@ -95,7 +95,7 @@ export async function POST(req) {
 
         const member = res.rows[0];
 
-        // Record activity log
+
         await dbQuery(`
             INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
             VALUES ($1, 'BOARD_CREATE', 'board', $2, $3)
@@ -107,7 +107,7 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Update board member
+
 export async function PATCH(req) {
     try {
         const auth = await isManager();
@@ -150,7 +150,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Remove board member
+
 export async function DELETE(req) {
     try {
         const auth = await isManager();

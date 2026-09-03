@@ -57,8 +57,8 @@ export default function UserNotificationsPage() {
   });
 
   return (
-    <div className="p-4 w-full space-y-8">
-      
+    <div className="p-4 w-full space-y-4">
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight flex items-center gap-3">
@@ -84,7 +84,7 @@ export default function UserNotificationsPage() {
         )}
       </div>
 
-      {/* Filter Tabs */}
+
       <div className="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2 overflow-x-auto">
         {[
           { key: 'all', label: 'All Updates' },
@@ -106,14 +106,14 @@ export default function UserNotificationsPage() {
         ))}
       </div>
 
-      {/* Content */}
+
       {loading ? (
-        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-3"></div>
           <p className="text-slate-500 text-sm font-medium">Loading notifications...</p>
         </div>
       ) : filteredNotifications.length === 0 ? (
-        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center space-y-3">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center space-y-3">
           <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center">
             <FiBell size={24} />
           </div>

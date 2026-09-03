@@ -3,7 +3,7 @@ import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { isStaffLogin } from "@/lib/auth/staff";
 
-// Helper — check staff authentication (Manager, Developer, Support)
+
 async function isAuthorizedStaffMember() {
     const auth = await isStaffLogin();
     if (!auth.success) return { success: false, message: "Please login" };
@@ -14,14 +14,14 @@ async function isAuthorizedStaffMember() {
     return { success: true, data: auth.data };
 }
 
-// GET — List all reports (Manager, Developer, Support)
+
 export async function GET(req) {
     try {
         const auth = await isAuthorizedStaffMember();
         if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const { searchParams } = new URL(req.url);
-        const status = searchParams.get("status"); // optional: 'pending' | 'replied'
+        const status = searchParams.get("status"); 
 
         let query = `
             SELECT 
@@ -49,7 +49,7 @@ export async function GET(req) {
     }
 }
 
-// PATCH — Reply to a report, send email, record activity log
+
 export async function PATCH(req) {
     try {
         const auth = await isAuthorizedStaffMember();
@@ -65,7 +65,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "Reply text cannot be empty" }, { status: 400 });
         }
 
-        // Fetch the report
+
         const reportRes = await dbQuery("SELECT * FROM reports WHERE id = $1", [id]);
         const report = reportRes.rows[0];
 
@@ -73,7 +73,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "Report not found" }, { status: 404 });
         }
 
-        // Save reply, mark as replied, record who responded
+
         const updateRes = await dbQuery(
             `UPDATE reports 
              SET reply = $1, status = 'replied', responded_by = $2, updated_at = now()
@@ -83,7 +83,7 @@ export async function PATCH(req) {
         );
         const updated = updateRes.rows[0];
 
-        // Send reply email to the original submitter
+
         const htmlContent = `
             <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 10px;">
                 <h1 style="color: #0f172a; font-size: 22px; font-weight: 700; margin-bottom: 8px;">Update regarding your issue report</h1>
@@ -107,7 +107,7 @@ export async function PATCH(req) {
             htmlContent
         }).catch((err) => console.error("Report reply email failed:", err));
 
-        // Record in activity_logs
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, $2, $3, $4, $5)`,
@@ -120,7 +120,7 @@ export async function PATCH(req) {
             ]
         ).catch((err) => console.error("Activity log failed:", err));
 
-        // Return updated record with responder name
+
         return NextResponse.json({
             success: true,
             message: "Reply saved and email sent to the submitter",
@@ -132,7 +132,7 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete a report (Manager, Developer, Support)
+
 export async function DELETE(req) {
     try {
         const auth = await isAuthorizedStaffMember();
@@ -156,7 +156,7 @@ export async function DELETE(req) {
 
         const deleted = res.rows[0];
 
-        // Record in activity_logs
+
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, $2, $3, $4, $5)`,

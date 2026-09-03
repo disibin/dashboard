@@ -16,7 +16,6 @@ export default function UserCartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Checkout Modal State
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('bkash');
   const [transactionId, setTransactionId] = useState('');
@@ -111,16 +110,14 @@ export default function UserCartPage() {
     }
   };
 
-  // Pricing calculations
   const totalGross = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
   const totalDiscount = cartItems.reduce((sum, item) => sum + Number(item.discount || 0), 0);
   const totalNet = Math.max(0, totalGross - totalDiscount);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
@@ -140,12 +137,12 @@ export default function UserCartPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white p-16 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
+        <div className="bg-white p-5 rounded-3xl border border-slate-100 text-center text-slate-400 flex flex-col items-center gap-2">
           <FiLoader className="animate-spin text-primary" size={28} />
           <p className="text-xs font-medium">Loading cart items...</p>
         </div>
       ) : cartItems.length === 0 ? (
-        <div className="bg-white p-16 rounded-3xl border border-slate-100 text-center space-y-4 max-w-lg mx-auto">
+        <div className="bg-white p-5 rounded-3xl border border-slate-100 text-center space-y-4 max-w-lg mx-auto">
           <div className="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
             <FiShoppingCart size={32} />
           </div>
@@ -155,14 +152,14 @@ export default function UserCartPage() {
           </p>
           <Link
             href="/user/packages"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs shadow-md transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs shadow-md transition-all"
           >
             <FiShoppingBag size={14} /> Explore Packages
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Cart Items List */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -210,7 +207,7 @@ export default function UserCartPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-6 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                    <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                       <div className="text-left sm:text-right">
                         <span className="text-base font-bold text-slate-900 block">
                           {formatCurrency(finalPrice)}
@@ -236,8 +233,7 @@ export default function UserCartPage() {
             </div>
           </div>
 
-          {/* Order Summary & Checkout Card */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 lg:sticky lg:top-8">
+          <div className="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-5 lg:sticky lg:top-8">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
               <FiCreditCard className="text-primary" /> Order Summary
             </h2>
@@ -275,10 +271,9 @@ export default function UserCartPage() {
         </div>
       )}
 
-      {/* Checkout Modal */}
       {checkoutModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 my-8 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-2xl border border-slate-100 space-y-4 my-8 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -291,7 +286,7 @@ export default function UserCartPage() {
               </div>
               <button
                 onClick={() => !submitting && setCheckoutModalOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors"
               >
                 <FiX size={20} />
               </button>
@@ -393,7 +388,7 @@ export default function UserCartPage() {
                 <button
                   type="submit"
                   disabled={submitting || !transactionId.trim()}
-                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white transition-all shadow-md disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-dark text-white transition-all shadow-md disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                 >
                   {submitting ? <FiLoader className="animate-spin" size={14} /> : <FiCheck size={14} />}
                   Confirm Payment

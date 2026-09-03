@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — Fetch single package details by slug OR id (Public / User Panel)
 export async function GET(req, { params }) {
     try {
         const resolvedParams = await params;
@@ -11,7 +10,6 @@ export async function GET(req, { params }) {
             return NextResponse.json({ success: false, message: "Package slug or ID is required" }, { status: 400 });
         }
 
-        // Query package with slug or ID fallback
         const pkgRes = await dbQuery(`
             SELECT 
                 p.id, 
@@ -39,7 +37,6 @@ export async function GET(req, { params }) {
 
         const pkg = pkgRes.rows[0];
 
-        // Fetch package features list
         const featuresRes = await dbQuery(`
             SELECT 
                 pf.id, 

@@ -40,10 +40,10 @@ const UserRoleModal = ({ isOpen, user, onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative">
+      <div className="bg-white rounded-2xl max-w-md w-full p-4 shadow-2xl border border-slate-100 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-xl"
         >
           <FiX size={20} />
         </button>

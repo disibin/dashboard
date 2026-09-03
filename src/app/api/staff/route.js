@@ -6,8 +6,8 @@ import { dbQuery } from "@/lib/database/pg";
 import { sendEmail } from "@/lib/database/brevo";
 import { BASE_URL, getBaseUrl } from "@/lib/database/secret";
 
-// ─── GET /api/staff ────────────────────────────────────────────────────────────
-// List all staff members (manager only)
+
+
 export async function GET() {
     try {
         const auth = await isManager();
@@ -25,8 +25,8 @@ export async function GET() {
     }
 }
 
-// ─── POST /api/staff ───────────────────────────────────────────────────────────
-// Create a new staff member and send invitation email (manager only)
+
+
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -65,7 +65,7 @@ export async function POST(req) {
         const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
         const verificationToken = crypto.randomBytes(32).toString("hex");
-        const verificationExpiresAt = new Date(Date.now() + 7 * 24 * 3600000); // 7 days
+        const verificationExpiresAt = new Date(Date.now() + 7 * 24 * 3600000); 
 
         const res = await dbQuery(
             `INSERT INTO staffs (name, email, phone, password, role, verification_token, verification_expires_at)
@@ -101,9 +101,9 @@ export async function POST(req) {
     }
 }
 
-// ─── PATCH /api/staff ──────────────────────────────────────────────────────────
-// Update a staff member's fields (manager only)
-// Guards: cannot demote/deactivate the last active manager
+
+
+
 export async function PATCH(req) {
     try {
         const auth = await isManager();
@@ -116,7 +116,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "Staff member ID is required" }, { status: 400 });
         }
 
-        // Strip protected fields
+
         const {
             password, verification_token, verification_expires_at,
             reset_token, token_expires_at, ...safeData
@@ -126,7 +126,7 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, message: "No fields to update" }, { status: 400 });
         }
 
-        // Guard: at least one active manager must remain
+
         const memberRes = await dbQuery("SELECT role, is_active FROM staffs WHERE id = $1", [id]);
         if (memberRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Staff member not found" }, { status: 404 });
@@ -149,7 +149,7 @@ export async function PATCH(req) {
             }
         }
 
-        // Validate field names (prevent SQL injection)
+
         const keys = Object.keys(safeData);
         for (const key of keys) {
             if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key)) {
@@ -182,9 +182,9 @@ export async function PATCH(req) {
     }
 }
 
-// ─── DELETE /api/staff?id=<id> ─────────────────────────────────────────────────
-// Remove a staff member (manager only)
-// Guards: cannot delete the last active manager
+
+
+
 export async function DELETE(req) {
     try {
         const auth = await isManager();
@@ -197,7 +197,7 @@ export async function DELETE(req) {
             return NextResponse.json({ success: false, message: "Staff member ID is required" }, { status: 400 });
         }
 
-        // Check if target exists
+
         const memberRes = await dbQuery("SELECT id, role, is_active FROM staffs WHERE id = $1", [id]);
         if (memberRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Staff member not found" }, { status: 404 });
@@ -205,7 +205,7 @@ export async function DELETE(req) {
 
         const target = memberRes.rows[0];
 
-        // Guard: cannot delete the last active manager
+
         if (target.role === 'manager' && target.is_active) {
             const activeManagersRes = await dbQuery(
                 "SELECT COUNT(*) AS cnt FROM staffs WHERE role = 'manager' AND is_active = TRUE"

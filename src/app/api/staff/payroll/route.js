@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List payroll cycles & staff salaries (Manager only)
 export async function GET() {
     try {
         const auth = await isManager();
@@ -42,7 +41,6 @@ export async function GET() {
     }
 }
 
-// POST — Generate new monthly payroll for active staff (Manager only)
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -59,7 +57,6 @@ export async function POST(req) {
         const yearNum = Number(year);
         const payrollTitle = title?.trim() || `Payroll ${monthNum}/${yearNum}`;
 
-        // Check if payroll already exists for month/year
         const check = await dbQuery(
             "SELECT id FROM payroll WHERE month = $1 AND year = $2",
             [monthNum, yearNum]
@@ -68,7 +65,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: `Payroll for ${monthNum}/${yearNum} already exists` }, { status: 409 });
         }
 
-        // Calculate total amount
         let totalSum = 0;
         if (Array.isArray(staff_salaries)) {
             totalSum = staff_salaries.reduce((acc, s) => acc + (Number(s.amount) || 0), 0);
@@ -83,7 +79,6 @@ export async function POST(req) {
 
         const payrollId = pRes.rows[0].id;
 
-        // Insert salary entries for staff
         if (Array.isArray(staff_salaries) && staff_salaries.length > 0) {
             for (const item of staff_salaries) {
                 const amt = Number(item.amount) || 0;
@@ -97,7 +92,6 @@ export async function POST(req) {
             }
         }
 
-        // Audit Log
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'PAYROLL_CREATE', 'payroll', $2, $3)`,
@@ -115,7 +109,6 @@ export async function POST(req) {
     }
 }
 
-// PATCH — Record salary payment or update payroll status (Manager only)
 export async function PATCH(req) {
     try {
         const auth = await isManager();
@@ -124,7 +117,6 @@ export async function PATCH(req) {
         const body = await req.json();
         const { salary_id, amount, payment_method, note, payroll_id, status } = body;
 
-        // Update payroll status if provided
         if (payroll_id && status) {
             await dbQuery(
                 `UPDATE payroll SET status = $1, updated_at = now() WHERE id = $2`,
@@ -133,7 +125,6 @@ export async function PATCH(req) {
             return NextResponse.json({ success: true, message: "Payroll status updated" });
         }
 
-        // Record salary payment
         if (salary_id && amount && amount > 0) {
             const salQuery = await dbQuery("SELECT * FROM salary WHERE id = $1", [salary_id]);
             if (salQuery.rows.length === 0) {
@@ -146,7 +137,6 @@ export async function PATCH(req) {
             const newDue = Math.max(0, Number(sal.amount || 0) - newPaid);
             const newStatus = newDue === 0 ? 'paid' : 'partially_paid';
 
-            // Update salary row
             await dbQuery(
                 `UPDATE salary 
                  SET paid_amount = $1, due_amount = $2, status = $3, updated_at = now() 
@@ -154,7 +144,6 @@ export async function PATCH(req) {
                 [newPaid, newDue, newStatus, salary_id]
             );
 
-            // Insert into salary_payments table
             await dbQuery(
                 `INSERT INTO salary_payments (salary_id, amount, payment_method, note, created_by)
                  VALUES ($1, $2, $3, $4, $5)`,
@@ -174,7 +163,6 @@ export async function PATCH(req) {
     }
 }
 
-// DELETE — Delete payroll cycle (Manager only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();

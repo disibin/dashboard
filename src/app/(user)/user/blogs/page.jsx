@@ -69,7 +69,7 @@ export default function UserBlogsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
       <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -112,15 +112,14 @@ export default function UserBlogsPage() {
         </div>
       </div>
 
-      {/* Blog Cards Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="h-80 bg-white rounded-3xl border border-slate-100 animate-pulse" />
           ))}
         </div>
       ) : filteredBlogs.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center space-y-3">
+        <div className="bg-white rounded-3xl border border-slate-100 p-4 text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
             <FiBookOpen size={24} />
           </div>
@@ -130,7 +129,7 @@ export default function UserBlogsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBlogs.map((blog, idx) => (
             <BlogCard key={blog.id} blog={blog} index={idx} isStaff={false} />
           ))}

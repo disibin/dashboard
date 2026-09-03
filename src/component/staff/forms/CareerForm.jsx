@@ -4,17 +4,7 @@ import { FiPlus, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import TiptapEditor from '../../helper/TiptapEditor';
-/**
- * CareerForm
- * ----------
- * Form to create or edit a job listing.
- * Handles array fields for responsibilities, skills, and nice_to_have.
- *
- * Props
- *   initialData — job object (Edit mode) | null (Create mode)
- *   onSuccess   — (job) => void
- *   onCancel    — () => void
- */
+
 const CareerForm = ({ initialData, onSuccess, onCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -31,7 +21,7 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
 
-  // Temporary inputs for array fields
+
   const [respInput, setRespInput] = useState('');
   const [skillInput, setSkillInput] = useState('');
   const [niceInput, setNiceInput] = useState('');
@@ -105,7 +95,7 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Basic Info */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label className={labelCls}>Job Title *</label>
@@ -152,8 +142,8 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
         />
       </div>
 
-      {/* Array Fields */}
-      {/* Responsibilities */}
+
+
       <div className="space-y-1.5">
         <label className={labelCls}>Responsibilities</label>
         <div className="flex gap-2">
@@ -174,7 +164,7 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
         </div>
       </div>
 
-      {/* Skills */}
+
       <div className="space-y-1.5">
         <label className={labelCls}>Skills Required</label>
         <div className="flex gap-2">
@@ -195,7 +185,7 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
         </div>
       </div>
 
-      {/* Nice to have */}
+
       <div className="space-y-1.5">
         <label className={labelCls}>Nice to Have</label>
         <div className="flex gap-2">
@@ -217,11 +207,11 @@ const CareerForm = ({ initialData, onSuccess, onCancel }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <input type="checkbox" name="is_published" checked={formData.is_published} onChange={handleChange} className="w-4 h-4 text-primary focus:ring-violet-500 border-slate-300 rounded" />
+        <input type="checkbox" name="is_published" checked={formData.is_published} onChange={handleChange} className="w-4 h-4 text-primary focus:ring-violet-500 border-slate-300 rounded-xl" />
         <label className="text-sm font-medium text-slate-700">Publish Immediately</label>
       </div>
 
-      {/* Actions */}
+
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
         <button type="button" onClick={onCancel} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-all">
           Cancel

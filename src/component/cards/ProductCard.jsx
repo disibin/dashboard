@@ -17,14 +17,14 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
       transition={{ duration: 0.3 }}
       className="h-full"
     >
-      <div className="group flex flex-col justify-between bg-white overflow-hidden box-border h-full border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 relative">
+      <div className="group flex flex-col justify-between bg-white rounded-xl overflow-hidden box-border h-full border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 relative">
         <a
           href={targetLink}
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col no-underline grow"
         >
-          <div className="p-3 flex flex-col gap-4 grow">
+          <div className="p-3 flex flex-col gap-3 grow">
             <div className="flex items-center justify-between">
               <p className="text-[14px] font-semibold text-gray-500 m-0">
                 {formattedNumber}
@@ -36,11 +36,11 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
               )}
             </div>
 
-            <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors m-0 font-poppins">
+            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors m-0 font-poppins">
               {product?.name}
             </h3>
 
-            <p className="text-[16px] leading-normal text-gray-900 m-0 font-poppins line-clamp-3">
+            <p className="text-sm leading-normal text-gray-700 m-0 font-poppins line-clamp-3">
               {product?.title}
             </p>
           </div>
@@ -66,7 +66,7 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
         </a>
 
         {isStaff && (onEdit || onDelete) && (
-          <div className="p-3 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div className="p-2.5 bg-slate-50/90 border-t border-slate-100 flex items-center justify-end gap-1.5">
             {onEdit && (
               <button
                 type="button"
@@ -75,7 +75,7 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
                   e.stopPropagation();
                   onEdit(product);
                 }}
-                className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+                className="p-1.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
                 title="Edit Product"
               >
                 <FiEdit2 size={14} /> Edit
@@ -89,7 +89,7 @@ const ProductCard = ({ product, index = 0, onEdit, onDelete, isStaff = false }) 
                   e.stopPropagation();
                   onDelete(product.id, product.name, product.image_id);
                 }}
-                className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+                className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
                 title="Delete Product"
               >
                 <FiTrash2 size={14} /> Delete

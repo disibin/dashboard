@@ -82,11 +82,10 @@ export default function BlogsManagerPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
             <FiBookOpen size={24} />
@@ -108,7 +107,6 @@ export default function BlogsManagerPage() {
         </Link>
       </div>
 
-      {/* Filter & Search Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-80">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -141,15 +139,14 @@ export default function BlogsManagerPage() {
         </div>
       </div>
 
-      {/* Blogs List Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-64 bg-white rounded-3xl border border-slate-100 animate-pulse p-4" />
           ))}
         </div>
       ) : filteredBlogs.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center space-y-3">
+        <div className="bg-white rounded-3xl border border-slate-100 p-4 text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
             <FiBookOpen size={24} />
           </div>
@@ -168,7 +165,7 @@ export default function BlogsManagerPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBlogs.map((blog, idx) => (
             <BlogCard
               key={blog.id}

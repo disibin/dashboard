@@ -76,10 +76,10 @@ export default function UserReviewsPage() {
   };
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-1">
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm space-y-1">
         <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
           <span className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
             <FiStar size={20} />
@@ -92,13 +92,13 @@ export default function UserReviewsPage() {
       </div>
 
       {loading ? (
-        <div className="py-16 bg-white rounded-3xl border border-slate-100 shadow-sm text-center text-slate-400 space-y-2">
+        <div className="py-4 bg-white rounded-3xl border border-slate-100 shadow-sm text-center text-slate-400 space-y-2">
           <FiLoader className="animate-spin mx-auto text-amber-500" size={28} />
           <p className="text-sm font-medium">Loading your feedback status...</p>
         </div>
       ) : review ? (
-        /* Existing Review Card */
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -121,7 +121,7 @@ export default function UserReviewsPage() {
             </button>
           </div>
 
-          {/* Star Rating Display */}
+
           <div className="space-y-2">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Rating</p>
             <div className="flex items-center gap-1">
@@ -135,7 +135,7 @@ export default function UserReviewsPage() {
             </div>
           </div>
 
-          {/* Comment */}
+
           <div className="space-y-1">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Review</p>
             <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -146,7 +146,7 @@ export default function UserReviewsPage() {
             </p>
           </div>
 
-          {/* Manager Staff Reply */}
+
           {review.reply && (
             <div className="bg-primary/10/70 p-5 rounded-2xl border border-primary/20 space-y-2">
               <div className="flex items-center gap-2 text-xs font-semibold text-primary-dark">
@@ -160,15 +160,15 @@ export default function UserReviewsPage() {
           )}
         </div>
       ) : (
-        /* New Review Form */
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
           <div className="space-y-1">
             <h2 className="text-lg font-semibold text-slate-900">Submit a Review</h2>
             <p className="text-xs text-slate-500">How would you rate your experience working with us?</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Interactive Rating Picker */}
+
             <div className="space-y-2">
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Rating *</label>
               <div className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export default function UserReviewsPage() {
               </div>
             </div>
 
-            {/* Comment Area */}
+
             <div>
               <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Review Comments (Optional)
@@ -208,7 +208,7 @@ export default function UserReviewsPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-slate-900 hover:bg-amber-500 text-white rounded-2xl font-semibold text-sm transition-all shadow-md disabled:opacity-50"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-3 bg-slate-900 hover:bg-amber-500 text-white rounded-2xl font-semibold text-sm transition-all shadow-md disabled:opacity-50"
             >
               {submitting ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
               {submitting ? 'Submitting Review...' : 'Submit Review'}

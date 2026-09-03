@@ -153,10 +153,10 @@ export default function TodosPage() {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
 
   return (
-    <div className="p-6 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
             <FiCheckSquare size={24} />
@@ -241,7 +241,7 @@ export default function TodosPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 <FiCheck size={16} />
                 {submitting ? 'Saving...' : editingTodo ? 'Update Task' : 'Create Task'}
@@ -294,11 +294,11 @@ export default function TodosPage() {
         ))}
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-6 space-y-3">
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-4 space-y-3">
         {loading ? (
-          <div className="p-12 text-center text-slate-400">Loading tasks...</div>
+          <div className="p-4 text-center text-slate-400">Loading tasks...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400">
+          <div className="p-4 text-center text-slate-400">
             <FiCheckSquare size={32} className="mx-auto mb-2 text-slate-300" />
             <p className="font-semibold text-sm">No to-do tasks found</p>
           </div>

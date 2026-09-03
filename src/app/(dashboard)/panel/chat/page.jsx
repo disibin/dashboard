@@ -112,10 +112,10 @@ export default function TeamChatListPage() {
   );
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
@@ -188,7 +188,7 @@ export default function TeamChatListPage() {
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`w-8 h-8 rounded-lg font-semibold flex items-center justify-center text-xs shrink-0 ${
+                      <div className={`w-8 h-8 rounded-xl font-semibold flex items-center justify-center text-xs shrink-0 ${
                         isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
                       }`}>
                         {member.name?.charAt(0) || 'U'}
@@ -201,7 +201,7 @@ export default function TeamChatListPage() {
                       </div>
                     </div>
 
-                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
+                    <div className={`w-5 h-5 rounded-xl border flex items-center justify-center transition-colors ${
                       isSelected ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
                     }`}>
                       {isSelected && <FiCheckCircle size={12} />}
@@ -237,7 +237,7 @@ export default function TeamChatListPage() {
                 type="button"
                 onClick={createNewChat}
                 disabled={selectedMemberIds.length === 0 || creatingChat}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 <FiCheck size={16} />
                 {creatingChat
@@ -270,12 +270,12 @@ export default function TeamChatListPage() {
         </div>
 
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-indigo-600" size={28} />
             <p className="text-sm font-medium">Loading conversations...</p>
           </div>
         ) : filteredInbox.length === 0 ? (
-          <div className="py-16 text-center space-y-4 px-4">
+          <div className="py-4 text-center space-y-4 px-4">
             <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
               <FiMessageSquare size={32} />
             </div>

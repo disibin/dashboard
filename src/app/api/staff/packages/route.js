@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List packages with tenant info & features (Staff)
 export async function GET() {
     try {
         const auth = await isManager();
@@ -37,7 +36,6 @@ export async function GET() {
     }
 }
 
-// POST — Create package with features (Manager only)
 export async function POST(req) {
     try {
         const auth = await isManager();
@@ -70,7 +68,6 @@ export async function POST(req) {
 
         const packageId = pkgRes.rows[0].id;
 
-        // Insert package features if provided
         if (Array.isArray(feature_ids) && feature_ids.length > 0) {
             for (const fId of feature_ids) {
                 await dbQuery(
@@ -82,7 +79,6 @@ export async function POST(req) {
             }
         }
 
-        // Audit Log
         await dbQuery(
             `INSERT INTO activity_logs (staff_id, action, entity_type, entity_id, description)
              VALUES ($1, 'PACKAGE_CREATE', 'packages', $2, $3)`,
@@ -100,7 +96,6 @@ export async function POST(req) {
     }
 }
 
-// PUT — Update package & sync features (Manager only)
 export async function PUT(req) {
     try {
         const auth = await isManager();
@@ -132,7 +127,6 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Package not found" }, { status: 404 });
         }
 
-        // Sync package_features if provided
         if (Array.isArray(feature_ids)) {
             await dbQuery("DELETE FROM package_features WHERE package_id = $1", [id]);
             for (const fId of feature_ids) {
@@ -156,7 +150,6 @@ export async function PUT(req) {
     }
 }
 
-// DELETE — Remove package (Manager only)
 export async function DELETE(req) {
     try {
         const auth = await isManager();

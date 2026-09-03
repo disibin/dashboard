@@ -2,40 +2,42 @@ import { NextResponse } from "next/server";
 import { isStaffLogin } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
-// GET — List all project chats for staff
 export async function GET() {
     try {
         const auth = await isStaffLogin();
         if (!auth.success) return NextResponse.json(auth, { status: 401 });
 
         const query = `
-            SELECT DISTINCT ON (pc.id)
-                pc.id AS package_chat_id,
-                pc.id AS id,
-                pc.title AS project_title,
-                pc.description,
-                'project' AS project_type,
-                COALESCE(pc.status, 'waiting') AS project_status,
-                pc.created_at,
-                u.name AS user_name,
-                u.email AS user_email,
-                u.id AS user_id,
-                (
-                    SELECT content 
-                    FROM project_chats_messages pcm 
-                    WHERE pcm.chat_id = pc.id 
-                    ORDER BY pcm.created_at DESC LIMIT 1
-                ) AS last_message,
-                (
-                    SELECT created_at 
-                    FROM project_chats_messages pcm 
-                    WHERE pcm.chat_id = pc.id 
-                    ORDER BY pcm.created_at DESC LIMIT 1
-                ) AS last_message_at
-            FROM project_chats pc
-            LEFT JOIN project_chats_participants pcp ON pc.id = pcp.chat_id AND pcp.user_id IS NOT NULL
-            LEFT JOIN users u ON u.id = pcp.user_id
-            ORDER BY pc.id, pc.created_at DESC
+            SELECT * FROM (
+                SELECT DISTINCT ON (pc.id)
+                    pc.id AS package_chat_id,
+                    pc.id AS id,
+                    pc.title AS project_title,
+                    pc.description,
+                    'project' AS project_type,
+                    COALESCE(pc.status, 'waiting') AS project_status,
+                    pc.created_at,
+                    u.name AS user_name,
+                    u.email AS user_email,
+                    u.id AS user_id,
+                    (
+                        SELECT content 
+                        FROM project_chats_messages pcm 
+                        WHERE pcm.chat_id = pc.id 
+                        ORDER BY pcm.created_at DESC LIMIT 1
+                    ) AS last_message,
+                    (
+                        SELECT created_at 
+                        FROM project_chats_messages pcm 
+                        WHERE pcm.chat_id = pc.id 
+                        ORDER BY pcm.created_at DESC LIMIT 1
+                    ) AS last_message_at
+                FROM project_chats pc
+                LEFT JOIN project_chats_participants pcp ON pc.id = pcp.chat_id AND pcp.user_id IS NOT NULL
+                LEFT JOIN users u ON u.id = pcp.user_id
+                ORDER BY pc.id DESC, pc.created_at DESC
+            ) sub
+            ORDER BY COALESCE(last_message_at, created_at) DESC, id DESC
         `;
 
         const res = await dbQuery(query);
@@ -46,7 +48,6 @@ export async function GET() {
     }
 }
 
-// POST — Staff create a project on behalf of a user
 export async function POST(req) {
     try {
         const auth = await isStaffLogin();
@@ -63,7 +64,6 @@ export async function POST(req) {
         const cleanTitle = title.trim();
         const cleanDesc = (description || "").trim();
 
-        // 1. Create project
         const projectRes = await dbQuery(
             `INSERT INTO project_chats (title, description, created_by, status)
              VALUES ($1, $2, $3, 'waiting')
@@ -72,7 +72,6 @@ export async function POST(req) {
         );
         const newProject = projectRes.rows[0];
 
-        // 2. Add staff participant
         await dbQuery(
             `INSERT INTO project_chats_participants (chat_id, staff_id)
              VALUES ($1, $2)
@@ -80,7 +79,6 @@ export async function POST(req) {
             [newProject.id, staffId]
         );
 
-        // 3. Add user participant if provided
         if (user_id) {
             await dbQuery(
                 `INSERT INTO project_chats_participants (chat_id, user_id)
@@ -101,7 +99,6 @@ export async function POST(req) {
             ).catch(() => {});
         }
 
-        // 4. Initial welcome message
         await dbQuery(
             `INSERT INTO project_chats_messages (chat_id, staff_id, content)
              VALUES ($1, $2, $3)`,

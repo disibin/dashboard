@@ -43,11 +43,11 @@ export default function ActivityLogPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      {/* Header Banner */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-primary/100/10 text-purple-600 flex items-center justify-center shrink-0">
@@ -70,9 +70,9 @@ export default function ActivityLogPage() {
         </button>
       </div>
 
-      {/* Main Table Container */}
+
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden space-y-0">
-        {/* Search Bar */}
+
         <div className="p-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between gap-4">
           <div className="relative w-full sm:w-80">
             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -94,14 +94,14 @@ export default function ActivityLogPage() {
           </span>
         </div>
 
-        {/* Content */}
+
         {loading ? (
-          <div className="py-16 text-center text-slate-400 space-y-3">
+          <div className="py-4 text-center text-slate-400 space-y-3">
             <FiLoader className="animate-spin mx-auto text-primary" size={28} />
             <p className="text-sm font-medium">Loading system audit trail...</p>
           </div>
         ) : filteredLogs.length === 0 ? (
-          <div className="py-16 text-center space-y-3 px-4">
+          <div className="py-4 text-center space-y-3 px-4">
             <FiActivity className="mx-auto text-slate-300" size={32} />
             <p className="font-semibold text-slate-800 text-base">No activity logs found</p>
             <p className="text-xs text-slate-500">There are no operational activity records matching your search query.</p>
@@ -111,22 +111,22 @@ export default function ActivityLogPage() {
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Action Event</th>
-                  <th className="px-6 py-4">Performed By</th>
-                  <th className="px-6 py-4">Event Description</th>
-                  <th className="px-6 py-4 text-right">Timestamp</th>
+                  <th className="px-4 py-4">Action Event</th>
+                  <th className="px-4 py-4">Performed By</th>
+                  <th className="px-4 py-4">Event Description</th>
+                  <th className="px-4 py-4 text-right">Timestamp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-mono">
+                    <td className="px-4 py-4 font-mono">
                       <span className="inline-flex items-center px-3 py-1 rounded-xl text-xs font-semibold uppercase bg-primary/10 text-purple-700 border border-purple-100">
                         {log.action}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       {log.staff_name ? (
                         <div className="space-y-0.5">
                           <p className="font-semibold text-slate-900 text-xs">{log.staff_name}</p>
@@ -137,11 +137,11 @@ export default function ActivityLogPage() {
                       )}
                     </td>
 
-                    <td className="px-6 py-4 text-xs font-medium text-slate-700 max-w-md">
+                    <td className="px-4 py-4 text-xs font-medium text-slate-700 max-w-md">
                       {log.description || 'No description provided'}
                     </td>
 
-                    <td className="px-6 py-4 text-xs text-slate-400 text-right font-medium">
+                    <td className="px-4 py-4 text-xs text-slate-400 text-right font-medium">
                       <span className="inline-flex items-center gap-1">
                         <FiClock size={12} />
                         {new Date(log.created_at).toLocaleString()}

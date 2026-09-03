@@ -137,7 +137,7 @@ export default function EditBlogPage({ params }) {
 
   if (loading) {
     return (
-      <div className="p-8 w-full max-w-5xl mx-auto space-y-6">
+      <div className="p-5 w-full max-w-5xl mx-auto space-y-4">
         <div className="h-12 bg-white rounded-2xl animate-pulse" />
         <div className="h-96 bg-white rounded-3xl animate-pulse" />
       </div>
@@ -145,10 +145,9 @@ export default function EditBlogPage({ params }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full max-w-5xl mx-auto space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full max-w-5xl mx-auto space-y-4">
       <Toaster position="top-center" />
 
-      {/* Navigation & Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link
@@ -167,10 +166,9 @@ export default function EditBlogPage({ params }) {
         </div>
       </div>
 
-      {/* Main Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-          {/* Title */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Blog Title <span className="text-rose-500">*</span>
@@ -185,7 +183,6 @@ export default function EditBlogPage({ params }) {
             />
           </div>
 
-          {/* Tenant Selector (Mandatory Required) */}
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
               <FiGlobe className="text-primary" size={14} />
@@ -205,7 +202,6 @@ export default function EditBlogPage({ params }) {
             </select>
           </div>
 
-          {/* Featured Image Uploader */}
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Featured Image
@@ -230,7 +226,7 @@ export default function EditBlogPage({ params }) {
                 </div>
               </div>
             ) : (
-              <label className="border-2 border-dashed border-slate-200 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all text-center">
+              <label className="border-2 border-dashed border-slate-200 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all text-center">
                 <input
                   type="file"
                   accept="image/*"
@@ -257,7 +253,6 @@ export default function EditBlogPage({ params }) {
             )}
           </div>
 
-          {/* Description (Tiptap Rich Text Editor) */}
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Blog Content / Description
@@ -269,18 +264,17 @@ export default function EditBlogPage({ params }) {
           </div>
         </div>
 
-        {/* Submit Actions */}
         <div className="flex items-center justify-end gap-3 pt-2">
           <Link
             href="/panel/blogs"
-            className="px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-all"
+            className="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-all"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-2xl bg-primary hover:bg-primary-dark text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary-dark text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 disabled:opacity-50"
           >
             {submitting ? (
               <>

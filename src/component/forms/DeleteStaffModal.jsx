@@ -2,17 +2,13 @@
 import React from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 
-/**
- * DeleteTeamModal
- * ---------------
- * Confirmation dialog before removing a staff member.
- */
+
 const DeleteTeamModal = ({ isOpen, member, onConfirm, onCancel, loading }) => {
   if (!isOpen || !member) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95 duration-200 space-y-5">
+      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-5 text-center animate-in zoom-in-95 duration-200 space-y-5">
         <div className="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center mx-auto">
           <FiAlertTriangle className="text-rose-500" size={28} />
         </div>

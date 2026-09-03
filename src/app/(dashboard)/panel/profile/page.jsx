@@ -39,11 +39,11 @@ export default function TeamProfilePage() {
   const member = profile || staffData;
 
   return (
-    <div className="p-4 w-full space-y-6">
+    <div className="p-4 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="relative overflow-hidden bg-primary rounded-3xl p-8 text-white shadow-xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="relative overflow-hidden bg-primary rounded-3xl p-5 text-white shadow-xl">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-5">
             <div className="w-20 h-20 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-3xl font-semibold text-white shadow-lg">
               {(member?.name || 'T').charAt(0).toUpperCase()}
@@ -88,10 +88,10 @@ export default function TeamProfilePage() {
         </div>
       </div>
 
-      {/* Main Details Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        {/* Member & Contact Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -121,7 +121,7 @@ export default function TeamProfilePage() {
                 )}
               </div>
               {member?.pending_email && (
-                <p className="text-xs text-primary mt-1 font-medium bg-primary/10 p-2 rounded-lg border border-primary/20">
+                <p className="text-xs text-primary mt-1 font-medium bg-primary/10 p-2 rounded-xl border border-primary/20">
                   Pending email change to: <strong>{member.pending_email}</strong> (Verification code sent to current email)
                 </p>
               )}
@@ -139,7 +139,7 @@ export default function TeamProfilePage() {
           </div>
         </div>
 
-        {/* Address Information */}
+
         <div className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
@@ -183,7 +183,7 @@ export default function TeamProfilePage() {
           </div>
         </div>
 
-        {/* Account Status & Timestamps */}
+
         <div className="md:col-span-2 bg-white rounded-3xl p-7 border border-slate-100 shadow-sm space-y-5">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 pb-3 border-b border-slate-100">
             <span className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">

@@ -15,7 +15,7 @@ export async function POST(req) {
         const body = await req.json();
         const { action } = body;
 
-        // 0. TOGGLE 2FA
+
         if (action === 'toggle-2fa') {
             const { is2faActive } = body;
             await dbQuery(
@@ -29,7 +29,7 @@ export async function POST(req) {
             });
         }
 
-        // 1. CHANGE PASSWORD
+
         if (action === 'change-password') {
             const { currentPassword, newPassword } = body;
             if (!currentPassword || !newPassword) {
@@ -56,7 +56,7 @@ export async function POST(req) {
             return NextResponse.json({ success: true, message: "Password updated successfully" });
         }
 
-        // 2. REQUEST EMAIL CHANGE (Sends verification code to current/old email)
+
         if (action === 'request-email-change') {
             const { newEmail } = body;
             if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
@@ -75,7 +75,7 @@ export async function POST(req) {
                 return NextResponse.json({ success: false, message: "New email must be different from current email" }, { status: 400 });
             }
 
-            // Check if new email is already taken
+
             const existingUser = await dbQuery("SELECT id FROM users WHERE email = $1", [newEmail]);
             if (existingUser.rows.length > 0) {
                 return NextResponse.json({ success: false, message: "This email address is already in use by another user account" }, { status: 400 });
@@ -86,9 +86,9 @@ export async function POST(req) {
                 return NextResponse.json({ success: false, message: "This email address is already in use by a staff account" }, { status: 400 });
             }
 
-            // Generate 6-digit verification code & 15-min expiration
+
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+            const expiresAt = new Date(Date.now() + 15 * 60 * 1000); 
 
             await dbQuery(
                 `UPDATE users 
@@ -97,7 +97,7 @@ export async function POST(req) {
                 [newEmail, verificationCode, expiresAt, userId]
             );
 
-            // Send Brevo email to OLD/CURRENT registered email address
+
             const htmlContent = `
                 <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 12px; background: #ffffff;">
                     <h1 style="color: #0f172a; font-size: 22px; font-weight: 700; margin-bottom: 12px;">Email Change Verification Code</h1>
@@ -124,7 +124,7 @@ export async function POST(req) {
             });
         }
 
-        // 3. VERIFY EMAIL CHANGE (Verifies 6-digit code)
+
         if (action === 'verify-email-change') {
             const { code } = body;
             if (!code) {
@@ -155,7 +155,7 @@ export async function POST(req) {
                 return NextResponse.json({ success: false, message: "Invalid verification code" }, { status: 400 });
             }
 
-            // Code verified! Update email and clear pending fields
+
             await dbQuery(
                 `UPDATE users 
                  SET email = $1, pending_email = NULL, email_change_code = NULL, email_change_expires_at = NULL, updated_at = now() 

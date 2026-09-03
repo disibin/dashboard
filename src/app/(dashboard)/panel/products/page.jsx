@@ -168,10 +168,10 @@ const ProductsManagement = () => {
   const labelCls = 'text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1 block';
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 w-full space-y-6">
+    <div className="p-4 sm:p-4 md:p-5 w-full space-y-4">
       <Toaster position="top-center" />
 
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
             <FiPackage size={24} />
@@ -299,7 +299,7 @@ const ProductsManagement = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 {submitting ? (
                   <>
@@ -333,18 +333,18 @@ const ProductsManagement = () => {
         </div>
 
       {loading ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400">
           Loading products...
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-400">
+        <div className="bg-white p-4 rounded-3xl border border-slate-100 text-center text-slate-400">
           <FiPackage size={32} className="mx-auto mb-2 text-slate-300" />
           <p className="font-semibold text-sm">
             {searchTerm ? 'No products match your filter.' : 'No products found. Add your first product!'}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProducts.map((prod, idx) => (
             <ProductCard
               key={prod.id}
