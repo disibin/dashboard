@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isStaffLogin } from "@/lib/auth/staff";
+import { isStaffLogin, isManager, isRoleAllowed } from "@/lib/auth/staff";
 import { dbQuery } from "@/lib/database/pg";
 
 // GET — List all payments & transactions for staff verification and management
@@ -61,8 +61,8 @@ export async function GET() {
 // PATCH — Staff payment check & verification (Approve, Record Partial, Reject)
 export async function PATCH(req) {
     try {
-        const auth = await isStaffLogin();
-        if (!auth.success) return NextResponse.json(auth, { status: 401 });
+        const auth = await isRoleAllowed(['support', 'manager']);
+        if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const staffId = auth.data.id;
         const staffName = auth.data.name || 'Staff';
@@ -181,8 +181,8 @@ export async function PATCH(req) {
 // DELETE — Staff delete payment record
 export async function DELETE(req) {
     try {
-        const auth = await isStaffLogin();
-        if (!auth.success) return NextResponse.json(auth, { status: 401 });
+        const auth = await isManager();
+        if (!auth.success) return NextResponse.json(auth, { status: 403 });
 
         const { searchParams } = new URL(req.url);
         const paymentId = searchParams.get('payment_id');

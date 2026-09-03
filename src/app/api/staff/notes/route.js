@@ -20,10 +20,14 @@ export async function GET(req) {
         `;
         let queryParams = [];
 
-        if (auth.data.role !== 'manager' || staffIdParam) {
-            const targetStaffId = staffIdParam || auth.data.id;
+        if (auth.data.role === 'manager') {
+            if (staffIdParam) {
+                query += ` WHERE n.staff_id = $1`;
+                queryParams.push(staffIdParam);
+            }
+        } else {
             query += ` WHERE n.staff_id = $1`;
-            queryParams.push(targetStaffId);
+            queryParams.push(auth.data.id);
         }
 
         query += ` ORDER BY n.updated_at DESC`;

@@ -5,7 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import {
   FiCreditCard, FiCheckCircle, FiClock, FiAlertCircle, FiSearch,
-  FiFileText, FiShoppingBag, FiSlash, FiUploadCloud, FiX, FiCheck, FiLoader
+  FiFileText, FiShoppingBag, FiSlash, FiUploadCloud, FiX, FiCheck, FiLoader, FiTrash2
 } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
 import { formatCurrency, CURRENCY } from '@/lib/database/secret';

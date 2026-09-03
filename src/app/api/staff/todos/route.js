@@ -20,10 +20,14 @@ export async function GET(req) {
         `;
         let queryParams = [];
 
-        if (auth.data.role !== 'manager' || staffIdParam) {
-            const targetStaffId = staffIdParam || auth.data.id;
+        if (auth.data.role === 'manager') {
+            if (staffIdParam) {
+                query += ` WHERE t.staff_id = $1`;
+                queryParams.push(staffIdParam);
+            }
+        } else {
             query += ` WHERE t.staff_id = $1`;
-            queryParams.push(targetStaffId);
+            queryParams.push(auth.data.id);
         }
 
         query += ` ORDER BY t.is_completed ASC, t.start_time ASC NULLS LAST, t.created_at DESC`;
@@ -135,6 +139,14 @@ export async function PATCH(req) {
 
         if (!id) {
             return NextResponse.json({ success: false, message: "To-do ID is required" }, { status: 400 });
+        }
+
+        // Verify ownership unless manager
+        if (auth.data.role !== 'manager') {
+            const check = await dbQuery("SELECT staff_id FROM staff_todos WHERE id = $1", [id]);
+            if (check.rows.length === 0 || check.rows[0].staff_id !== auth.data.id) {
+                return NextResponse.json({ success: false, message: "Unauthorized to update this to-do" }, { status: 403 });
+            }
         }
 
         const res = await dbQuery(

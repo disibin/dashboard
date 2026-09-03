@@ -62,21 +62,11 @@ export default function UserDashboardHome() {
     <div className="p-4 sm:p-6 md:p-8 w-full space-y-8">
       <Toaster position="top-center" />
 
-      {/* Hero Welcome Banner */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-2 z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5">
-              <FiUser size={12} /> Client Dashboard
-            </span>
-            {user?.is_verified && (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-xs font-semibold inline-flex items-center gap-1">
-                <FiShield size={12} /> Verified Account
-              </span>
-            )}
-          </div>
+          
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Welcome back, {user?.name || 'Valued Client'}! 👋
+            Welcome back, {user?.name || 'Valued Client'}
           </h1>
           <p className="text-slate-500 text-sm max-w-xl leading-relaxed">
             Manage active projects, review purchase invoices, track support tickets, and update your profile credentials.
