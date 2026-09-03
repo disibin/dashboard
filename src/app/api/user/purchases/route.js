@@ -11,6 +11,7 @@ export async function GET() {
 
         const res = await dbQuery(`
             SELECT 
+                pur.id,
                 pur.id AS purchase_id, 
                 pur.order_id,
                 pur.package_id, 
@@ -31,9 +32,15 @@ export async function GET() {
                 pay.sender_number,
                 pay.note,
                 pay.proof_url,
-                pay.verified_at
+                pay.verified_at,
+                u.name AS user_name,
+                u.email AS user_email,
+                u.phone AS user_phone,
+                u.city AS user_city,
+                u.country AS user_country
             FROM purchases pur
             LEFT JOIN packages pkg ON pur.package_id = pkg.id
+            LEFT JOIN users u ON pur.user_id = u.id
             LEFT JOIN payments pay ON (
                 (pur.order_id IS NOT NULL AND pay.order_id = pur.order_id)
                 OR 

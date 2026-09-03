@@ -9,6 +9,7 @@ export async function GET(req) {
 
         const res = await dbQuery(`
             SELECT 
+                p.id,
                 p.id AS purchase_id,
                 p.order_id,
                 p.price,
@@ -35,7 +36,11 @@ export async function GET(req) {
             FROM purchases p
             LEFT JOIN users u ON p.user_id = u.id
             LEFT JOIN packages pkg ON p.package_id = pkg.id
-            LEFT JOIN payments pay ON p.id = pay.purchase_id
+            LEFT JOIN payments pay ON (
+                (p.order_id IS NOT NULL AND pay.order_id = p.order_id)
+                OR
+                (p.order_id IS NULL AND pay.purchase_id = p.id)
+            )
             ORDER BY p.created_at DESC
         `);
 
@@ -99,7 +104,7 @@ export async function PATCH(req) {
 
         let newProjectId = null;
         if (create_project && purchase.user_id) {
-            const projectTitle = `Project - ${purchase.package_name || 'Deliverable'} (#${purchase.order_id || purchase.id})`;
+            const projectTitle = `Project - ${purchase.package_name || 'Deliverable'} (#${purchase.id})`;
             
             const existingChat = await dbQuery(`
                 SELECT pc.id 
@@ -115,7 +120,7 @@ export async function PATCH(req) {
                     INSERT INTO project_chats (title, description, status, created_by)
                     VALUES ($1, $2, 'working', $3)
                     RETURNING id
-                `, [projectTitle, `Automated workspace created for package purchase order #${purchase.order_id || purchase.id}`, auth.data.id]);
+                `, [projectTitle, `Automated workspace created for package purchase #${purchase.id}`, auth.data.id]);
 
                 newProjectId = projectRes.rows[0].id;
 
@@ -134,7 +139,7 @@ export async function PATCH(req) {
                 await dbQuery(`
                     INSERT INTO project_chats_messages (chat_id, staff_id, content)
                     VALUES ($1, $2, $3)
-                    `, [newProjectId, auth.data.id, `Welcome! Your project workspace for order "${purchase.package_name}" (#${purchase.order_id || purchase.id}) has been activated.`]);
+                    `, [newProjectId, auth.data.id, `Welcome! Your project workspace for purchase "${purchase.package_name}" (#${purchase.id}) has been activated.`]);
             }
         }
 

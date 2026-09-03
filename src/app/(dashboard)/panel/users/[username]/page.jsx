@@ -335,8 +335,8 @@ export default function TeamUserProfilePage() {
                   {purchases.slice(0, 4).map((pur) => (
                     <div key={pur.id} className="py-2.5 flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-800">{pur.package_name || 'Package Order'}</p>
-                        <p className="text-[11px] text-slate-400">Order: #{pur.order_id || pur.id}</p>
+                        <p className="text-semibold text-slate-800">{pur.package_name || 'Package Purchase'}</p>
+                        <p className="text-[11px] text-slate-400">Purchase #{pur.purchase_id || pur.id}</p>
                       </div>
                       <span className="font-bold text-slate-900">{formatCurrency(pur.price)}</span>
                     </div>
@@ -407,7 +407,11 @@ export default function TeamUserProfilePage() {
                 <tbody className="divide-y divide-slate-100">
                   {purchases.map((pur) => (
                     <tr key={pur.id} className="hover:bg-slate-50/50">
-                      <td className="p-3 font-mono font-bold text-slate-800">#{pur.order_id || pur.id}</td>
+                      <td className="p-3 font-mono font-bold text-slate-800">
+                        <Link href={`/panel/purchases/${pur.purchase_id || pur.id}`} className="hover:text-primary underline">
+                          Purchase #{pur.purchase_id || pur.id}
+                        </Link>
+                      </td>
                       <td className="p-3 font-semibold text-slate-900">{pur.package_name || 'N/A'}</td>
                       <td className="p-3 font-bold text-slate-900">{formatCurrency(pur.price)}</td>
                       <td className="p-3">
@@ -457,7 +461,13 @@ export default function TeamUserProfilePage() {
                   {payments.map((pay) => (
                     <tr key={pay.id} className="hover:bg-slate-50/50">
                       <td className="p-3 font-mono font-bold text-slate-900">
-                        {pay.transaction_id || `#${pay.order_id || pay.id}`}
+                        {pay.purchase_id ? (
+                          <Link href={`/panel/purchases/${pay.purchase_id}`} className="hover:text-primary underline">
+                            {pay.transaction_id || `Purchase #${pay.purchase_id}`}
+                          </Link>
+                        ) : (
+                          pay.transaction_id || `Payment #${pay.payment_id || pay.id}`
+                        )}
                       </td>
                       <td className="p-3 uppercase font-semibold text-slate-700">{pay.payment_method || 'N/A'}</td>
                       <td className="p-3 font-bold text-slate-900">{formatCurrency(pay.paid || pay.price)}</td>

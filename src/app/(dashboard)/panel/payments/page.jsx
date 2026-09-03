@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import {
   FiCreditCard, FiCheckCircle, FiAlertCircle, FiSearch, FiDollarSign,
   FiUser, FiClock, FiCheck, FiX, FiSlash, FiLoader, FiEye, FiTrash2,
@@ -286,9 +287,19 @@ export default function StaffPaymentsPage() {
                   return (
                     <tr key={item.payment_id} className="hover:bg-slate-50/60 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-mono font-semibold text-slate-900 block">
-                          #{item.order_id || `PAY-${item.payment_id}`}
-                        </span>
+                        {item.purchase_id ? (
+                          <Link
+                            href={`/panel/purchases/${item.purchase_id}`}
+                            className="font-mono font-semibold text-slate-900 hover:text-primary block"
+                            title="View Purchase Details"
+                          >
+                            Purchase #{item.purchase_id}
+                          </Link>
+                        ) : (
+                          <span className="font-mono font-semibold text-slate-900 block">
+                            Payment #{item.payment_id || item.id}
+                          </span>
+                        )}
                         <span className="text-[10px] text-slate-400">
                           {new Date(item.created_at).toLocaleDateString()}
                         </span>
@@ -405,7 +416,18 @@ export default function StaffPaymentsPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">Payment Verification</h3>
-                  <p className="text-xs text-slate-500">Order #{inspectPayment.order_id || inspectPayment.payment_id}</p>
+                  {inspectPayment.purchase_id ? (
+                    <Link
+                      href={`/panel/purchases/${inspectPayment.purchase_id}`}
+                      target="_blank"
+                      className="text-xs text-primary font-semibold hover:underline flex items-center gap-1 mt-0.5"
+                    >
+                      Purchase #{inspectPayment.purchase_id}
+                      <FiExternalLink size={11} />
+                    </Link>
+                  ) : (
+                    <p className="text-xs text-slate-500">Payment #{inspectPayment.payment_id || inspectPayment.id}</p>
+                  )}
                 </div>
               </div>
               <button

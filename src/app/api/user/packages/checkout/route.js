@@ -33,7 +33,6 @@ export async function POST(req) {
         }
 
         const selectedPackages = pkgRes.rows;
-        const orderId = `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
         let totalGross = 0;
         let totalDiscount = 0;
@@ -50,23 +49,25 @@ export async function POST(req) {
             totalNet += pkgNet;
 
             const purRes = await dbQuery(
-                `INSERT INTO purchases (package_id, user_id, order_id, price, discount, status)
-                 VALUES ($1, $2, $3, $4, $5, 'pending')
-                 RETURNING id, package_id, order_id, price, discount, status, created_at`,
-                [pkg.id, userId, orderId, pkgPrice, pkgDiscount]
+                `INSERT INTO purchases (package_id, user_id, price, discount, status)
+                 VALUES ($1, $2, $3, $4, 'pending')
+                 RETURNING id, package_id, price, discount, status, created_at`,
+                [pkg.id, userId, pkgPrice, pkgDiscount]
             );
             createdPurchases.push(purRes.rows[0]);
         }
 
+        const primaryPurchaseId = createdPurchases[0].id;
+
         const paymentRes = await dbQuery(
             `INSERT INTO payments (
-                order_id, user_id, price, paid, due, 
+                purchase_id, user_id, price, paid, due, 
                 payment_method, transaction_id, sender_number, note, proof_url, status
              )
              VALUES ($1, $2, $3, 0, $4, $5, $6, $7, $8, $9, $10)
-             RETURNING id, order_id, price, paid, due, payment_method, transaction_id, sender_number, status, created_at`,
+             RETURNING id, purchase_id, price, paid, due, payment_method, transaction_id, sender_number, status, created_at`,
             [
-                orderId,
+                primaryPurchaseId,
                 userId,
                 totalNet,
                 totalNet,
@@ -86,7 +87,7 @@ export async function POST(req) {
              VALUES ($1, $2, $3, 'payment', $4)`,
             [
                 userId,
-                `Order Received: ${orderId}`,
+                `Order Received: Purchase #${primaryPurchaseId}`,
                 `Your order for ${selectedPackages.length} package(s) (${packageNames}) has been received and is pending staff payment verification.`,
                 '/user/purchases'
             ]
@@ -95,7 +96,7 @@ export async function POST(req) {
         await dbQuery(
             `INSERT INTO activity_logs (action, entity_type, description)
              VALUES ('NEW_ORDER_PAYMENT', 'payments', $1)`,
-            [`User ID ${userId} submitted payment for Order ${orderId} (${selectedPackages.length} packages). Trx: ${transaction_id || 'N/A'}`]
+            [`User ID ${userId} submitted payment for Purchase #${primaryPurchaseId} (${selectedPackages.length} packages). Trx: ${transaction_id || 'N/A'}`]
         ).catch(() => {});
 
         await dbQuery(
@@ -107,7 +108,7 @@ export async function POST(req) {
             success: true,
             message: "Order placed successfully! Pending staff verification.",
             data: {
-                order_id: orderId,
+                purchase_id: primaryPurchaseId,
                 purchases: createdPurchases,
                 payment: newPayment,
                 total: totalNet,

@@ -54,16 +54,62 @@ export async function GET(req, { params }) {
         `, [user.id]).catch(() => ({ rows: [] }));
 
         const purchasesRes = await dbQuery(`
-            SELECT p.id, p.order_id, p.price, p.discount, p.status, p.created_at, pkg.name as package_name, pkg.slug as package_slug
+            SELECT 
+                p.id, 
+                p.id AS purchase_id,
+                p.order_id, 
+                p.price, 
+                p.discount, 
+                p.status, 
+                p.status AS purchase_status,
+                p.created_at, 
+                pkg.name as package_name, 
+                pkg.slug as package_slug,
+                pay.payment_method,
+                pay.transaction_id,
+                pay.sender_number,
+                pay.status AS payment_status,
+                pay.paid AS paid_amount,
+                pay.due AS due_amount,
+                u.name AS user_name,
+                u.email AS user_email,
+                u.phone AS user_phone,
+                u.city AS user_city,
+                u.country AS user_country
             FROM purchases p
             LEFT JOIN packages pkg ON p.package_id = pkg.id
+            LEFT JOIN users u ON p.user_id = u.id
+            LEFT JOIN payments pay ON (p.order_id IS NOT NULL AND pay.order_id = p.order_id) OR (p.order_id IS NULL AND pay.purchase_id = p.id)
             WHERE p.user_id = $1
             ORDER BY p.created_at DESC
         `, [user.id]).catch(() => ({ rows: [] }));
 
         const paymentsRes = await dbQuery(`
-            SELECT pay.id, pay.purchase_id, pay.order_id, pay.price, pay.paid, pay.due, pay.payment_method, pay.transaction_id, pay.sender_number, pay.note, pay.proof_url, pay.status, pay.created_at
+            SELECT 
+                pay.id, 
+                pay.id AS payment_id,
+                pay.purchase_id, 
+                pay.order_id, 
+                pay.price, 
+                pay.paid, 
+                pay.paid AS paid_amount,
+                pay.due, 
+                pay.due AS due_amount,
+                pay.payment_method, 
+                pay.transaction_id, 
+                pay.sender_number, 
+                pay.note, 
+                pay.proof_url, 
+                pay.status, 
+                pay.status AS payment_status,
+                pay.created_at,
+                u.name AS user_name,
+                u.email AS user_email,
+                u.phone AS user_phone,
+                u.city AS user_city,
+                u.country AS user_country
             FROM payments pay
+            LEFT JOIN users u ON pay.user_id = u.id
             WHERE pay.user_id = $1
             ORDER BY pay.created_at DESC
         `, [user.id]).catch(() => ({ rows: [] }));

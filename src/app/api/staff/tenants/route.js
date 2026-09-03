@@ -35,7 +35,7 @@ export async function POST(req) {
         }
 
         const nameTrimmed = name.trim();
-        const urlFormatted = url.trim().toLowerCase().replace(/^https?:\/\//, '');
+        const urlFormatted = url.trim().toLowerCase().replace(new RegExp('^https?://'), '');
 
         const dupCheck = await dbQuery("SELECT id FROM tenants WHERE LOWER(url) = $1", [urlFormatted]);
         if (dupCheck.rows.length > 0) {
@@ -78,7 +78,7 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: "Tenant ID is required" }, { status: 400 });
         }
 
-        const urlFormatted = url ? url.trim().toLowerCase().replace(/^https?:\/\//, '') : '';
+        const urlFormatted = url ? url.trim().toLowerCase().replace(new RegExp('^https?://'), '') : '';
 
         const res = await dbQuery(
             `UPDATE tenants 

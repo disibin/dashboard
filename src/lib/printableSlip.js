@@ -1,4 +1,12 @@
 import toast from 'react-hot-toast';
+import {
+  STORE_NAME,
+  STORE_SUBTITLE,
+  STORE_PHONE,
+  STORE_EMAIL,
+  STORE_WEBSITE,
+  STORE_ADDRESS
+} from '@/lib/secret';
 
 export function printReceipt(order, userObj) {
   const item = order;
@@ -10,14 +18,16 @@ export function printReceipt(order, userObj) {
     return;
   }
 
-  const storeName = 'DISIBIN';
-  const storePhone = '+880 1700 000000';
-  const storeEmail = 'support@disibin.com';
-  const storeWebsite = 'www.disibin.com';
-  const storeAddress = 'Dhaka 1212, Bangladesh';
+  const storeName = STORE_NAME;
+  const storeSub = STORE_SUBTITLE;
+  const storePhone = STORE_PHONE;
+  const storeEmail = STORE_EMAIL;
+  const storeWebsite = STORE_WEBSITE;
+  const storeAddress = STORE_ADDRESS;
 
-  let orderId = (item.order_id || (item.purchase_id ? `PUR-${item.purchase_id}` : item.payment_id ? `PAY-${item.payment_id}` : `INV-${item.id || '4032'}`)).toString();
-  if (orderId.startsWith('#')) orderId = orderId.slice(1);
+  const purId = item.purchase_id || (typeof item.id === 'number' ? item.id : null);
+  const payId = item.payment_id;
+  const displayOrderRef = purId ? `PUR-${purId}` : (payId ? `PAY-${payId}` : 'N/A');
   const createdAt = item.created_at ? new Date(item.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const rawName = item.user_name || item.customer_name || item.name || item.full_name || userObj?.name || userObj?.user_name || userObj?.full_name;
@@ -43,20 +53,48 @@ export function printReceipt(order, userObj) {
   const total = Math.max(0, price - discount);
   const rawStatus = (item.payment_status || item.purchase_status || item.status || 'complete').toLowerCase();
   const isPaid = rawStatus === 'paid' || rawStatus === 'complete';
-  const paid = parseFloat(item.paid || item.paid_amount || (isPaid ? total : 0));
-  const due = Math.max(0, parseFloat(item.due || item.due_amount || (total - paid)));
+  const paid = parseFloat(item.paid !== undefined ? item.paid : (item.paid_amount !== undefined ? item.paid_amount : (isPaid ? total : 0)));
+  const due = Math.max(0, parseFloat(item.due !== undefined ? item.due : (item.due_amount !== undefined ? item.due_amount : (total - paid))));
 
   const packageName = item.package_name || item.package_title || item.title || item.name || 'Software Solutions & Tech Services';
   const logoUrl = typeof window !== 'undefined' ? `${window.location.origin}/icon.png` : '/icon.png';
 
   const formatMoney = (amount) => '৳' + Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+  const hasItemsArray = Array.isArray(item.items) && item.items.length > 0;
+  const tableRowsHtml = hasItemsArray
+    ? item.items.map(it => {
+        const itemPrice = parseFloat(it.price || 0);
+        const itemDisc = parseFloat(it.discount || 0);
+        const itemNet = Math.max(0, itemPrice - itemDisc);
+        return `
+          <tr>
+            <td>
+              <div class="product-title">${it.package_name || packageName}</div>
+            </td>
+            <td style="text-align: center; font-family: monospace;">1</td>
+            <td style="text-align: right; font-family: monospace;">${formatMoney(itemPrice)}</td>
+            <td style="text-align: right; font-family: monospace;">${formatMoney(itemNet)}</td>
+          </tr>
+        `;
+      }).join('')
+    : `
+      <tr>
+        <td>
+          <div class="product-title">${packageName}</div>
+        </td>
+        <td style="text-align: center; font-family: monospace;">1</td>
+        <td style="text-align: right; font-family: monospace;">${formatMoney(price)}</td>
+        <td style="text-align: right; font-family: monospace;">${formatMoney(price)}</td>
+      </tr>
+    `;
+
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="utf-8">
-        <title>Receipt #${orderId}</title>
+        <title>Receipt ${displayOrderRef}</title>
         <style>
           @page {
             size: A4 portrait;
@@ -70,6 +108,7 @@ export function printReceipt(order, userObj) {
           }
           * {
             box-sizing: border-box;
+            font-weight: 400 !important;
           }
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -79,6 +118,7 @@ export function printReceipt(order, userObj) {
             background-color: #ffffff;
             font-size: 13px;
             line-height: 1.5;
+            font-weight: 400;
           }
           .receipt-container {
             max-width: 800px;
@@ -104,6 +144,7 @@ export function printReceipt(order, userObj) {
             font-size: 12px;
             color: #475569;
             margin-top: 4px;
+            font-weight: 400;
           }
           .meta-row {
             display: flex;
@@ -111,46 +152,29 @@ export function printReceipt(order, userObj) {
             align-items: flex-start;
             margin-bottom: 32px;
           }
-          .recipient-label {
+          .meta-column {
+            min-width: 220px;
+          }
+          .meta-label {
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 400;
             color: #0f172a;
             letter-spacing: 0.05em;
             text-transform: uppercase;
             margin-bottom: 6px;
           }
-          .customer-name {
-            font-size: 20px;
-            font-weight: 700;
+          .meta-heading {
+            font-size: 18px;
+            font-weight: 400;
             color: #0f172a;
             line-height: 1.2;
           }
-          .customer-address {
+          .meta-details {
             font-size: 13px;
             color: #475569;
             margin-top: 4px;
             line-height: 1.4;
-          }
-          .receipt-green-box {
-            width: 320px;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-          }
-          .green-top-banner {
-            background-color: #76a300;
-            color: #ffffff;
-            padding: 10px 16px;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-          }
-          .grey-sub-banner {
-            background-color: #f1f5f9;
-            color: #475569;
-            padding: 8px 16px;
-            font-size: 12px;
-            font-weight: 500;
+            font-weight: 400;
           }
           .item-table {
             width: 100%;
@@ -158,30 +182,24 @@ export function printReceipt(order, userObj) {
             margin-bottom: 36px;
           }
           .item-table th {
-            background-color: #76a300;
-            color: #ffffff;
+            background-color: #f1f5f9;
+            color: #0f172a;
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 400;
             letter-spacing: 0.05em;
             padding: 10px 12px;
             text-transform: uppercase;
-          }
-          .item-table th:first-child {
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-          }
-          .item-table th:last-child {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
+            border-bottom: 1px solid #e2e8f0;
           }
           .item-table td {
             padding: 14px 12px;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: top;
             color: #1e293b;
+            font-weight: 400;
           }
           .product-title {
-            font-weight: 600;
+            font-weight: 400;
             color: #0f172a;
             font-size: 13px;
           }
@@ -194,14 +212,15 @@ export function printReceipt(order, userObj) {
           .thanks-text {
             font-size: 13px;
             color: #64748b;
-            font-weight: 500;
+            font-weight: 400;
+            line-height: 1.6;
           }
           .totals-box {
             width: 320px;
           }
           .totals-title {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 400;
             color: #1e293b;
             margin-bottom: 12px;
           }
@@ -212,10 +231,11 @@ export function printReceipt(order, userObj) {
             border-bottom: 1px solid #f1f5f9;
             font-size: 13px;
             color: #475569;
+            font-weight: 400;
           }
           .totals-row.grand-total {
-            font-size: 15px;
-            font-weight: 800;
+            font-size: 14px;
+            font-weight: 400;
             color: #0f172a;
             border-bottom: none;
             padding-top: 10px;
@@ -224,7 +244,7 @@ export function printReceipt(order, userObj) {
             margin-top: 40px;
             text-align: center;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 400;
             color: #64748b;
             border-top: 1px dashed #cbd5e1;
             padding-top: 20px;
@@ -244,19 +264,25 @@ export function printReceipt(order, userObj) {
           </div>
 
           <div class="meta-row">
-            <div>
-              <div class="recipient-label">RECIPIENT:</div>
-              <div class="customer-name">${customerName}</div>
-              <div class="customer-address">
+            <div class="meta-column">
+              <div class="meta-label">RECIPIENT:</div>
+              <div class="meta-heading">${customerName}</div>
+              <div class="meta-details">
                 ${customerEmail ? `<div>${customerEmail}</div>` : ''}
                 ${customerPhone ? `<div>${customerPhone}</div>` : ''}
                 ${customerLocation ? `<div>${customerLocation}</div>` : ''}
               </div>
             </div>
 
-            <div class="receipt-green-box">
-              <div class="green-top-banner">Receipt for #${orderId}</div>
-              <div class="grey-sub-banner">Transaction Date: ${createdAt}</div>
+            <div class="meta-column" style="text-align: right;">
+              <div class="meta-label">PAYMENT DETAILS:</div>
+              <div class="meta-heading">${displayOrderRef}</div>
+              <div class="meta-details">
+                <div>Date: ${createdAt}</div>
+                <div>Status: ${rawStatus.toUpperCase()}</div>
+                ${paymentMethod ? `<div>Method: ${paymentMethod}</div>` : ''}
+                ${transactionId ? `<div>Trx ID: ${transactionId}</div>` : ''}
+              </div>
             </div>
           </div>
 
@@ -270,14 +296,7 @@ export function printReceipt(order, userObj) {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <div class="product-title">${packageName}</div>
-                </td>
-                <td style="text-align: center; font-family: monospace;">1</td>
-                <td style="text-align: right; font-family: monospace;">${formatMoney(price)}</td>
-                <td style="text-align: right; font-family: monospace; font-weight: 700;">${formatMoney(price)}</td>
-              </tr>
+              ${tableRowsHtml}
             </tbody>
           </table>
 
@@ -295,7 +314,7 @@ export function printReceipt(order, userObj) {
               </div>
 
               ${discount > 0 ? `
-              <div class="totals-row" style="color: #059669;">
+              <div class="totals-row">
                 <span>Discount</span>
                 <span style="font-family: monospace;">-${formatMoney(discount)}</span>
               </div>
@@ -307,14 +326,14 @@ export function printReceipt(order, userObj) {
               </div>
 
               ${paid > 0 ? `
-              <div class="totals-row" style="color: #059669; font-weight: 600;">
+              <div class="totals-row">
                 <span>Amount Paid</span>
                 <span style="font-family: monospace;">${formatMoney(paid)}</span>
               </div>
               ` : ''}
 
               ${due > 0 ? `
-              <div class="totals-row" style="color: #dc2626; font-weight: 700;">
+              <div class="totals-row">
                 <span>Remaining Due</span>
                 <span style="font-family: monospace;">${formatMoney(due)}</span>
               </div>

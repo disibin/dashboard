@@ -9,6 +9,7 @@ export async function GET() {
 
         const query = `
             SELECT 
+                pay.id,
                 pay.id AS payment_id,
                 pay.order_id,
                 pay.purchase_id,
@@ -136,14 +137,15 @@ export async function PATCH(req) {
         }
 
         if (currentPayment.user_id) {
-            let notificationTitle = `Payment Update for Order #${currentPayment.order_id || currentPayment.id}`;
+            const refId = currentPayment.purchase_id ? `Purchase #${currentPayment.purchase_id}` : `Payment #${currentPayment.id}`;
+            let notificationTitle = `Payment Update for ${refId}`;
             let notificationMsg = `Your payment status is now "${newStatus.toUpperCase()}".`;
 
             if (newStatus === 'paid') {
-                notificationTitle = `Payment Approved: Order #${currentPayment.order_id || currentPayment.id}`;
+                notificationTitle = `Payment Approved for ${refId}`;
                 notificationMsg = `Your payment has been verified and marked as Paid. Thank you!`;
             } else if (newStatus === 'rejected') {
-                notificationTitle = `Payment Rejected: Order #${currentPayment.order_id || currentPayment.id}`;
+                notificationTitle = `Payment Rejected for ${refId}`;
                 notificationMsg = `Your payment could not be verified.${note ? ` Reason: ${note}` : ''}`;
             }
 

@@ -282,7 +282,7 @@ export default function UserPurchasesPage() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-xl">
-                      #{item.order_id || `PUR-${item.purchase_id}`}
+                      Purchase #{item.purchase_id || item.id}
                     </span>
                     <StatusBadge status={item.payment_status} />
                   </div>
@@ -370,7 +370,7 @@ export default function UserPurchasesPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Submit Payment Proof</h3>
-                  <p className="text-xs text-slate-500">Order #{payModalItem.order_id || payModalItem.purchase_id}</p>
+                  <p className="text-xs text-slate-500">Purchase #{payModalItem.purchase_id || payModalItem.id}</p>
                 </div>
               </div>
               <button

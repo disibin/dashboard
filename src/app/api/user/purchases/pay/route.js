@@ -27,29 +27,25 @@ export async function POST(req) {
             return NextResponse.json({ success: false, message: "Transaction ID / Reference is required" }, { status: 400 });
         }
 
-        let purchaseRes;
-        if (order_id) {
-            purchaseRes = await dbQuery(
-                `SELECT id, user_id, order_id, price, discount FROM purchases WHERE order_id = $1 AND user_id = $2`,
-                [order_id, userId]
-            );
-        } else {
-            purchaseRes = await dbQuery(
-                `SELECT id, user_id, order_id, price, discount FROM purchases WHERE id = $1 AND user_id = $2`,
-                [purchase_id, userId]
-            );
+        const targetId = parseInt(purchase_id || order_id, 10);
+        if (isNaN(targetId)) {
+            return NextResponse.json({ success: false, message: "Valid purchase_id is required" }, { status: 400 });
         }
+
+        const purchaseRes = await dbQuery(
+            `SELECT id, user_id, price, discount FROM purchases WHERE id = $1 AND user_id = $2`,
+            [targetId, userId]
+        );
 
         if (purchaseRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: "Purchase record not found" }, { status: 404 });
         }
 
-        const targetOrderId = purchaseRes.rows[0].order_id || null;
         const targetPurchaseId = purchaseRes.rows[0].id;
 
         const paymentCheck = await dbQuery(
-            `SELECT id, price, paid, due, status FROM payments WHERE (order_id = $1 AND $1 IS NOT NULL) OR purchase_id = $2`,
-            [targetOrderId, targetPurchaseId]
+            `SELECT id, price, paid, due, status FROM payments WHERE purchase_id = $1`,
+            [targetPurchaseId]
         );
 
         let updatedPayment;
@@ -74,14 +70,13 @@ export async function POST(req) {
             const netPrice = Math.max(0, Number(purchaseRes.rows[0].price || 0) - Number(purchaseRes.rows[0].discount || 0));
             const insertRes = await dbQuery(
                 `INSERT INTO payments (
-                    purchase_id, order_id, user_id, price, paid, due, 
+                    purchase_id, user_id, price, paid, due, 
                     payment_method, transaction_id, sender_number, note, proof_url, status
                  )
-                 VALUES ($1, $2, $3, $4, 0, $4, $5, $6, $7, $8, $9, 'pending')
+                 VALUES ($1, $2, $3, 0, $3, $4, $5, $6, $7, $8, 'pending')
                  RETURNING *`,
                 [
                     targetPurchaseId,
-                    targetOrderId,
                     userId,
                     netPrice,
                     payment_method || 'manual',
@@ -94,11 +89,7 @@ export async function POST(req) {
             updatedPayment = insertRes.rows[0];
         }
 
-        if (targetOrderId) {
-            await dbQuery(`UPDATE purchases SET status = 'pending', updated_at = now() WHERE order_id = $1`, [targetOrderId]);
-        } else {
-            await dbQuery(`UPDATE purchases SET status = 'pending', updated_at = now() WHERE id = $1`, [targetPurchaseId]);
-        }
+        await dbQuery(`UPDATE purchases SET status = 'pending', updated_at = now() WHERE id = $1`, [targetPurchaseId]);
 
         await dbQuery(
             `INSERT INTO activity_logs (action, entity_type, entity_id, description)

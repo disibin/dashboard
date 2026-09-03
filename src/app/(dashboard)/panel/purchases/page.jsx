@@ -271,8 +271,8 @@ export default function StaffPurchasesPage() {
                 {filteredPurchases.map((item) => (
                   <tr key={item.purchase_id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="py-3 px-4">
-                      <Link href={`/panel/purchases/${item.order_id || item.purchase_id}`} className="font-mono font-semibold text-slate-900 hover:text-primary block">
-                        #{item.order_id || item.purchase_id}
+                      <Link href={`/panel/purchases/${item.purchase_id || item.id}`} className="font-mono font-semibold text-slate-900 hover:text-primary block">
+                        Purchase #{item.purchase_id || item.id}
                       </Link>
                       <span className="text-[10px] text-slate-400">
                         {new Date(item.created_at).toLocaleDateString()}
@@ -326,7 +326,7 @@ export default function StaffPurchasesPage() {
                     <td className="py-3 px-4 text-right">
                       <div className="inline-flex items-center gap-1.5">
                         <Link
-                          href={`/panel/purchases/${encodeURIComponent(item.order_id || item.purchase_id)}`}
+                          href={`/panel/purchases/${item.purchase_id || item.id}`}
                           className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-primary text-white text-xs font-semibold transition-all flex items-center gap-1"
                         >
                           <FiEye size={12} /> Inspect Details
@@ -367,7 +367,7 @@ export default function StaffPurchasesPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">Order Verification</h3>
-                  <p className="text-xs text-slate-500">Order #{inspectPurchase.order_id || inspectPurchase.purchase_id}</p>
+                  <p className="text-xs text-slate-500">Purchase #{inspectPurchase.purchase_id || inspectPurchase.id}</p>
                 </div>
               </div>
               <button

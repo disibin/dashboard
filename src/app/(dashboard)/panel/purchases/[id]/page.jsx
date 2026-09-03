@@ -158,7 +158,7 @@ export default function SinglePurchaseDetailPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-slate-900">
-              Order #{purchase.order_id || purchase.purchase_id}
+              Purchase #{purchase.purchase_id || purchase.id}
             </h1>
             <StatusBadge status={purchase.purchase_status} />
           </div>
@@ -169,7 +169,13 @@ export default function SinglePurchaseDetailPage() {
 
         <div className="flex items-center gap-2 flex-wrap">
           <button
-            onClick={() => printReceipt(purchase)}
+            onClick={() => printReceipt({
+              ...purchase,
+              ...(mainPayment || {}),
+              paid: mainPayment?.paid ?? mainPayment?.paid_amount,
+              due: mainPayment?.due ?? mainPayment?.due_amount,
+              payment_status: mainPayment?.status || purchase?.purchase_status
+            })}
             className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-primary text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <FiFileText size={13} /> Print Payment Slip
